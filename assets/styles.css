@@ -23,6 +23,8 @@
   --marker: #ffe45c;
   --marker-hl: #ffe45c;
   --marker-ink: #221e00;
+  --accent-on-ink: #aab3ff;
+  --muted-on-ink: rgba(238, 240, 255, 0.66);
   --good: #0b875e;
   --good-soft: #def4ea;
   --good-line: #93d6b9;
@@ -50,9 +52,10 @@
   --sw-9: #13b5a6;
   --sw-10: #ffe45c;
 
-  --f-display: "Bricolage Grotesque", "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-display: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --f-body: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --f-mono: "DM Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --f-mono: var(--f-body);
+  --f-code: "DM Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 
   --fs-xs: 12px;
   --fs-sm: 14px;
@@ -91,6 +94,8 @@
     --marker: #f2d84b;
     --marker-hl: rgba(242, 216, 75, 0.42);
     --marker-ink: #1c1800;
+    --accent-on-ink: #2e3bff;
+    --muted-on-ink: rgba(10, 13, 31, 0.6);
     --good: #3ad49b;
     --good-soft: #0f2e27;
     --good-line: #1f6b53;
@@ -129,6 +134,8 @@
   --marker: #f2d84b;
   --marker-hl: rgba(242, 216, 75, 0.42);
   --marker-ink: #1c1800;
+  --accent-on-ink: #2e3bff;
+  --muted-on-ink: rgba(10, 13, 31, 0.6);
   --good: #3ad49b;
   --good-soft: #0f2e27;
   --good-line: #1f6b53;
@@ -252,11 +259,10 @@ p {
 /* ---------- Shared type ---------- */
 
 .eyebrow {
-  font-family: var(--f-mono);
-  font-size: var(--fs-xs);
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-family: var(--f-body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0;
   color: var(--muted);
 }
 
@@ -279,23 +285,12 @@ p {
 }
 
 .mono {
-  font-family: var(--f-mono);
+  font-family: var(--f-body);
+  font-variant-numeric: tabular-nums;
 }
 
 .hl {
-  background-image: linear-gradient(100deg, transparent 0.5%, var(--marker-hl) 1.5%, var(--marker-hl) 98%, transparent 99.5%);
-  background-repeat: no-repeat;
-  background-position: 0 92%;
-  background-size: 100% 46%;
-  padding: 0 0.08em;
-  margin: 0 -0.04em;
-  animation: hl-swipe 0.9s 0.25s cubic-bezier(0.25, 0.8, 0.25, 1) backwards;
-}
-
-@keyframes hl-swipe {
-  from {
-    background-size: 0% 46%;
-  }
+  color: var(--accent);
 }
 
 /* Markdown content */
@@ -338,7 +333,7 @@ p {
 }
 
 .md code {
-  font-family: var(--f-mono);
+  font-family: var(--f-code);
   font-size: 0.9em;
   background: var(--surface-2);
   border: 1px solid var(--line);
@@ -380,11 +375,10 @@ p {
 }
 
 .md th {
-  font-family: var(--f-mono);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-family: var(--f-body);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0;
   color: var(--muted);
   background: var(--surface-2);
 }
@@ -670,7 +664,7 @@ p {
   overflow: hidden;
   text-overflow: ellipsis;
   font-family: var(--f-display);
-  font-weight: 750;
+  font-weight: 700;
   font-size: 18px;
   letter-spacing: -0.02em;
   white-space: nowrap;
@@ -678,12 +672,12 @@ p {
 
 .brand-tag {
   display: block;
-  font-family: var(--f-mono);
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-family: var(--f-body);
+  font-size: 12px;
+  letter-spacing: 0;
   color: var(--muted);
   line-height: 1.1;
+  font-weight: 500;
 }
 
 .topbar-spacer {
@@ -699,8 +693,8 @@ p {
   border-radius: 999px;
   background: var(--marker);
   color: var(--marker-ink);
-  font-family: var(--f-mono);
-  font-weight: 500;
+  font-family: var(--f-body);
+  font-weight: 700;
   font-size: 14px;
   font-variant-numeric: tabular-nums;
   border: 0;
@@ -903,8 +897,8 @@ p {
 
 .level-item .li-meta {
   display: block;
-  font-family: var(--f-mono);
-  font-size: 11px;
+  font-family: var(--f-body);
+  font-size: 12px;
   color: var(--muted);
   margin-top: 2px;
 }
@@ -948,10 +942,18 @@ p {
 
 .rail-foot {
   margin-top: auto;
-  padding: 16px 6px 0;
+  padding: 14px 6px 0;
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 2px;
   font-size: 12px;
   color: var(--muted);
-  line-height: 1.45;
+  line-height: 1.5;
+}
+
+.rail-foot .rf-org {
+  font-weight: 600;
+  color: var(--ink-2);
 }
 
 /* ---------- Stage header (step progress) ---------- */
@@ -1107,7 +1109,7 @@ p {
 }
 
 .callout .eyebrow {
-  color: var(--marker);
+  color: var(--muted-on-ink);
 }
 
 .callout-title {
@@ -1124,10 +1126,7 @@ p {
 }
 
 .callout .hl {
-  color: var(--marker-ink);
-  background-image: linear-gradient(100deg, transparent 0.5%, var(--marker) 1.5%, var(--marker) 98%, transparent 99.5%);
-  background-size: 100% 88%;
-  background-position: 0 70%;
+  color: var(--accent-on-ink);
 }
 
 .tag.verdict {
@@ -1173,11 +1172,11 @@ p {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  font-family: var(--f-mono);
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-family: var(--f-body);
+  font-size: 12.5px;
+  letter-spacing: 0;
   color: var(--muted);
+  font-weight: 600;
 }
 
 .prompt-text {
@@ -1227,9 +1226,9 @@ p {
 
 .hero h1 {
   font-size: var(--fs-hero);
-  font-weight: 800;
-  letter-spacing: -0.035em;
-  line-height: 1.02;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
 }
 
 .hero .lede {
@@ -1277,11 +1276,11 @@ p {
 
 .meter-flag {
   position: absolute;
-  font-family: var(--f-mono);
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-family: var(--f-body);
+  font-size: 12.5px;
+  letter-spacing: 0;
   white-space: nowrap;
+  font-weight: 600;
 }
 
 .meter-flag.f-now {
@@ -1356,10 +1355,11 @@ p {
   display: flex;
   flex-wrap: wrap;
   gap: 8px 18px;
-  font-family: var(--f-mono);
-  font-size: 12px;
+  font-family: var(--f-body);
+  font-size: 13px;
   color: var(--muted);
-  letter-spacing: 0.04em;
+  letter-spacing: 0;
+  font-weight: 500;
 }
 
 .meta-row span {
@@ -1394,9 +1394,9 @@ p {
 
 .ticket h2 {
   font-size: clamp(30px, 4.6vw, 46px);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.02;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
 }
 
 .ticket .tagline {
@@ -1640,17 +1640,14 @@ p {
 
 .reveal-big .big {
   font-family: var(--f-display);
-  font-weight: 800;
+  font-weight: 700;
   font-size: clamp(26px, 4vw, 38px);
   line-height: 1.08;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.025em;
 }
 
 .reveal-big .big .hl {
-  color: var(--marker-ink);
-  background-image: linear-gradient(100deg, transparent 0.5%, var(--marker) 1.5%, var(--marker) 98%, transparent 99.5%);
-  background-size: 100% 88%;
-  background-position: 0 70%;
+  color: var(--accent-on-ink);
 }
 
 .reveal-big p {
@@ -1712,16 +1709,16 @@ p {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-family: var(--f-mono);
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-family: var(--f-body);
+  font-size: 12px;
+  letter-spacing: 0;
   padding: 3px 8px;
   border-radius: 6px;
   background: var(--surface-2);
   border: 1px solid var(--line);
   color: var(--ink-2);
   white-space: nowrap;
+  font-weight: 600;
 }
 
 .tag.good {
@@ -2019,7 +2016,7 @@ p {
 }
 
 .facts-head .eyebrow {
-  color: var(--marker);
+  color: var(--muted-on-ink);
 }
 
 .fact {
@@ -2036,12 +2033,12 @@ p {
 }
 
 .fact .k {
-  font-family: var(--f-mono);
-  font-size: 11.5px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-family: var(--f-body);
+  font-size: 13px;
+  letter-spacing: 0;
   color: var(--muted);
   padding-top: 2px;
+  font-weight: 600;
 }
 
 @media (max-width: 480px) {
@@ -2188,12 +2185,12 @@ p {
 }
 
 .checklist .bonus {
-  font-family: var(--f-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.06em;
+  font-family: var(--f-body);
+  font-size: 11.5px;
+  letter-spacing: 0;
   color: var(--muted);
   margin-left: 6px;
-  text-transform: uppercase;
+  font-weight: 600;
 }
 
 .live-box {
@@ -2242,10 +2239,10 @@ p {
 }
 
 .slot-key {
-  font-family: var(--f-mono);
+  font-family: var(--f-body);
   font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   padding: 3px 8px;
   border-radius: 5px;
   color: #fff;
@@ -2487,7 +2484,7 @@ button.rcard:hover {
   flex-wrap: wrap;
   gap: 0.28em;
   font-family: var(--f-display);
-  font-weight: 800;
+  font-weight: 700;
   font-size: clamp(22px, 3.4vw, 32px);
   letter-spacing: -0.025em;
   line-height: 1.15;
@@ -2730,7 +2727,7 @@ button.rcard:hover {
   font-family: var(--f-display);
   font-weight: 800;
   font-size: 15px;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
 }
 
 .fnode .fn-short {
@@ -2944,11 +2941,10 @@ button.rcard:hover {
   border-radius: var(--r-md);
   border: 1px solid var(--line-2);
   background: var(--surface);
-  font-family: var(--f-display);
-  font-weight: 750;
+  font-family: var(--f-body);
+  font-weight: 650;
   font-size: 14px;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
+  letter-spacing: 0;
   transition: border-color 0.15s, background-color 0.15s, transform 0.12s;
 }
 
@@ -3589,8 +3585,8 @@ button.rcard:hover {
 
 .plan li .log {
   display: block;
-  font-family: var(--f-mono);
-  font-size: 12px;
+  font-family: var(--f-body);
+  font-size: 12.5px;
   color: var(--muted);
   margin-top: 3px;
 }
@@ -3665,7 +3661,7 @@ button.rcard:hover {
   border: 1px solid #262c58;
   background: #0d1026;
   color: #d9ddff;
-  font-family: var(--f-mono);
+  font-family: var(--f-code);
   font-size: 13px;
   line-height: 1.6;
   box-shadow: var(--shadow-2);
@@ -3740,7 +3736,7 @@ button.rcard:hover {
 .browser-bar .url {
   flex: 1;
   min-width: 0;
-  font-family: var(--f-mono);
+  font-family: var(--f-code);
   font-size: 12px;
   color: var(--muted);
   background: var(--surface);
@@ -3802,7 +3798,7 @@ button.rcard:hover {
 }
 
 .utm-out {
-  font-family: var(--f-mono);
+  font-family: var(--f-code);
   font-size: 13px;
   padding: 10px 12px;
   border-radius: var(--r-md);
@@ -3823,10 +3819,11 @@ button.rcard:hover {
 }
 
 .wf-q .qn {
-  font-family: var(--f-mono);
-  font-size: 11px;
-  letter-spacing: 0.1em;
+  font-family: var(--f-body);
+  font-size: 12.5px;
+  letter-spacing: 0;
   color: var(--muted);
+  font-weight: 600;
 }
 
 .wf-q .qt {
@@ -3855,11 +3852,11 @@ button.rcard:hover {
 }
 
 .wf-step .k {
-  font-family: var(--f-mono);
-  font-size: 11.5px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-family: var(--f-body);
+  font-size: 13px;
+  letter-spacing: 0;
   color: var(--ink-2);
+  font-weight: 600;
 }
 
 .wf-card {
@@ -3882,7 +3879,7 @@ button.rcard:hover {
 }
 
 .wf-card-head .eyebrow {
-  color: var(--marker);
+  color: var(--muted-on-ink);
 }
 
 .wf-card-head .n {
@@ -3915,12 +3912,12 @@ button.rcard:hover {
 }
 
 .wf-link .k {
-  font-family: var(--f-mono);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-family: var(--f-body);
+  font-size: 13px;
+  letter-spacing: 0;
   color: var(--muted);
   padding-top: 2px;
+  font-weight: 600;
 }
 
 /* ---------- Mission / timer ---------- */
@@ -3944,7 +3941,7 @@ button.rcard:hover {
 }
 
 .timer .eyebrow {
-  color: var(--marker);
+  color: var(--muted-on-ink);
 }
 
 .timer .bar {
@@ -4039,10 +4036,10 @@ button.rcard:hover {
 
 .takeaway {
   font-family: var(--f-display);
-  font-weight: 800;
+  font-weight: 700;
   font-size: clamp(26px, 4.2vw, 40px);
-  letter-spacing: -0.03em;
-  line-height: 1.06;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
   max-width: 22ch;
 }
 
@@ -4088,9 +4085,9 @@ button.rcard:hover {
 
 .cert .who {
   font-family: var(--f-display);
-  font-weight: 800;
+  font-weight: 700;
   font-size: clamp(34px, 6vw, 56px);
-  letter-spacing: -0.035em;
+  letter-spacing: -0.03em;
   line-height: 1;
 }
 
@@ -4314,8 +4311,9 @@ button.rcard:hover {
 }
 
 .toast .xp {
-  font-family: var(--f-mono);
+  font-family: var(--f-body);
   color: var(--marker);
+  font-weight: 700;
 }
 
 .toast.out {
@@ -4340,8 +4338,8 @@ button.rcard:hover {
   position: fixed;
   z-index: 90;
   pointer-events: none;
-  font-family: var(--f-mono);
-  font-weight: 500;
+  font-family: var(--f-body);
+  font-weight: 700;
   font-size: 13px;
   padding: 4px 9px;
   border-radius: 999px;
@@ -4385,7 +4383,7 @@ button.rcard:hover {
 }
 
 .kbd {
-  font-family: var(--f-mono);
+  font-family: var(--f-code);
   font-size: 11px;
   padding: 1px 6px;
   border-radius: 5px;

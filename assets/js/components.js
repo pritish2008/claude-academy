@@ -491,7 +491,7 @@
           revealHost.appendChild(
             h(
               'div.reveal-big',
-              step.reveal.eyebrow ? h('div.eyebrow', { style: 'color:var(--marker)' }, step.reveal.eyebrow) : null,
+              step.reveal.eyebrow ? h('div.eyebrow', { style: 'color:var(--muted-on-ink)' }, step.reveal.eyebrow) : null,
               h('div.big', { html: PU.rich(step.reveal.big) }),
               step.reveal.text ? h('p', { html: PU.rich(step.reveal.text) }) : null
             )

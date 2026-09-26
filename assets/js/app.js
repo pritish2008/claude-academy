@@ -204,7 +204,12 @@
       rankCard(),
       h('div.rail-head', h('span.eyebrow', 'Levels'), h('span.mono.small.muted', overallPct() + '% done')),
       levelList(),
-      h('div.rail-foot', 'An internal training for the ' + ((PU.brand && PU.brand.name) || 'agency') + ' team. Not an official Anthropic product. Chats marked “Simulated” show pre-written example answers.')
+      h(
+        'div.rail-foot',
+        h('div.rf-org', '© ' + new Date().getFullYear() + ' ' + ((PU.brand && PU.brand.name) || 'Claude Power-Up')),
+        h('div', 'Internal training. For team use only.'),
+        h('div', 'Not affiliated with Anthropic. Example chats are simulated.')
+      )
     );
   }
 

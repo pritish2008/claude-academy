@@ -52,14 +52,14 @@
         lede: 'Tap each step, or run the whole thing. The example: a month of content for Pulse Studio, a boutique fitness studio in Pune.',
         nodes: [
           {
-            title: 'TASK',
+            title: 'Task',
             short: 'Set the job',
             does: 'Say what you need and what success looks like.',
             prompt: 'We need a month of Instagram content for Pulse Studio, a boutique fitness studio in Pune. Goal: 40 trial class bookings.',
             sample: 'Got it: one month of content, measured by trial class bookings. I’ll start by looking at what’s already working.'
           },
           {
-            title: 'ANALYSE',
+            title: 'Analyse',
             short: 'Look before leaping',
             does: 'Have Claude study the real material first.',
             prompt: 'First, analyse the attached last 20 posts and top 50 comments. What gets saves and shares? What do people ask about?',
@@ -67,14 +67,14 @@
               '- Posts featuring a trainer’s face get about **2x more saves** than equipment shots.\n- The most common question in the comments: **“Is it OK for beginners?”** (asked 14 times).\n- Timetable posts get the fewest likes but the most link clicks.'
           },
           {
-            title: 'THINK',
+            title: 'Think',
             short: 'Find the insight',
             does: 'Ask for the insight before the ideas.',
             prompt: 'Based on that, what’s the biggest content gap and the most useful insight about our audience?',
             sample: '**Insight:** beginners want to join but feel intimidated. Almost no fitness brand in Pune talks to them directly.\n\n**Gap:** there’s no “your first class” content anywhere on the account.'
           },
           {
-            title: 'CREATE',
+            title: 'Create',
             short: 'Now make things',
             does: 'Generate options built on the insight.',
             prompt: 'Generate 12 post concepts that use this insight, across Reels, carousels and stories.',
@@ -82,7 +82,7 @@
               '1. **Your first class, minute by minute** (Reel)\n2. **Things beginners worry about that trainers don’t care about** (carousel)\n3. **Meet the trainer who’ll be nicest to you** (Reel)\n4. **Motivation Monday quote** (static)\n\n…plus 8 more.'
           },
           {
-            title: 'CRITIQUE',
+            title: 'Critique',
             short: 'Judge it harshly',
             does: 'Make Claude score its own work against your criteria.',
             prompt: 'Score each concept 1–5 on insight, brand fit and effort to produce. Be harsh. Cut anything generic.',
@@ -90,7 +90,7 @@
               '- **Motivation Monday quote: 1/5.** Generic, any gym could post it. Cut.\n- **Your first class, minute by minute: 5/5.** Answers the beginner fear directly. Easy to shoot.\n- **Things beginners worry about: 5/5.** Very saveable.'
           },
           {
-            title: 'IMPROVE',
+            title: 'Improve',
             short: 'Polish the winners',
             does: 'Develop only the best ideas.',
             prompt: 'Take the top 3 and write full Reel scripts: hook, shots, on-screen text and caption.',

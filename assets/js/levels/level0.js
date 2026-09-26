@@ -17,7 +17,7 @@
         type: 'hero',
         hideBar: true,
         xp: 10,
-        eyebrow: (PU.brand && PU.brand.name ? PU.brand.name : 'Claude Power-Up') + ' · internal training',
+        eyebrow: (PU.brand && PU.brand.name ? PU.brand.name : 'Claude Power-Up') + ' · Internal training',
         title: 'Most people are using Claude at ==20%== of its potential.',
         lede: 'Stop using Claude like Google. Learn to brief it, feed it and put it to work like the sharpest person on your team.',
         meta: [
