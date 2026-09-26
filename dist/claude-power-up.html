@@ -59,6 +59,7 @@
   --sw-8: #1c1c28;
   --sw-9: #13b5a6;
   --sw-10: #ffe45c;
+  --sw-11: #3f7cff;
 
   --f-display: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --f-body: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -338,6 +339,11 @@ p {
 
 .md em {
   color: var(--ink-2);
+}
+
+.md .table-wrap + ul,
+.md .table-wrap + ol {
+  margin-top: 14px;
 }
 
 .md code {
@@ -1046,6 +1052,11 @@ p {
 .step {
   display: grid;
   gap: 22px;
+}
+
+/* Let wide content (tables, code) scroll inside its box, not the page. */
+.step > * {
+  min-width: 0;
 }
 
 .step.enter {
@@ -4189,6 +4200,14 @@ button.rcard:hover {
   color: var(--ink-2);
 }
 
+.rules-plain li {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.rules-plain li::before {
+  content: none;
+}
+
 /* ---------- Drawers, toasts, overlays ---------- */
 
 .scrim {
@@ -4454,6 +4473,281 @@ button.rcard:hover {
   padding: 40px 0;
   text-align: center;
   color: var(--muted);
+}
+
+/* ---------- Setup checklist (guide) ---------- */
+
+.guide-progress {
+  display: grid;
+  grid-template-columns: auto auto minmax(60px, 1fr);
+  align-items: center;
+  gap: 12px;
+}
+
+.guide-count {
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.guide {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.guide-item {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: start;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.guide-num {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--ink-2);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  transition: background 0.15s, color 0.15s;
+}
+
+.guide-main {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.guide-title {
+  font-weight: 700;
+  line-height: 1.3;
+  padding-top: 4px;
+}
+
+.guide-body.md {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.guide-body.md > * + * {
+  margin-top: 0.5em;
+}
+
+.guide-tick {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line-2);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 650;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.guide-tick .icon {
+  opacity: 0.35;
+}
+
+.guide-tick:hover {
+  border-color: var(--accent-line);
+  color: var(--ink);
+}
+
+.guide-item.is-done {
+  border-color: var(--good-line);
+  background: var(--good-soft);
+}
+
+.guide-item.is-done .guide-num,
+.guide-item.is-done .guide-tick {
+  background: var(--good);
+  border-color: var(--good);
+  color: var(--bg);
+}
+
+.guide-item.is-done .guide-tick .icon {
+  opacity: 1;
+}
+
+@media (max-width: 519px) {
+  .guide-item {
+    grid-template-columns: 26px minmax(0, 1fr);
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .guide-num {
+    width: 26px;
+    height: 26px;
+    font-size: 13px;
+  }
+
+  .guide-tick {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+/* ---------- Model and effort ---------- */
+
+.settings-vis {
+  display: grid;
+  gap: 12px;
+}
+
+.sv-panel {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+
+.sv-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 4px 12px;
+}
+
+.sv-head b {
+  font-family: var(--f-display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.model-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+}
+
+.model-card {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  padding: 12px;
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+}
+
+.mc-name {
+  font-weight: 750;
+  font-size: 16px;
+}
+
+.mc-role {
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--accent);
+}
+
+.mc-text {
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+.mc-limit {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.mc-limit i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--line-2);
+}
+
+.mc-limit i.on {
+  background: var(--ink-2);
+}
+
+.mc-limit span {
+  margin-left: 4px;
+}
+
+.effort-scale {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  align-items: end;
+}
+
+.effort-scale button {
+  display: grid;
+  justify-items: center;
+  align-content: end;
+  gap: 6px;
+  padding: 8px 2px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.15;
+  min-height: 92px;
+}
+
+.effort-scale button i {
+  display: block;
+  width: 18px;
+  border-radius: 4px;
+  background: var(--line-2);
+  transition: background 0.15s;
+}
+
+.effort-scale button:hover {
+  border-color: var(--accent-line);
+}
+
+.effort-scale button.is-on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+.effort-scale button.is-on i,
+.effort-scale button.is-lit i {
+  background: var(--accent);
+}
+
+.effort-desc {
+  font-size: 14.5px;
+  color: var(--ink-2);
+  min-height: 2.9em;
+}
+
+.effort-desc b {
+  color: var(--ink);
 }
 
 /* ---------- Reduced motion ---------- */
@@ -5713,6 +6007,22 @@ button.rcard:hover {
     );
   };
 
+  /** How a level is named and numbered: "Level 3" / "03", "Final" / "10", "Bonus" / "B". */
+  PU.levelLabel = function (L) {
+    return L.label || 'Level ' + L.num;
+  };
+  PU.levelCode = function (L) {
+    return L.code || pad(L.num);
+  };
+
+  /** The next level on the main path. Optional (bonus) levels are skipped. */
+  PU.nextLevel = function (L) {
+    for (var j = PU.levels.indexOf(L) + 1; j < PU.levels.length; j++) {
+      if (!PU.levels[j].optional) return PU.levels[j];
+    }
+    return null;
+  };
+
   function factsCard(f) {
     return h(
       'div.facts',
@@ -5913,6 +6223,9 @@ button.rcard:hover {
       case 'cards':
         d.open = all(step.cards);
         break;
+      case 'guide':
+        d.ticked = all(step.items);
+        break;
       case 'chat':
       case 'guesses':
         d.done = true;
@@ -6047,11 +6360,11 @@ button.rcard:hover {
           'div.ticket-row',
           h(
             'div.stack-sm',
-            h('div.eyebrow', 'Job Nº PU-' + pad(L.num) + (L.num === 10 ? ' · Final' : ' · Level ' + L.num)),
+            h('div.eyebrow', 'Job Nº PU-' + PU.levelCode(L) + ' · ' + PU.levelLabel(L)),
             h('h2', { html: PU.rich(L.title) }),
             h('p.tagline', L.tagline)
           ),
-          h('div.ticket-chip', { 'aria-hidden': 'true' }, h('i'), h('b', 'PU ' + pad(L.num)))
+          h('div.ticket-chip', { 'aria-hidden': 'true' }, h('i'), h('b', 'PU ' + PU.levelCode(L)))
         )
       ),
       h('div.perf'),
@@ -6759,17 +7072,92 @@ button.rcard:hover {
   };
 
   /* ---------------------------------------------------------------------
+     guide — a setup checklist people tick off as they do each step.
+     Reading is enough to continue; ticking everything earns the XP.
+     --------------------------------------------------------------------- */
+  S.guide = function (step, ctx) {
+    var d = ctx.data;
+    d.ticked = d.ticked || {};
+    var total = step.items.length;
+    var count = h('span.guide-count');
+    var fill = h('span');
+    var calloutHost = h('div');
+    ctx.complete();
+    function paint(anchor) {
+      var n = Object.keys(d.ticked).length;
+      count.textContent = n + ' of ' + total + ' done';
+      fill.style.width = Math.round((n / total) * 100) + '%';
+      if (n >= total) {
+        if (anchor) ctx.award('all', step.xp || 20, step.xpLabel || 'All set up', anchor);
+        if (step.callout && !calloutHost.firstChild) calloutHost.appendChild(callout(step.callout));
+      }
+    }
+    var list = h(
+      'ol.guide',
+      step.items.map(function (it, i) {
+        var tick = h(
+          'button.guide-tick',
+          { type: 'button', role: 'checkbox', 'aria-checked': String(!!d.ticked[i]), 'aria-label': 'Done: ' + it.title },
+          PU.icon('check', 'icon-sm'),
+          h('span', 'Done')
+        );
+        var row = h(
+          'li.guide-item',
+          { class: d.ticked[i] ? 'is-done' : '' },
+          h('span.guide-num', { 'aria-hidden': 'true' }, String(i + 1)),
+          h(
+            'div.guide-main',
+            h('div.guide-title', it.title),
+            it.body ? h('div.guide-body.md', { html: PU.md(it.body) }) : null
+          ),
+          tick
+        );
+        tick.addEventListener('click', function () {
+          if (d.ticked[i]) delete d.ticked[i];
+          else d.ticked[i] = true;
+          ctx.save();
+          row.classList.toggle('is-done', !!d.ticked[i]);
+          tick.setAttribute('aria-checked', String(!!d.ticked[i]));
+          paint(tick);
+        });
+        return row;
+      })
+    );
+    paint(null);
+    return [
+      head(step),
+      h('div.guide-progress', h('span.eyebrow', 'Checklist'), count, h('div.bar', fill)),
+      list,
+      step.extras ? h('div.stack-sm', h('div.eyebrow', 'When you’re ready'), PU.tiles(step.extras)) : null,
+      step.footer ? note(step.footer) : null,
+      calloutHost
+    ];
+  };
+
+  /* ---------------------------------------------------------------------
      chat — scripted conversation, user presses Send for each turn
      --------------------------------------------------------------------- */
   S.chat = function (step, ctx) {
     var d = ctx.data;
     var frame = chatFrame(step.chatTitle || 'Claude · simulated');
-    var calloutHost = h('div');
+    var calloutHost = h('div.stack');
     var composerText = h('div.fake-input');
     var send = h('button.btn.btn-primary.btn-sm', { type: 'button' }, PU.icon('send', 'icon-sm'), h('span', 'Send'));
     PU.put(frame.composer, composerText, send);
     var idx = 0;
     var busy = false;
+    /** Shown once the conversation is over: callout, prompts to copy, footnote. */
+    function showAfter() {
+      if (calloutHost.firstChild) return;
+      PU.put(
+        calloutHost,
+        step.callout ? callout(step.callout) : null,
+        (step.templates || []).map(function (t) {
+          return promptBlock(t.text, { label: t.label, copy: true, open: true });
+        }),
+        step.footer ? note(step.footer) : null
+      );
+    }
     function finish() {
       composerText.textContent = step.endText || 'Conversation complete.';
       send.disabled = true;
@@ -6777,7 +7165,7 @@ button.rcard:hover {
       ctx.save();
       ctx.award('chat', step.xp || 10, step.xpLabel || 'Conversation complete', frame.el);
       ctx.complete();
-      if (step.callout && !calloutHost.firstChild) calloutHost.appendChild(callout(step.callout));
+      showAfter();
     }
     function prepare() {
       var t = step.turns[idx];
@@ -6816,7 +7204,7 @@ button.rcard:hover {
       composerText.textContent = step.endText || 'Conversation complete.';
       send.disabled = true;
       ctx.complete();
-      if (step.callout) calloutHost.appendChild(callout(step.callout));
+      showAfter();
     } else prepare();
     return [head(step), frame.el, calloutHost];
   };
@@ -8582,7 +8970,7 @@ button.rcard:hover {
       PU.save();
     }
     ctx.complete();
-    ctx.award('done', 50, 'Level ' + L.num + ' complete', null);
+    ctx.award('done', 50, PU.levelLabel(L) + ' complete', null);
     PU.emit('levels');
     var rank = PU.rankFor(PU.state.xp);
     function stat(k, v) {
@@ -8591,7 +8979,7 @@ button.rcard:hover {
     var card = h(
       'div.done-card',
       { class: first && !PU.reduced ? 'thud' : '' },
-      h('div.eyebrow', (L.num === 10 ? 'Final' : 'Level ' + L.num) + ' complete · ' + L.title.replace(/==/g, '')),
+      h('div.eyebrow', PU.levelLabel(L) + ' complete · ' + L.title.replace(/==/g, '')),
       h('div.stamp', { class: first ? 'slam' : '' }, 'Approved'),
       h('div.takeaway', { html: PU.rich(step.takeaway) }),
       step.points
@@ -8605,11 +8993,12 @@ button.rcard:hover {
       h('div.done-stats', stat('XP this level', PU.xpForPrefix(L.id + '.')), stat('Total XP', PU.state.xp), stat('Rank', rank.name))
     );
     if (first) setTimeout(PU.confetti, 380);
-    var next = PU.levels[L.num + 1];
+    var next = L.optional ? null : PU.nextLevel(L);
     return [
       card,
       step.template ? promptBlock(step.template, { label: step.templateLabel || 'Keep this', copy: true }) : null,
-      next ? note('**Up next: Level ' + (next.num === 10 ? 'Final' : next.num) + ' · ' + next.title.replace(/==/g, '') + '.** ' + next.tagline, 'arrowRight') : null
+      step.note ? note(step.note, step.noteIcon) : null,
+      next ? note('**Up next: ' + PU.levelLabel(next) + ' · ' + next.title.replace(/==/g, '') + '.** ' + next.tagline, 'arrowRight') : null
     ];
   };
 
@@ -8638,6 +9027,19 @@ button.rcard:hover {
     'OUTPUT: [Format, number of options, structure.]\n' +
     'Before you start, ask me any questions you need answered.';
 
+  /** Which model and effort to pick. Model names change; the idea doesn't. */
+  PU.SETTINGS = [
+    ['Everyday work', 'Sonnet, default effort. Captions, emails, summaries, rewrites.'],
+    ['Big, tricky or high-stakes work', 'Opus, or Fable for the hardest jobs. Effort on High or above.'],
+    ['Claude cut corners?', 'It didn’t try hard enough. Raise the effort.'],
+    ['Claude missed the point?', 'Check your brief first. Then try a bigger model.']
+  ];
+
+  PU.HELPER_PROMPT =
+    'Improve this prompt: “[paste your rough prompt]”.\n' +
+    'Rewrite it as a clear brief with a role, context, goal, input, constraints and output format. ' +
+    'Ask me questions first about anything important that’s missing.';
+
   PU.cheatSheetText = function () {
     var s = PU.state;
     var out = [];
@@ -8656,6 +9058,16 @@ button.rcard:hover {
     out.push('```');
     out.push(PU.BRIEF_TEMPLATE);
     out.push('```');
+    out.push('');
+    out.push('## Prompt helper (works in any AI chat)');
+    out.push('```');
+    out.push(PU.HELPER_PROMPT);
+    out.push('```');
+    out.push('');
+    out.push('## Model and effort');
+    PU.SETTINGS.forEach(function (r) {
+      out.push('- **' + r[0] + ':** ' + r[1]);
+    });
     var stars = s.data.stars || {};
     var keys = Object.keys(stars);
     if (keys.length) {
@@ -8703,6 +9115,16 @@ button.rcard:hover {
       )
     );
     wrap.appendChild(promptBlock(PU.BRIEF_TEMPLATE, { label: 'The brief template', copy: true, open: true }));
+    wrap.appendChild(promptBlock(PU.HELPER_PROMPT, { label: 'Prompt helper', copy: true, open: true }));
+    wrap.appendChild(h('div.eyebrow', 'Model and effort'));
+    wrap.appendChild(
+      h(
+        'ul.rules.rules-plain',
+        PU.SETTINGS.map(function (r) {
+          return h('li', h('div', h('b', r[0]), h('span', r[1])));
+        })
+      )
+    );
     var stars = s.data.stars || {};
     var keys = Object.keys(stars);
     if (keys.length) {
@@ -8727,7 +9149,10 @@ button.rcard:hover {
       PU.emit('levels');
     }
     var rank = PU.rankFor(s.xp);
-    var levelsDone = PU.levels.filter(function (L) {
+    var mainLevels = PU.levels.filter(function (L) {
+      return !L.optional;
+    });
+    var levelsDone = mainLevels.filter(function (L) {
       return s.levelsDone[L.id];
     }).length;
     var prompts = s.data.prompts || {};
@@ -8779,7 +9204,7 @@ button.rcard:hover {
         h('div.stamp.slam', 'Approved'),
         h('div.who', s.name || 'You did it'),
         h('p.lede', { html: PU.rich('Officially stopped using Claude like Google. Rank: ==' + rank.name + '==.') }),
-        h('div.done-stats', stat('Total XP', s.xp), stat('Levels', levelsDone + ' / ' + PU.levels.length), stat('Best prompt', best ? best + '/100' : '—'), stat('Date', date))
+        h('div.done-stats', stat('Total XP', s.xp), stat('Levels', levelsDone + ' / ' + mainLevels.length), stat('Best prompt', best ? best + '/100' : '—'), stat('Date', date))
       ),
       h('div.btn-row', PU.copyBtn(PU.cheatSheetText, 'Copy cheat sheet'), dl, reset),
       confirmHost,
@@ -8817,7 +9242,8 @@ button.rcard:hover {
         meta: [
           ['grid', '11 short levels'],
           ['trophy', 'XP, ranks and a certificate'],
-          ['target', 'Ends with a challenge on your real work']
+          ['target', 'Ends with a challenge on your real work'],
+          ['terminal', 'Bonus level for web developers']
         ]
       },
 
@@ -8992,7 +9418,12 @@ button.rcard:hover {
     short: 'Stop writing terrible prompts',
     tagline: 'A prompt is a brief. Here’s how to write a great one in 60 seconds.',
     deliverable: 'A prompt formula you’ll use every day',
-    learn: ['The 6 parts of a great brief', 'Why better information beats longer prompts', 'How to check your own prompt before you send it'],
+    learn: [
+      'The 6 parts of a great brief',
+      'Why better information beats longer prompts',
+      'How to check your own prompt before you send it',
+      'How to get AI to help you write the prompt'
+    ],
     steps: [
       { type: 'intro' },
 
@@ -9287,12 +9718,53 @@ button.rcard:hover {
       },
 
       {
+        type: 'chat',
+        xp: 15,
+        eyebrow: 'Pro move',
+        title: 'Stuck? Let ==AI write the prompt== with you.',
+        lede: 'Paste a rough idea into Claude, ChatGPT or any AI chat and ask it to turn the idea into a proper brief. Press Send to watch.',
+        chatTitle: 'Prompt helper · simulated',
+        turns: [
+          { role: 'user', text: 'Improve this prompt: “write reel ideas for our restaurant client”. Ask me questions first.' },
+          {
+            role: 'claude',
+            text:
+              'Happy to. Four quick questions first:\n\n1. **Which restaurant?** What’s the food, where is it, and what makes it special?\n2. **Who should the Reels reach?**\n3. **What should they achieve?** Bookings, followers, awareness?\n4. **Any rules?** Length, tone, things to avoid.'
+          },
+          {
+            role: 'user',
+            send: 'Answer the questions',
+            text: 'Dakshin Table, premium South Indian in Bandra. For 25–40 year-old professionals. Goal: more weekend brunch bookings. Under 30 seconds, shot on a phone, no clichés.'
+          },
+          {
+            role: 'claude',
+            think: 1100,
+            text:
+              'Here’s your improved prompt:\n\n> You’re a short-form video strategist for restaurants. Our client is Dakshin Table, a premium South Indian restaurant in Bandra, Mumbai. Audience: 25–40 year-old professionals. Goal: more weekend brunch bookings.\n>\n> Give me 5 Instagram Reel concepts. For each: a title, a 3-second hook, a shot-by-shot outline, on-screen text, and why it will work.\n>\n> Rules: under 30 seconds, shootable on a phone, no clichés like “foodie heaven”.'
+          }
+        ],
+        callout: {
+          title: 'Rough idea in, ==proper brief== out.',
+          text: 'Use it whenever you’re stuck. Then read the brief before you use it: you know the client, the AI doesn’t.'
+        },
+        templates: [
+          { label: 'Prompt helper: improve my prompt', text: PU.HELPER_PROMPT },
+          {
+            label: 'Prompt helper: interview me',
+            text: 'I need help with [the task]. Before you write anything, interview me: ask one question at a time until you have everything you need. Then write the prompt I should use.'
+          }
+        ],
+        footer: 'This works in any AI chat, including ChatGPT. Only paste client information into AI tools the agency has approved.'
+      },
+
+      {
         type: 'summary',
         takeaway: 'Real Creatives Give Insanely Clear Orders.',
         points: [
           '**R**ole, **C**ontext, **G**oal, **I**nput, **C**onstraints, **O**utput.',
           'Better information beats longer prompts.',
-          'Pro move: end with “Ask me any questions before you start.”'
+          'Pro move: end with “Ask me any questions before you start.”',
+          'Stuck? Ask an AI to turn your rough idea into a brief.'
         ],
         template: PU.BRIEF_TEMPLATE,
         templateLabel: 'Your brief template (copy it)'
@@ -9553,6 +10025,69 @@ button.rcard:hover {
 (function () {
   'use strict';
   var PU = window.PU;
+  var h = PU.h;
+
+  /* Model cards + a clickable effort scale. Names change often; update them here. */
+  var MODELS = [
+    { name: 'Sonnet 5', role: 'The all-rounder', text: 'Fast and capable. Everyday writing, emails, captions and summaries.', load: 1 },
+    { name: 'Opus 5.5', role: 'The expert', text: 'Strategy, long documents and tricky analysis.', load: 2 },
+    { name: 'Fable 5.1', role: 'The specialist', text: 'The hardest, longest jobs. Big research and long Cowork tasks.', load: 3 }
+  ];
+  var EFFORT = [
+    { label: 'Low', text: 'Quick, simple jobs. Fastest, and lightest on your limit.' },
+    { label: 'Medium', text: 'Routine work. Still quick, still light on your limit.' },
+    { label: 'High', text: 'The best balance of quality and speed for most work.' },
+    { label: 'Extra high', text: 'Long, many-step jobs, like big Cowork or Claude Code tasks.' },
+    { label: 'Max', text: 'When it has to be right and you can wait. Slowest, and uses the most.' }
+  ];
+
+  function settingsVisual() {
+    var desc = h('p.effort-desc', { 'aria-live': 'polite' });
+    var btns = EFFORT.map(function (e, i) {
+      var b = h('button', { type: 'button', 'aria-pressed': 'false' }, h('i', { style: { height: 10 + i * 9 + 'px' } }), h('span', e.label));
+      b.addEventListener('click', function () {
+        pick(i);
+      });
+      return b;
+    });
+    function pick(i) {
+      btns.forEach(function (b, j) {
+        b.classList.toggle('is-on', i === j);
+        b.classList.toggle('is-lit', j < i);
+        b.setAttribute('aria-pressed', String(i === j));
+      });
+      PU.fill(desc, h('b', EFFORT[i].label + ': '), EFFORT[i].text);
+    }
+    pick(2);
+    return h(
+      'div.settings-vis',
+      h(
+        'div.sv-panel',
+        h('div.sv-head', h('b', 'Model'), h('span.eyebrow', 'Who does the work')),
+        h(
+          'div.model-grid',
+          MODELS.map(function (m) {
+            var dots = [1, 2, 3].map(function (n) {
+              return h('i', { class: n <= m.load ? 'on' : '' });
+            });
+            return h(
+              'div.model-card',
+              h('span.mc-name', m.name),
+              h('span.mc-role', m.role),
+              h('span.mc-text', m.text),
+              h('span.mc-limit', { 'aria-label': 'Uses your limit: ' + ['', 'least', 'more', 'most'][m.load] }, dots, h('span', 'uses your limit'))
+            );
+          })
+        )
+      ),
+      h(
+        'div.sv-panel',
+        h('div.sv-head', h('b', 'Effort'), h('span.eyebrow', 'How hard it thinks. Tap a level')),
+        h('div.effort-scale', { role: 'group', 'aria-label': 'Effort levels' }, btns),
+        desc
+      )
+    );
+  }
 
   PU.levels[3] = {
     id: 'L3',
@@ -9565,7 +10100,8 @@ button.rcard:hover {
     learn: [
       'The 6-step workflow: Task, Analyse, Think, Create, Critique, Improve',
       'Ready-made workflows for 13 everyday agency jobs',
-      'How to give feedback that actually improves the next draft'
+      'How to give feedback that actually improves the next draft',
+      'Which model and effort level to pick for each job'
     ],
     steps: [
       { type: 'intro' },
@@ -9848,9 +10384,45 @@ button.rcard:hover {
       },
 
       {
+        type: 'concept',
+        eyebrow: 'Model and effort',
+        title: 'Pick the right brain, and ==how hard it thinks==.',
+        lede: 'Click the model name next to the send button. You’ll see the models, and the effort setting in the same menu. The defaults are fine most of the time. For big or tricky jobs, turn them up.',
+        visual: settingsVisual,
+        body:
+          '- **Bigger model and more effort = better on hard jobs.** But slower, and it uses up your plan’s limit faster.\n- **Claude cut corners** (skipped parts, rushed)? It didn’t try hard enough. Raise the effort.\n- **Claude missed the point** on a hard problem? It didn’t know enough. Check your brief first, then try a bigger model.',
+        note: 'Model names change every few months, and what you can pick depends on your plan. The idea stays the same: routine work on the defaults, hard work turned up.'
+      },
+
+      {
+        type: 'sort',
+        xp: 20,
+        eyebrow: 'Default or turn it up?',
+        title: 'Which jobs need ==more power==?',
+        buckets: [
+          { key: 'default', label: 'Default is fine' },
+          { key: 'up', label: 'Turn it up' }
+        ],
+        items: [
+          { text: 'Write 10 caption options for a post', answer: 'default', why: 'Routine writing. The default is quick and saves your limit.' },
+          { text: 'Fix the grammar in a client email', answer: 'default', why: 'Small and simple. The default, or even Low, is plenty.' },
+          { text: 'Turn 6 research files into a year-long content strategy', answer: 'up', why: 'Big, high-stakes thinking. A bigger model and more effort pay off.' },
+          { text: 'Summarise a 30-minute call into action points', answer: 'default', why: 'Everyday work. The default handles it well.' },
+          { text: 'Find out why sales dropped, from 12 months of ad data', answer: 'up', why: 'Tricky analysis. Give it more effort, or a bigger model.' },
+          { text: 'A long Cowork job: 8 client spreadsheets into one deck', answer: 'up', why: 'Long, many-step work goes better with more effort.' }
+        ],
+        success: 'Spot on. Routine work: leave the defaults. Big, tricky or long work: turn it up.'
+      },
+
+      {
         type: 'summary',
         takeaway: 'Don’t ask for outputs. ==Assign a process.==',
-        points: ['Analyse → Think → Create → Critique → Improve.', 'Always ask Claude to critique its own draft.', 'Feedback formula: keep this, change that, give me X.']
+        points: [
+          'Analyse → Think → Create → Critique → Improve.',
+          'Always ask Claude to critique its own draft.',
+          'Feedback formula: keep this, change that, give me X.',
+          'Routine job: default settings. Big or tricky job: turn up the effort or the model.'
+        ]
       }
     ]
   };
@@ -10062,6 +10634,46 @@ button.rcard:hover {
       ]
     },
     {
+      key: 'web',
+      label: 'Web & SEO',
+      icon: 'layers',
+      color: '#3f7cff',
+      blurb: 'Pages people find, read and act on.',
+      items: [
+        {
+          title: 'Keyword ideas by search intent',
+          desc: 'What people search for, grouped by what they want.',
+          template:
+            'You’re an SEO strategist. Our client is [brand], a [type of business] in [city or market]. Their customers are [audience]. List 30 keyword ideas they could realistically rank for, grouped by search intent: informational, commercial and local. For each group, suggest one page or article to create. Don’t invent search volumes; mark anything we should check in an SEO tool.',
+          tip: 'Claude can’t see real search volumes. Check the shortlist in your SEO tool.'
+        },
+        {
+          title: 'SEO content brief',
+          desc: 'Everything a writer needs to rank, on one page.',
+          template:
+            'Write a content brief for an article targeting “[main keyword]” for [brand]. Include: the search intent, a title (max 60 characters), a meta description (max 155 characters), an H2/H3 outline, the questions to answer, internal links to [pages], and what would make it better than the current top results. Audience: [audience].'
+        },
+        {
+          title: 'Meta titles and descriptions',
+          desc: 'Unique, keyword-first and within the limits.',
+          template:
+            'Write a title tag (max 60 characters) and a meta description (max 155 characters) for each page below. Put the main keyword near the start, make each one unique, and write in [brand]’s tone. Give 2 options per page with character counts. Pages: [list each page with its main keyword].'
+        },
+        {
+          title: 'FAQs from real customer questions',
+          desc: 'Turn what customers ask into answers on the page.',
+          template:
+            'Write 8 FAQs for [brand]’s [service] page, based on questions real customers ask: [paste questions from sales calls, reviews or “People also ask”]. Short, direct answers of 40–60 words. Mark any answer we need the client to confirm.'
+        },
+        {
+          title: 'Google Business Profile posts',
+          desc: 'A month of local posts in one go.',
+          template:
+            'Write 4 Google Business Profile posts for [business] in [area] for [month]: one offer, one event, one update and one tip. Each under 1,500 characters, with a clear call to action and the area name used naturally. Tone: [tone].'
+        }
+      ]
+    },
+    {
       key: 'sales',
       label: 'Sales',
       icon: 'brief',
@@ -10264,7 +10876,7 @@ button.rcard:hover {
     color: 'var(--sw-4)',
     title: 'Claude for ==your actual job==',
     short: 'Claude for your actual job',
-    tagline: 'Ten departments. Fifty jobs Claude can take off your plate.',
+    tagline: 'Eleven departments. Fifty-five jobs Claude can take off your plate.',
     deliverable: 'Your personal list of Claude jobs',
     learn: ['What Claude can do for your role, with ready-made prompts', 'How to turn a template into your own prompt in seconds', 'What you should never fully hand over'],
     steps: [
@@ -10866,7 +11478,12 @@ button.rcard:hover {
     short: 'Claude Cowork',
     tagline: 'Chat gives you answers. Cowork gives you finished work.',
     deliverable: 'Finished files, not just answers',
-    learn: ['What Cowork is, and when to use it instead of chat', 'How to delegate a task and stay in control', 'The ground rules for letting Claude work on your files'],
+    learn: [
+      'What Cowork is, and when to use it instead of chat',
+      'How to delegate a task and stay in control',
+      'How to set up Cowork on your computer, step by step',
+      'The ground rules for letting Claude work on your files'
+    ],
     steps: [
       { type: 'intro' },
 
@@ -10890,7 +11507,7 @@ button.rcard:hover {
         },
         body:
           '- **Works with your files.** In the Claude desktop app, connect a folder and Claude can read, organise and create files in it.\n- **Makes real documents.** Spreadsheets with formulas, presentations, reports.\n- **Keeps going without you.** Tasks can run in the background, and recurring jobs can run on a schedule.\n- **You stay in charge.** You choose how often it asks before it acts.',
-        note: 'Cowork is in the Claude app (desktop, web and mobile) on paid plans. If you don’t see it, ask your admin.'
+        note: 'Cowork is in the Claude app on paid plans. You’ll set it up, step by step, later in this level.'
       },
 
       {
@@ -10990,6 +11607,66 @@ button.rcard:hover {
       },
 
       {
+        type: 'guide',
+        xp: 20,
+        eyebrow: 'Set it up',
+        title: 'Get Cowork running ==on your computer==',
+        lede: 'Do this once. Tick each step as you go. Not at your computer right now? Continue, and come back to this list later.',
+        items: [
+          {
+            title: 'Install the Claude desktop app',
+            body: 'Download it from [claude.com/download](https://claude.com/download). It works on Mac and Windows.'
+          },
+          {
+            title: 'Sign in with your work account',
+            body: 'Cowork needs a paid plan: Pro, Max, Team or Enterprise. On a Team plan it’s switched on by default. Can’t see it? Ask your admin to check **Organization settings → Cowork**.'
+          },
+          {
+            title: 'Switch to Cowork',
+            body: 'In the message box, choose **Cowork**. No Chat/Cowork switch? Then your app already handles Cowork tasks in any conversation.'
+          },
+          {
+            title: 'Pick one folder',
+            body: 'Click **Work in a project or folder** and choose one project folder, like _Luma Skin / November report_. Claude can only see the folders you pick. Never pick your whole computer.'
+          },
+          {
+            title: 'Add folder instructions',
+            body: 'Tell Claude how the folder works: what’s inside, how files are named, and what it must never touch. It reads them every time it works there, and can update them for you.'
+          },
+          {
+            title: 'Choose how much Claude asks',
+            body: 'Pick a mode in the message box.\n- **Manual:** Claude asks before it acts. Start here.\n- **Auto:** it keeps going without asking at every step.\n- **Skip:** no pauses, and nothing checks its actions. Avoid it for client work.'
+          },
+          {
+            title: 'Run a small, safe first task',
+            body: 'Try: “List every file in this folder with a one-line summary of each. Don’t move or delete anything.” Check the result, then hand it something bigger.'
+          }
+        ],
+        extras: [
+          {
+            icon: 'layers',
+            title: 'Connect your tools',
+            text: 'Google Drive, Gmail, Slack and more. Add them from the + menu in the message box.',
+            color: 'var(--sw-5)'
+          },
+          {
+            icon: 'clock',
+            title: 'Put repeat jobs on a schedule',
+            text: 'Type /schedule in a task, or click Scheduled in the left sidebar. Scheduled tasks run in the cloud, even when your computer is off.',
+            color: 'var(--sw-2)'
+          },
+          {
+            icon: 'send',
+            title: 'Start tasks from your phone',
+            text: 'Cowork is also in the Claude phone app and on claude.ai. Files on your computer are only reachable while the desktop app is open.',
+            color: 'var(--sw-6)'
+          }
+        ],
+        footer: 'Menus and names change often. If something looks different, look for the same three things: pick a folder, choose how much Claude asks, then describe the finished result.',
+        callout: { title: 'You’re set up. Start small, ==then delegate bigger==.' }
+      },
+
+      {
         type: 'cards',
         xp: 15,
         eyebrow: 'Ground rules',
@@ -11016,6 +11693,7 @@ button.rcard:hover {
         points: [
           'Describe the finished result, approve the plan, review the files.',
           'Chat for thinking. Cowork for multi-step work that ends in a file.',
+          'Set up once: desktop app, one folder, Manual mode to start.',
           'Say no to anything you didn’t ask for.'
         ]
       }
@@ -11151,7 +11829,9 @@ button.rcard:hover {
           'Describe the outcome, ask for a plan, start small.',
           'Report problems like a client: what you did, what happened, what you expected.',
           'Start with a tool that saves you 30 minutes a week.'
-        ]
+        ],
+        note: '**Build websites or do SEO?** There’s a bonus level for you: Claude Code for web & SEO. It’s at the bottom of the level list, and always open.',
+        noteIcon: 'terminal'
       }
     ]
   };
@@ -11391,6 +12071,7 @@ button.rcard:hover {
   PU.levels[10] = {
     id: 'LF',
     num: 10,
+    label: 'Final',
     color: 'var(--sw-10)',
     title: 'The ==real work== challenge',
     short: 'The real work challenge',
@@ -11456,6 +12137,296 @@ button.rcard:hover {
 
 </script>
 <script>
+/* Bonus — Claude Code for web & SEO (optional, always open) */
+(function () {
+  'use strict';
+  var PU = window.PU;
+
+  var WORKFLOWS = [
+    {
+      key: 'dev-seo',
+      label: 'Technical SEO',
+      icon: 'search',
+      color: '#13b5a6',
+      blurb: 'Find and fix what stops pages ranking.',
+      items: [
+        {
+          title: 'SEO audit of the codebase',
+          desc: 'Every missing title, description, canonical and heading problem.',
+          template:
+            'Audit this codebase for technical SEO. Check every page template for: title tags, meta descriptions, canonical URLs, robots meta, heading order (one H1), image alt text, hreflang, structured data and internal links. Also check robots.txt and the sitemap. Don’t change anything yet. Give me a table: page or template, issue, why it matters, fix, priority. Site: [domain]. Framework: [framework].'
+        },
+        {
+          title: 'Meta titles and descriptions at scale',
+          desc: 'Hundreds of pages, each one unique and within the limits.',
+          template:
+            'I’m attaching [a CSV of URLs with their current title, description and main keyword]. Write a new title (max 60 characters) and meta description (max 155 characters) for each. Keyword near the start, every one unique, in [brand]’s tone, no clickbait. Return a CSV: URL, title, characters, description, characters. Flag pages where the keyword doesn’t fit naturally.'
+        },
+        {
+          title: 'Structured data (JSON-LD)',
+          desc: 'Schema markup built from data already in the templates.',
+          template:
+            'Add JSON-LD structured data to [page type, e.g. product pages] using data already in the templates. Use the schema.org types [e.g. Product, Offer, BreadcrumbList]. Only mark up content that’s visible on the page. Put it in [file or component]. Then show me one example of the final output so I can test it in Google’s Rich Results Test.'
+        },
+        {
+          title: 'Redirect map for a site move',
+          desc: 'Old URLs matched to new ones, with a ready redirect file.',
+          template:
+            'We’re moving from [old URL structure] to [new URL structure]. Old URLs: [attach or paste]. New URLs: [attach or paste]. Match each old URL to the best new one by topic, not just by slug, and flag anything with no good match. Output a CSV (old URL, new URL, confidence) and a 301 redirect file for [server or platform]. Don’t touch the live config.'
+        },
+        {
+          title: 'Search Console quick wins',
+          desc: 'Pages that are close to page one, and what to change.',
+          template:
+            'I’m attaching a Search Console export [queries and pages, last 3 months]. Find pages with high impressions but low click-through, queries ranking in positions 5 to 15, and pages losing clicks. For each, suggest one specific fix: title, description, content or internal links. Rank the list by likely impact. Only use numbers that are in the file.'
+        }
+      ]
+    },
+    {
+      key: 'dev-build',
+      label: 'Build & fix',
+      icon: 'terminal',
+      color: '#7a4dff',
+      blurb: 'Faster pages, cleaner code, fewer broken links.',
+      items: [
+        {
+          title: 'Speed up slow pages',
+          desc: 'From a PageSpeed report to fixes, biggest win first.',
+          template:
+            'Here’s the PageSpeed Insights report for [URL]: [attach or paste]. Explain the 5 biggest problems in plain English. Then fix them in order of impact: image sizes and formats, lazy loading, font loading, render-blocking scripts, and layout shift from missing width and height. One fix per commit. Run the build after each.'
+        },
+        {
+          title: 'Landing page from a design',
+          desc: 'A screenshot in, a responsive page out, using your components.',
+          template:
+            'Build this landing page from the attached design [screenshot]. Use our existing components in [folder] and the brand colours in [file]. Semantic HTML, one H1, responsive down to 360px wide, and every image with alt text, width and height. Title: [title]. Meta description: [description]. Show me the plan before you write any code.'
+        },
+        {
+          title: 'Accessibility check',
+          desc: 'The WCAG basics, fixed without changing the design.',
+          template:
+            'Check [page or component] against WCAG 2.2 AA basics: colour contrast, alt text, form labels, keyboard access and focus states, heading order, and link text. List the problems by severity, then fix the high ones. Don’t change the visual design without asking me first.'
+        },
+        {
+          title: 'Fix broken links and 404s',
+          desc: 'A crawl export in, clean links out.',
+          template:
+            'I’m attaching a crawl export [e.g. a Screaming Frog CSV]. Find broken internal links, redirect chains and pages returning 404. Fix the links in the files where they live. For deleted pages, suggest the best redirect target. Finish with a summary of every change.'
+        },
+        {
+          title: 'Internal links for a new article',
+          desc: 'Links in and out, with natural anchor text.',
+          template:
+            'Here’s a new article: [path or paste]. Find 5 to 8 existing pages on our site [sitemap URL or content folder] that it should link to, and 3 to 5 pages that should link to it. Suggest natural anchor text, no keyword stuffing. Show me the edits before you make them.'
+        }
+      ]
+    }
+  ];
+
+  var CLAUDE_MD =
+    '# [Client] website\n\n' +
+    '## About\n' +
+    '[One line: what the site is, who it’s for, which market.]\n\n' +
+    '## Stack and commands\n' +
+    '- Framework: [e.g. Next.js, WordPress theme, Shopify theme]\n' +
+    '- Run locally: [npm run dev]\n' +
+    '- Build: [npm run build]\n' +
+    '- Lint and tests: [npm run lint], [npm test]\n' +
+    '- Hosting: [e.g. Vercel]. Deploys go out from [branch]. Never deploy yourself.\n\n' +
+    '## SEO rules\n' +
+    '- Every page: a unique title (max 60 characters) and meta description (max 155).\n' +
+    '- One H1 per page. Headings in order, no skipped levels.\n' +
+    '- Every image: alt text, width and height. Use WebP or AVIF.\n' +
+    '- Set meta tags through [our SEO component or plugin]. Never hard-code them.\n' +
+    '- Canonical URLs are absolute: https://[www.domain.com]/...\n' +
+    '- Never change or delete a live URL without a 301 redirect in [file].\n' +
+    '- Structured data: JSON-LD only, and only for content visible on the page.\n\n' +
+    '## Code rules\n' +
+    '- Reuse the components in [folder] before making new ones.\n' +
+    '- Brand colours and fonts live in [file]. Don’t add new ones.\n' +
+    '- Keep changes small. Run the build and lint before saying you’re done.\n' +
+    '- Never open, print or edit .env files or API keys.';
+
+  var SEO_SKILL =
+    '---\n' +
+    'description: Technical SEO audit. Use when asked to audit SEO or check pages before launch.\n' +
+    '---\n\n' +
+    'Audit the pages I name (or the whole site if I don’t) for:\n' +
+    '- A unique title (max 60 characters) and meta description (max 155)\n' +
+    '- One H1, and headings in order\n' +
+    '- Canonical URL, robots meta and hreflang\n' +
+    '- Image alt text, width and height\n' +
+    '- JSON-LD structured data that matches the visible content\n' +
+    '- Internal links, and any broken links\n\n' +
+    'Don’t change anything. Return a table: page, issue, fix, priority.\n' +
+    'Then ask me which fixes to make.';
+
+  PU.levels[11] = {
+    id: 'LB',
+    num: 11,
+    label: 'Bonus',
+    code: 'B',
+    optional: true,
+    color: 'var(--sw-11)',
+    title: 'Claude Code for ==web & SEO==',
+    short: 'Claude Code for web & SEO',
+    tagline: 'For the web team: ship SEO fixes and pages faster, without breaking the site.',
+    deliverable: 'A CLAUDE.md for your site and 10 ready workflows',
+    learn: [
+      'Set Claude Code up so it knows your site',
+      'Which model and effort to use for coding',
+      '10 ready-made web and SEO workflows',
+      'The safety rules: secrets, staging and reviewing every change'
+    ],
+    steps: [
+      { type: 'intro' },
+
+      {
+        type: 'concept',
+        eyebrow: 'For the web team',
+        title: 'A pair programmer ==inside your codebase==.',
+        lede: 'Claude Code reads the whole project, edits files, runs commands and checks its own work. You review and approve.',
+        visual: function () {
+          return PU.tiles([
+            { icon: 'terminal', title: 'Terminal', text: 'Run “claude” in your project folder.', color: 'var(--sw-8)' },
+            { icon: 'layers', title: 'VS Code and JetBrains', text: 'The extension works right next to your code.', color: 'var(--sw-1)' },
+            { icon: 'home', title: 'Desktop app', text: 'Claude Code inside the Claude desktop app.', color: 'var(--sw-6)' },
+            { icon: 'external', title: 'On the web', text: 'claude.ai/code, for projects on GitHub.', color: 'var(--sw-2)' }
+          ]);
+        },
+        body:
+          '**Not a developer?** This bonus level is optional. Skip it and you can still finish the training.\n\n**New to Claude Code?** Level 8 covers the basics. Inside Claude Code, type `/powerup` for its built-in interactive lessons.'
+      },
+
+      {
+        type: 'cards',
+        xp: 15,
+        eyebrow: 'Set it up right',
+        title: 'Six habits of developers who get ==great results==',
+        lede: 'Open each card.',
+        cards: [
+          {
+            icon: 'book',
+            title: 'Run /init once',
+            color: '#2e3bff',
+            body: 'It writes a **CLAUDE.md**: your project’s rulebook. Claude reads it at the start of every session. Keep it short, under 200 lines.'
+          },
+          {
+            icon: 'compass',
+            title: 'Plan before you build',
+            color: '#7a4dff',
+            body: 'Press **Shift+Tab** until you see “plan mode on”. Claude reads the code and proposes a plan. No edits until you approve.'
+          },
+          {
+            icon: 'target',
+            title: 'Point at the right files',
+            color: '#ff7a00',
+            body: 'Type **@** to add a file or folder, like `@src/components/Seo.tsx`. Paste screenshots straight in.'
+          },
+          {
+            icon: 'check',
+            title: 'Small steps, then test',
+            color: '#00a676',
+            body: 'One change at a time. Ask Claude to run the build, lint and tests before it says it’s done.'
+          },
+          {
+            icon: 'refresh',
+            title: 'Keep an undo button',
+            color: '#e0418b',
+            body: 'Commit before big changes. `/rewind` (or **Esc** twice) undoes Claude’s file edits, but not commands it ran. Git is your real safety net.'
+          },
+          {
+            icon: 'wand',
+            title: 'Save repeat jobs as skills',
+            color: '#00a3e0',
+            body: 'Write the steps once in `.claude/skills/seo-audit/SKILL.md`. Then run them any time with `/seo-audit`.'
+          }
+        ]
+      },
+
+      {
+        type: 'concept',
+        eyebrow: 'Model and effort',
+        title: 'Turn up the ==effort== before you change the model.',
+        lede: 'Effort decides how many files Claude reads, how much it checks, and how far it goes before checking in with you.',
+        body:
+          '| The job | Model | Effort |\n|---|---|---|\n| Meta tags, alt text, copy tweaks | Sonnet | Low or medium |\n| Everyday features and fixes | Opus, the usual default | Leave the default |\n| Multi-file changes, tricky bugs | Opus | High or extra high |\n| Migrations, deep debugging, big refactors | Fable | High or above |\n\n- **Claude cut corners** (skipped a file, didn’t run the tests)? Raise the effort: `/effort high`.\n- **Claude doesn’t understand the problem,** even with more effort? Try a bigger model: `/model opus` or `/model fable`.\n- **Can’t afford a mistake** (checkout, tracking, redirects)? Use `max`, then review every line.',
+        note: 'Type `/model` to see and switch your model (the ← and → keys change the effort there too). `/effort` opens the effort slider. Models and defaults change, so check `/model` now and then.'
+      },
+
+      {
+        type: 'menu',
+        xp: 30,
+        eyebrow: 'Ready-made workflows',
+        title: 'Pick a job. Get a ==ready-made prompt==.',
+        lede: 'Ten workflows for web and SEO work. Fill in the brackets, then paste into Claude Code. Star the ones you’ll reuse.',
+        departments: WORKFLOWS
+      },
+
+      {
+        type: 'concept',
+        eyebrow: 'Your rulebook',
+        title: 'Start every site with a ==CLAUDE.md==.',
+        lede: 'Run /init, then add the rules Claude can’t work out on its own. Copy this starter and fill in the brackets.',
+        visual: function () {
+          return PU.promptBlock(CLAUDE_MD, { label: 'CLAUDE.md starter', copy: true });
+        },
+        note: 'Commit it, so everyone on the project works to the same rules. Personal preferences go in `CLAUDE.local.md`, which stays out of git.'
+      },
+
+      {
+        type: 'quiz',
+        xp: 20,
+        eyebrow: 'Stay safe',
+        title: 'Claude wants to delete a folder on the ==live server== “to clean up”. What do you do?',
+        options: [
+          { label: 'Approve it. Claude knows what it’s doing.', why: 'Deleting live files wasn’t your task, and /rewind can’t undo a command.' },
+          {
+            label: 'Say no, ask why, and do any clean-up on staging with a backup first.',
+            correct: true,
+            why: 'You stay in charge of anything live. Test on staging, keep a backup, then decide.'
+          },
+          { label: 'Turn off the permission prompts so it stops asking.', why: 'Those prompts are what just saved you.' },
+          { label: 'Approve it, then check the site later.', why: 'By then the files are gone.' }
+        ],
+        explain: '**Say no to anything you didn’t ask for,** especially on live servers. Work on a branch or staging, and review every change before it ships.'
+      },
+
+      {
+        type: 'multi',
+        xp: 15,
+        eyebrow: 'Safe habits',
+        title: 'Which of these are ==safe habits==?',
+        lede: 'Tap every safe habit, then press Check.',
+        columns: '250px',
+        options: [
+          { label: 'Keep API keys in .env files, and tell Claude never to open them', status: 'correct', why: 'Secrets stay out of the chat and out of git.' },
+          { label: 'Paste the live database password into the chat to debug faster', status: 'wrong', why: 'Never share passwords or keys in a chat.' },
+          { label: 'Work on a branch, review the diff, then merge', status: 'correct', why: 'You see every change before it’s real.' },
+          { label: 'Let Claude push straight to the live site on a Friday evening', status: 'wrong', why: 'Changes go through review, and never straight to live.' },
+          { label: 'Ask Claude to explain any change you don’t understand before approving it', status: 'correct', why: 'If you can’t explain it, don’t ship it.' },
+          { label: 'Skip the build because Claude said it’s done', status: 'wrong', why: 'Check it yourself. Run the build and look at the page.' }
+        ],
+        perfect: 'Spot on. Secrets stay secret, changes go through review, and you check the result yourself.'
+      },
+
+      {
+        type: 'summary',
+        takeaway: 'Plan first. Small steps. ==Review every change.==',
+        points: [
+          'Run /init and keep your CLAUDE.md short and specific.',
+          'Claude cut corners? Raise the effort. Didn’t understand? Try a bigger model.',
+          'Never share secrets, and never let changes reach the live site unreviewed.'
+        ],
+        template: SEO_SKILL,
+        templateLabel: 'Keep this: save as .claude/skills/seo-audit/SKILL.md, run with /seo-audit'
+      }
+    ]
+  };
+})();
+
+</script>
+<script>
 /* ==========================================================================
    Claude Power-Up — app shell: top bar, level rail, step navigation,
    drawers (levels, cheat sheet, settings) and boot.
@@ -11473,14 +12444,11 @@ button.rcard:hover {
   var nextEnabled = false;
   var building = false;
 
-  function pad(n) {
-    return (n < 10 ? '0' : '') + n;
-  }
   function plain(t) {
     return String(t).replace(/==|\*\*/g, '');
   }
   function levelName(L) {
-    return L.num === 10 ? 'Final' : 'Level ' + L.num;
+    return PU.levelLabel(L);
   }
   function stepKey(L, i) {
     return L.id + '.' + i;
@@ -11509,16 +12477,31 @@ button.rcard:hover {
     return n;
   }
 
+  /** The main-path level before this one (bonus levels don't count). */
+  function prevMain(idx) {
+    for (var j = idx - 1; j >= 0; j--) if (!PU.levels[j].optional) return j;
+    return -1;
+  }
+
+  /** Same, going forward. */
+  function nextMain(idx) {
+    for (var j = idx + 1; j < PU.levels.length; j++) if (!PU.levels[j].optional) return j;
+    return -1;
+  }
+
+  /** Bonus levels are always open. Main levels open once the one before is done. */
   function isUnlocked(idx) {
-    if (idx === 0 || PU.state.unlockAll || PU.state.preview) return true;
-    var prev = PU.levels[idx - 1];
-    return !!PU.state.levelsDone[prev.id] || levelProgress(PU.levels[idx]) > 0;
+    var L = PU.levels[idx];
+    if (idx === 0 || L.optional || PU.state.unlockAll || PU.state.preview) return true;
+    var prev = PU.levels[prevMain(idx)];
+    return !prev || !!PU.state.levelsDone[prev.id] || levelProgress(L) > 0;
   }
 
   function overallPct() {
     var tot = 0;
     var done = 0;
     PU.levels.forEach(function (L) {
+      if (L.optional) return;
       L.steps.forEach(function (s, i) {
         tot++;
         if (PU.state.stepsDone[stepKey(L, i)]) done++;
@@ -11646,7 +12629,7 @@ button.rcard:hover {
             class: [cur ? 'is-current' : '', done ? 'is-done' : '', locked ? 'is-locked' : ''].join(' '),
             'aria-current': cur ? 'step' : null
           },
-          h('span.chip-swatch', { style: { '--sw': L.color }, 'aria-hidden': 'true' }, h('i'), h('b', pad(L.num))),
+          h('span.chip-swatch', { style: { '--sw': L.color }, 'aria-hidden': 'true' }, h('i'), h('b', PU.levelCode(L))),
           h(
             'span',
             h('span.li-title', L.short || plain(L.title)),
@@ -11657,7 +12640,7 @@ button.rcard:hover {
         if (locked) b.setAttribute('aria-label', plain(L.title) + ' (locked)');
         b.addEventListener('click', function () {
           if (locked) {
-            PU.toast('Finish ' + levelName(PU.levels[i - 1]) + ' first, or unlock all levels in Settings.', { icon: 'lock', ms: 3200 });
+            PU.toast('Finish ' + levelName(PU.levels[prevMain(i)]) + ' first. To look around, turn on Preview mode in Settings.', { icon: 'lock', ms: 3600 });
             return;
           }
           closeDrawer();
@@ -11725,14 +12708,16 @@ button.rcard:hover {
   function goNext() {
     var pos = PU.state.pos;
     var L = PU.levels[pos.level];
+    var n = nextMain(pos.level);
     if (pos.step < L.steps.length - 1) go(pos.level, pos.step + 1);
-    else if (pos.level < PU.levels.length - 1) go(pos.level + 1, 0);
+    else if (n >= 0) go(n, 0);
   }
 
   function goBack() {
     var pos = PU.state.pos;
+    var p = prevMain(pos.level);
     if (pos.step > 0) go(pos.level, pos.step - 1);
-    else if (pos.level > 0) go(pos.level - 1, PU.levels[pos.level - 1].steps.length - 1);
+    else if (p >= 0 && !PU.levels[pos.level].optional) go(p, PU.levels[p].steps.length - 1);
   }
 
   function render() {
@@ -11824,9 +12809,9 @@ button.rcard:hover {
     var stepEl = h('div.step', { class: PU.reduced ? '' : 'enter' }, content);
     PU.clear(stepHost).appendChild(stepEl);
 
-    backBtn.disabled = pos.level === 0 && idx === 0;
+    backBtn.disabled = idx === 0 && (pos.level === 0 || !!L.optional);
     var isLast = idx === L.steps.length - 1;
-    var nextL = PU.levels[pos.level + 1];
+    var nextL = PU.levels[nextMain(pos.level)];
     nextLabel.textContent = isLast ? (nextL ? 'Next level' : 'Finish') : st.nextLabel || 'Continue';
     nextBtn.hidden = !!st.hideNext || (isLast && !nextL);
     actionbar.hidden = !!st.hideBar;
@@ -11923,7 +12908,7 @@ button.rcard:hover {
       'Cheat sheet',
       h(
         'div.stack',
-        h('p.small.muted', 'The 10 rules, the brief template, and anything you’ve saved along the way.'),
+        h('p.small.muted', 'The 10 rules, the brief template, which model and effort to use, and anything you’ve saved along the way.'),
         h('div.btn-row', PU.copyBtn(PU.cheatSheetText, 'Copy everything'), dl),
         PU.renderSheet(true)
       )
@@ -12045,8 +13030,15 @@ button.rcard:hover {
     });
   }
 
-  /** Preview mode: skim everything, answers shown, nothing scored or saved. */
+  /**
+   * Preview mode: skim everything, answers shown, nothing scored or saved.
+   * Turning it off goes back to where you were before, so skimming never
+   * counts as reaching a step (a level summary would otherwise mark it done).
+   */
   function setPreview(on) {
+    if (on && !PU.state.preview) PU.state.prePreviewPos = PU.state.pos;
+    if (!on && PU.state.preview && PU.state.prePreviewPos) PU.state.pos = PU.state.prePreviewPos;
+    if (!on) delete PU.state.prePreviewPos;
     PU.state.preview = !!on;
     PU.save();
     render();
@@ -12059,11 +13051,21 @@ button.rcard:hover {
     applyTheme();
     wireEvents();
     PU.live.init();
-    if (window.location.hash === '#preview') {
+    var hash = window.location.hash || '';
+    if (hash === '#preview' && !PU.state.preview) {
+      PU.state.prePreviewPos = PU.state.pos;
       PU.state.preview = true;
       PU.save();
     }
-    var m = /^#level-(\d+)$/.exec(window.location.hash || '');
+    if (hash === '#bonus') {
+      for (var b = 0; b < PU.levels.length; b++) {
+        if (PU.levels[b].optional) {
+          PU.state.pos = { level: b, step: 0 };
+          break;
+        }
+      }
+    }
+    var m = /^#level-(\d+)$/.exec(hash);
     if (m) {
       var n = parseInt(m[1], 10);
       for (var i = 0; i < PU.levels.length; i++) {
@@ -12071,6 +13073,14 @@ button.rcard:hover {
           PU.state.pos = { level: i, step: 0 };
           break;
         }
+      }
+    }
+    // The link has done its job: clear it so a reload doesn't jump again.
+    if (hash === '#preview' || hash === '#bonus' || m) {
+      try {
+        window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      } catch (e) {
+        /* not allowed here: harmless */
       }
     }
     updateXP(false);

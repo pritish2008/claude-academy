@@ -23,7 +23,8 @@
         meta: [
           ['grid', '11 short levels'],
           ['trophy', 'XP, ranks and a certificate'],
-          ['target', 'Ends with a challenge on your real work']
+          ['target', 'Ends with a challenge on your real work'],
+          ['terminal', 'Bonus level for web developers']
         ]
       },
 

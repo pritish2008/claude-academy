@@ -124,7 +124,9 @@
           'Describe the outcome, ask for a plan, start small.',
           'Report problems like a client: what you did, what happened, what you expected.',
           'Start with a tool that saves you 30 minutes a week.'
-        ]
+        ],
+        note: '**Build websites or do SEO?** There’s a bonus level for you: Claude Code for web & SEO. It’s at the bottom of the level list, and always open.',
+        noteIcon: 'terminal'
       }
     ]
   };

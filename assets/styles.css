@@ -51,6 +51,7 @@
   --sw-8: #1c1c28;
   --sw-9: #13b5a6;
   --sw-10: #ffe45c;
+  --sw-11: #3f7cff;
 
   --f-display: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --f-body: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -330,6 +331,11 @@ p {
 
 .md em {
   color: var(--ink-2);
+}
+
+.md .table-wrap + ul,
+.md .table-wrap + ol {
+  margin-top: 14px;
 }
 
 .md code {
@@ -1038,6 +1044,11 @@ p {
 .step {
   display: grid;
   gap: 22px;
+}
+
+/* Let wide content (tables, code) scroll inside its box, not the page. */
+.step > * {
+  min-width: 0;
 }
 
 .step.enter {
@@ -4181,6 +4192,14 @@ button.rcard:hover {
   color: var(--ink-2);
 }
 
+.rules-plain li {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.rules-plain li::before {
+  content: none;
+}
+
 /* ---------- Drawers, toasts, overlays ---------- */
 
 .scrim {
@@ -4446,6 +4465,281 @@ button.rcard:hover {
   padding: 40px 0;
   text-align: center;
   color: var(--muted);
+}
+
+/* ---------- Setup checklist (guide) ---------- */
+
+.guide-progress {
+  display: grid;
+  grid-template-columns: auto auto minmax(60px, 1fr);
+  align-items: center;
+  gap: 12px;
+}
+
+.guide-count {
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.guide {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.guide-item {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: start;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.guide-num {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--ink-2);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  transition: background 0.15s, color 0.15s;
+}
+
+.guide-main {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.guide-title {
+  font-weight: 700;
+  line-height: 1.3;
+  padding-top: 4px;
+}
+
+.guide-body.md {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.guide-body.md > * + * {
+  margin-top: 0.5em;
+}
+
+.guide-tick {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line-2);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 650;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.guide-tick .icon {
+  opacity: 0.35;
+}
+
+.guide-tick:hover {
+  border-color: var(--accent-line);
+  color: var(--ink);
+}
+
+.guide-item.is-done {
+  border-color: var(--good-line);
+  background: var(--good-soft);
+}
+
+.guide-item.is-done .guide-num,
+.guide-item.is-done .guide-tick {
+  background: var(--good);
+  border-color: var(--good);
+  color: var(--bg);
+}
+
+.guide-item.is-done .guide-tick .icon {
+  opacity: 1;
+}
+
+@media (max-width: 519px) {
+  .guide-item {
+    grid-template-columns: 26px minmax(0, 1fr);
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .guide-num {
+    width: 26px;
+    height: 26px;
+    font-size: 13px;
+  }
+
+  .guide-tick {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+/* ---------- Model and effort ---------- */
+
+.settings-vis {
+  display: grid;
+  gap: 12px;
+}
+
+.sv-panel {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+
+.sv-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 4px 12px;
+}
+
+.sv-head b {
+  font-family: var(--f-display);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.model-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+}
+
+.model-card {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  padding: 12px;
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+}
+
+.mc-name {
+  font-weight: 750;
+  font-size: 16px;
+}
+
+.mc-role {
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--accent);
+}
+
+.mc-text {
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+.mc-limit {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.mc-limit i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--line-2);
+}
+
+.mc-limit i.on {
+  background: var(--ink-2);
+}
+
+.mc-limit span {
+  margin-left: 4px;
+}
+
+.effort-scale {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  align-items: end;
+}
+
+.effort-scale button {
+  display: grid;
+  justify-items: center;
+  align-content: end;
+  gap: 6px;
+  padding: 8px 2px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.15;
+  min-height: 92px;
+}
+
+.effort-scale button i {
+  display: block;
+  width: 18px;
+  border-radius: 4px;
+  background: var(--line-2);
+  transition: background 0.15s;
+}
+
+.effort-scale button:hover {
+  border-color: var(--accent-line);
+}
+
+.effort-scale button.is-on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+.effort-scale button.is-on i,
+.effort-scale button.is-lit i {
+  background: var(--accent);
+}
+
+.effort-desc {
+  font-size: 14.5px;
+  color: var(--ink-2);
+  min-height: 2.9em;
+}
+
+.effort-desc b {
+  color: var(--ink);
 }
 
 /* ---------- Reduced motion ---------- */

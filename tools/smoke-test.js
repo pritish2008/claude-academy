@@ -39,7 +39,7 @@ const SAMPLE =
     page.evaluate(() => {
       const p = PU.state.pos;
       const L = PU.levels[p.level];
-      return { level: p.level, step: p.step, type: L.steps[p.step].type, key: L.id + '.' + p.step };
+      return { level: p.level, step: p.step, type: L.steps[p.step].type, key: L.id + '.' + p.step, last: p.step === L.steps.length - 1 };
     });
   const isDone = (key) => page.evaluate((k) => !!PU.state.stepsDone[k], key);
   const btn = (name) => page.getByRole('button', { name, exact: typeof name === 'string' });
@@ -77,6 +77,10 @@ const SAMPLE =
     },
     cards: async () => {
       while (await page.locator('button.rcard').count()) await page.locator('button.rcard').first().click();
+    },
+    guide: async () => {
+      const ticks = page.locator('.guide-tick');
+      for (let i = 0; i < (await ticks.count()); i++) await ticks.nth(i).click();
     },
     chat: async (info) => {
       for (let k = 0; k < 400 && !(await isDone(info.key)); k++) {
@@ -142,37 +146,55 @@ const SAMPLE =
     }
   };
 
-  let last = '';
-  for (let guard = 0; guard < 200; guard++) {
-    const info = await pos();
-    const tag = 'Level ' + info.level + ' step ' + (info.step + 1) + ' (' + info.type + ')';
-    if (tag === last) {
-      problems.push('stuck at ' + tag);
-      break;
-    }
-    last = tag;
-    try {
-      if (handlers[info.type]) await handlers[info.type](info);
-    } catch (e) {
-      problems.push(tag + ': ' + e.message.split('\n')[0]);
-    }
-    await page.waitForTimeout(100);
-    const sideways = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-    if (sideways > 1) problems.push('page scrolls sideways by ' + sideways + 'px at ' + tag);
-    if (info.type === 'certificate') break;
-    const after = await pos();
-    if (after.level === info.level && after.step === info.step) {
+  // Do each step's activity, press Continue, and repeat until stop(step) is true.
+  async function walk(stop) {
+    let last = '';
+    for (let guard = 0; guard < 200; guard++) {
+      const info = await pos();
+      const tag = 'Level ' + info.level + ' step ' + (info.step + 1) + ' (' + info.type + ')';
+      if (tag === last) {
+        problems.push('stuck at ' + tag);
+        return;
+      }
+      last = tag;
       try {
-        await page.waitForFunction(() => {
-          const b = document.querySelector('.actionbar .btn-primary');
-          return b && !b.classList.contains('is-locked');
-        }, null, { timeout: 25000 });
-        await page.click('.actionbar .btn-primary');
+        if (handlers[info.type]) await handlers[info.type](info);
       } catch (e) {
-        problems.push('could not continue from ' + tag);
-        break;
+        problems.push(tag + ': ' + e.message.split('\n')[0]);
+      }
+      await page.waitForTimeout(100);
+      const sideways = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+      if (sideways > 1) problems.push('page scrolls sideways by ' + sideways + 'px at ' + tag);
+      if (stop(info)) return;
+      const after = await pos();
+      if (after.level === info.level && after.step === info.step) {
+        try {
+          await page.waitForFunction(() => {
+            const b = document.querySelector('.actionbar .btn-primary');
+            return b && !b.hidden && !b.classList.contains('is-locked');
+          }, null, { timeout: 25000 });
+          await page.click('.actionbar .btn-primary');
+        } catch (e) {
+          problems.push('could not continue from ' + tag);
+          return;
+        }
       }
     }
+  }
+
+  // The main path, from the opening screen to the certificate.
+  await walk((info) => info.type === 'certificate');
+
+  // The bonus level isn't on the main path: open it from the level list.
+  try {
+    await page.click('.brand');
+    await page.locator('.drawer button.level-item').last().click();
+    const at = await pos();
+    const isBonus = await page.evaluate((i) => !!PU.levels[i].optional, at.level);
+    if (!isBonus) problems.push('the last item in the level list is not the bonus level');
+    else await walk((info) => info.last);
+  } catch (e) {
+    problems.push('could not open the bonus level: ' + e.message.split('\n')[0]);
   }
 
   const xp = await page.evaluate(() => PU.state.xp);

@@ -15,14 +15,11 @@
   var nextEnabled = false;
   var building = false;
 
-  function pad(n) {
-    return (n < 10 ? '0' : '') + n;
-  }
   function plain(t) {
     return String(t).replace(/==|\*\*/g, '');
   }
   function levelName(L) {
-    return L.num === 10 ? 'Final' : 'Level ' + L.num;
+    return PU.levelLabel(L);
   }
   function stepKey(L, i) {
     return L.id + '.' + i;
@@ -51,16 +48,31 @@
     return n;
   }
 
+  /** The main-path level before this one (bonus levels don't count). */
+  function prevMain(idx) {
+    for (var j = idx - 1; j >= 0; j--) if (!PU.levels[j].optional) return j;
+    return -1;
+  }
+
+  /** Same, going forward. */
+  function nextMain(idx) {
+    for (var j = idx + 1; j < PU.levels.length; j++) if (!PU.levels[j].optional) return j;
+    return -1;
+  }
+
+  /** Bonus levels are always open. Main levels open once the one before is done. */
   function isUnlocked(idx) {
-    if (idx === 0 || PU.state.unlockAll || PU.state.preview) return true;
-    var prev = PU.levels[idx - 1];
-    return !!PU.state.levelsDone[prev.id] || levelProgress(PU.levels[idx]) > 0;
+    var L = PU.levels[idx];
+    if (idx === 0 || L.optional || PU.state.unlockAll || PU.state.preview) return true;
+    var prev = PU.levels[prevMain(idx)];
+    return !prev || !!PU.state.levelsDone[prev.id] || levelProgress(L) > 0;
   }
 
   function overallPct() {
     var tot = 0;
     var done = 0;
     PU.levels.forEach(function (L) {
+      if (L.optional) return;
       L.steps.forEach(function (s, i) {
         tot++;
         if (PU.state.stepsDone[stepKey(L, i)]) done++;
@@ -188,7 +200,7 @@
             class: [cur ? 'is-current' : '', done ? 'is-done' : '', locked ? 'is-locked' : ''].join(' '),
             'aria-current': cur ? 'step' : null
           },
-          h('span.chip-swatch', { style: { '--sw': L.color }, 'aria-hidden': 'true' }, h('i'), h('b', pad(L.num))),
+          h('span.chip-swatch', { style: { '--sw': L.color }, 'aria-hidden': 'true' }, h('i'), h('b', PU.levelCode(L))),
           h(
             'span',
             h('span.li-title', L.short || plain(L.title)),
@@ -199,7 +211,7 @@
         if (locked) b.setAttribute('aria-label', plain(L.title) + ' (locked)');
         b.addEventListener('click', function () {
           if (locked) {
-            PU.toast('Finish ' + levelName(PU.levels[i - 1]) + ' first, or unlock all levels in Settings.', { icon: 'lock', ms: 3200 });
+            PU.toast('Finish ' + levelName(PU.levels[prevMain(i)]) + ' first. To look around, turn on Preview mode in Settings.', { icon: 'lock', ms: 3600 });
             return;
           }
           closeDrawer();
@@ -267,14 +279,16 @@
   function goNext() {
     var pos = PU.state.pos;
     var L = PU.levels[pos.level];
+    var n = nextMain(pos.level);
     if (pos.step < L.steps.length - 1) go(pos.level, pos.step + 1);
-    else if (pos.level < PU.levels.length - 1) go(pos.level + 1, 0);
+    else if (n >= 0) go(n, 0);
   }
 
   function goBack() {
     var pos = PU.state.pos;
+    var p = prevMain(pos.level);
     if (pos.step > 0) go(pos.level, pos.step - 1);
-    else if (pos.level > 0) go(pos.level - 1, PU.levels[pos.level - 1].steps.length - 1);
+    else if (p >= 0 && !PU.levels[pos.level].optional) go(p, PU.levels[p].steps.length - 1);
   }
 
   function render() {
@@ -366,9 +380,9 @@
     var stepEl = h('div.step', { class: PU.reduced ? '' : 'enter' }, content);
     PU.clear(stepHost).appendChild(stepEl);
 
-    backBtn.disabled = pos.level === 0 && idx === 0;
+    backBtn.disabled = idx === 0 && (pos.level === 0 || !!L.optional);
     var isLast = idx === L.steps.length - 1;
-    var nextL = PU.levels[pos.level + 1];
+    var nextL = PU.levels[nextMain(pos.level)];
     nextLabel.textContent = isLast ? (nextL ? 'Next level' : 'Finish') : st.nextLabel || 'Continue';
     nextBtn.hidden = !!st.hideNext || (isLast && !nextL);
     actionbar.hidden = !!st.hideBar;
@@ -465,7 +479,7 @@
       'Cheat sheet',
       h(
         'div.stack',
-        h('p.small.muted', 'The 10 rules, the brief template, and anything you’ve saved along the way.'),
+        h('p.small.muted', 'The 10 rules, the brief template, which model and effort to use, and anything you’ve saved along the way.'),
         h('div.btn-row', PU.copyBtn(PU.cheatSheetText, 'Copy everything'), dl),
         PU.renderSheet(true)
       )
@@ -587,8 +601,15 @@
     });
   }
 
-  /** Preview mode: skim everything, answers shown, nothing scored or saved. */
+  /**
+   * Preview mode: skim everything, answers shown, nothing scored or saved.
+   * Turning it off goes back to where you were before, so skimming never
+   * counts as reaching a step (a level summary would otherwise mark it done).
+   */
   function setPreview(on) {
+    if (on && !PU.state.preview) PU.state.prePreviewPos = PU.state.pos;
+    if (!on && PU.state.preview && PU.state.prePreviewPos) PU.state.pos = PU.state.prePreviewPos;
+    if (!on) delete PU.state.prePreviewPos;
     PU.state.preview = !!on;
     PU.save();
     render();
@@ -601,11 +622,21 @@
     applyTheme();
     wireEvents();
     PU.live.init();
-    if (window.location.hash === '#preview') {
+    var hash = window.location.hash || '';
+    if (hash === '#preview' && !PU.state.preview) {
+      PU.state.prePreviewPos = PU.state.pos;
       PU.state.preview = true;
       PU.save();
     }
-    var m = /^#level-(\d+)$/.exec(window.location.hash || '');
+    if (hash === '#bonus') {
+      for (var b = 0; b < PU.levels.length; b++) {
+        if (PU.levels[b].optional) {
+          PU.state.pos = { level: b, step: 0 };
+          break;
+        }
+      }
+    }
+    var m = /^#level-(\d+)$/.exec(hash);
     if (m) {
       var n = parseInt(m[1], 10);
       for (var i = 0; i < PU.levels.length; i++) {
@@ -613,6 +644,14 @@
           PU.state.pos = { level: i, step: 0 };
           break;
         }
+      }
+    }
+    // The link has done its job: clear it so a reload doesn't jump again.
+    if (hash === '#preview' || hash === '#bonus' || m) {
+      try {
+        window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      } catch (e) {
+        /* not allowed here: harmless */
       }
     }
     updateXP(false);

@@ -202,6 +202,46 @@
       ]
     },
     {
+      key: 'web',
+      label: 'Web & SEO',
+      icon: 'layers',
+      color: '#3f7cff',
+      blurb: 'Pages people find, read and act on.',
+      items: [
+        {
+          title: 'Keyword ideas by search intent',
+          desc: 'What people search for, grouped by what they want.',
+          template:
+            'You’re an SEO strategist. Our client is [brand], a [type of business] in [city or market]. Their customers are [audience]. List 30 keyword ideas they could realistically rank for, grouped by search intent: informational, commercial and local. For each group, suggest one page or article to create. Don’t invent search volumes; mark anything we should check in an SEO tool.',
+          tip: 'Claude can’t see real search volumes. Check the shortlist in your SEO tool.'
+        },
+        {
+          title: 'SEO content brief',
+          desc: 'Everything a writer needs to rank, on one page.',
+          template:
+            'Write a content brief for an article targeting “[main keyword]” for [brand]. Include: the search intent, a title (max 60 characters), a meta description (max 155 characters), an H2/H3 outline, the questions to answer, internal links to [pages], and what would make it better than the current top results. Audience: [audience].'
+        },
+        {
+          title: 'Meta titles and descriptions',
+          desc: 'Unique, keyword-first and within the limits.',
+          template:
+            'Write a title tag (max 60 characters) and a meta description (max 155 characters) for each page below. Put the main keyword near the start, make each one unique, and write in [brand]’s tone. Give 2 options per page with character counts. Pages: [list each page with its main keyword].'
+        },
+        {
+          title: 'FAQs from real customer questions',
+          desc: 'Turn what customers ask into answers on the page.',
+          template:
+            'Write 8 FAQs for [brand]’s [service] page, based on questions real customers ask: [paste questions from sales calls, reviews or “People also ask”]. Short, direct answers of 40–60 words. Mark any answer we need the client to confirm.'
+        },
+        {
+          title: 'Google Business Profile posts',
+          desc: 'A month of local posts in one go.',
+          template:
+            'Write 4 Google Business Profile posts for [business] in [area] for [month]: one offer, one event, one update and one tip. Each under 1,500 characters, with a clear call to action and the area name used naturally. Tone: [tone].'
+        }
+      ]
+    },
+    {
       key: 'sales',
       label: 'Sales',
       icon: 'brief',
@@ -404,7 +444,7 @@
     color: 'var(--sw-4)',
     title: 'Claude for ==your actual job==',
     short: 'Claude for your actual job',
-    tagline: 'Ten departments. Fifty jobs Claude can take off your plate.',
+    tagline: 'Eleven departments. Fifty-five jobs Claude can take off your plate.',
     deliverable: 'Your personal list of Claude jobs',
     learn: ['What Claude can do for your role, with ready-made prompts', 'How to turn a template into your own prompt in seconds', 'What you should never fully hand over'],
     steps: [

@@ -47,7 +47,12 @@
     short: 'Claude Cowork',
     tagline: 'Chat gives you answers. Cowork gives you finished work.',
     deliverable: 'Finished files, not just answers',
-    learn: ['What Cowork is, and when to use it instead of chat', 'How to delegate a task and stay in control', 'The ground rules for letting Claude work on your files'],
+    learn: [
+      'What Cowork is, and when to use it instead of chat',
+      'How to delegate a task and stay in control',
+      'How to set up Cowork on your computer, step by step',
+      'The ground rules for letting Claude work on your files'
+    ],
     steps: [
       { type: 'intro' },
 
@@ -71,7 +76,7 @@
         },
         body:
           '- **Works with your files.** In the Claude desktop app, connect a folder and Claude can read, organise and create files in it.\n- **Makes real documents.** Spreadsheets with formulas, presentations, reports.\n- **Keeps going without you.** Tasks can run in the background, and recurring jobs can run on a schedule.\n- **You stay in charge.** You choose how often it asks before it acts.',
-        note: 'Cowork is in the Claude app (desktop, web and mobile) on paid plans. If you don’t see it, ask your admin.'
+        note: 'Cowork is in the Claude app on paid plans. You’ll set it up, step by step, later in this level.'
       },
 
       {
@@ -171,6 +176,66 @@
       },
 
       {
+        type: 'guide',
+        xp: 20,
+        eyebrow: 'Set it up',
+        title: 'Get Cowork running ==on your computer==',
+        lede: 'Do this once. Tick each step as you go. Not at your computer right now? Continue, and come back to this list later.',
+        items: [
+          {
+            title: 'Install the Claude desktop app',
+            body: 'Download it from [claude.com/download](https://claude.com/download). It works on Mac and Windows.'
+          },
+          {
+            title: 'Sign in with your work account',
+            body: 'Cowork needs a paid plan: Pro, Max, Team or Enterprise. On a Team plan it’s switched on by default. Can’t see it? Ask your admin to check **Organization settings → Cowork**.'
+          },
+          {
+            title: 'Switch to Cowork',
+            body: 'In the message box, choose **Cowork**. No Chat/Cowork switch? Then your app already handles Cowork tasks in any conversation.'
+          },
+          {
+            title: 'Pick one folder',
+            body: 'Click **Work in a project or folder** and choose one project folder, like _Luma Skin / November report_. Claude can only see the folders you pick. Never pick your whole computer.'
+          },
+          {
+            title: 'Add folder instructions',
+            body: 'Tell Claude how the folder works: what’s inside, how files are named, and what it must never touch. It reads them every time it works there, and can update them for you.'
+          },
+          {
+            title: 'Choose how much Claude asks',
+            body: 'Pick a mode in the message box.\n- **Manual:** Claude asks before it acts. Start here.\n- **Auto:** it keeps going without asking at every step.\n- **Skip:** no pauses, and nothing checks its actions. Avoid it for client work.'
+          },
+          {
+            title: 'Run a small, safe first task',
+            body: 'Try: “List every file in this folder with a one-line summary of each. Don’t move or delete anything.” Check the result, then hand it something bigger.'
+          }
+        ],
+        extras: [
+          {
+            icon: 'layers',
+            title: 'Connect your tools',
+            text: 'Google Drive, Gmail, Slack and more. Add them from the + menu in the message box.',
+            color: 'var(--sw-5)'
+          },
+          {
+            icon: 'clock',
+            title: 'Put repeat jobs on a schedule',
+            text: 'Type /schedule in a task, or click Scheduled in the left sidebar. Scheduled tasks run in the cloud, even when your computer is off.',
+            color: 'var(--sw-2)'
+          },
+          {
+            icon: 'send',
+            title: 'Start tasks from your phone',
+            text: 'Cowork is also in the Claude phone app and on claude.ai. Files on your computer are only reachable while the desktop app is open.',
+            color: 'var(--sw-6)'
+          }
+        ],
+        footer: 'Menus and names change often. If something looks different, look for the same three things: pick a folder, choose how much Claude asks, then describe the finished result.',
+        callout: { title: 'You’re set up. Start small, ==then delegate bigger==.' }
+      },
+
+      {
         type: 'cards',
         xp: 15,
         eyebrow: 'Ground rules',
@@ -197,6 +262,7 @@
         points: [
           'Describe the finished result, approve the plan, review the files.',
           'Chat for thinking. Cowork for multi-step work that ends in a file.',
+          'Set up once: desktop app, one folder, Manual mode to start.',
           'Say no to anything you didn’t ask for.'
         ]
       }

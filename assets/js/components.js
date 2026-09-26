@@ -88,6 +88,22 @@
     );
   };
 
+  /** How a level is named and numbered: "Level 3" / "03", "Final" / "10", "Bonus" / "B". */
+  PU.levelLabel = function (L) {
+    return L.label || 'Level ' + L.num;
+  };
+  PU.levelCode = function (L) {
+    return L.code || pad(L.num);
+  };
+
+  /** The next level on the main path. Optional (bonus) levels are skipped. */
+  PU.nextLevel = function (L) {
+    for (var j = PU.levels.indexOf(L) + 1; j < PU.levels.length; j++) {
+      if (!PU.levels[j].optional) return PU.levels[j];
+    }
+    return null;
+  };
+
   function factsCard(f) {
     return h(
       'div.facts',
@@ -288,6 +304,9 @@
       case 'cards':
         d.open = all(step.cards);
         break;
+      case 'guide':
+        d.ticked = all(step.items);
+        break;
       case 'chat':
       case 'guesses':
         d.done = true;
@@ -422,11 +441,11 @@
           'div.ticket-row',
           h(
             'div.stack-sm',
-            h('div.eyebrow', 'Job Nº PU-' + pad(L.num) + (L.num === 10 ? ' · Final' : ' · Level ' + L.num)),
+            h('div.eyebrow', 'Job Nº PU-' + PU.levelCode(L) + ' · ' + PU.levelLabel(L)),
             h('h2', { html: PU.rich(L.title) }),
             h('p.tagline', L.tagline)
           ),
-          h('div.ticket-chip', { 'aria-hidden': 'true' }, h('i'), h('b', 'PU ' + pad(L.num)))
+          h('div.ticket-chip', { 'aria-hidden': 'true' }, h('i'), h('b', 'PU ' + PU.levelCode(L)))
         )
       ),
       h('div.perf'),
@@ -1134,17 +1153,92 @@
   };
 
   /* ---------------------------------------------------------------------
+     guide — a setup checklist people tick off as they do each step.
+     Reading is enough to continue; ticking everything earns the XP.
+     --------------------------------------------------------------------- */
+  S.guide = function (step, ctx) {
+    var d = ctx.data;
+    d.ticked = d.ticked || {};
+    var total = step.items.length;
+    var count = h('span.guide-count');
+    var fill = h('span');
+    var calloutHost = h('div');
+    ctx.complete();
+    function paint(anchor) {
+      var n = Object.keys(d.ticked).length;
+      count.textContent = n + ' of ' + total + ' done';
+      fill.style.width = Math.round((n / total) * 100) + '%';
+      if (n >= total) {
+        if (anchor) ctx.award('all', step.xp || 20, step.xpLabel || 'All set up', anchor);
+        if (step.callout && !calloutHost.firstChild) calloutHost.appendChild(callout(step.callout));
+      }
+    }
+    var list = h(
+      'ol.guide',
+      step.items.map(function (it, i) {
+        var tick = h(
+          'button.guide-tick',
+          { type: 'button', role: 'checkbox', 'aria-checked': String(!!d.ticked[i]), 'aria-label': 'Done: ' + it.title },
+          PU.icon('check', 'icon-sm'),
+          h('span', 'Done')
+        );
+        var row = h(
+          'li.guide-item',
+          { class: d.ticked[i] ? 'is-done' : '' },
+          h('span.guide-num', { 'aria-hidden': 'true' }, String(i + 1)),
+          h(
+            'div.guide-main',
+            h('div.guide-title', it.title),
+            it.body ? h('div.guide-body.md', { html: PU.md(it.body) }) : null
+          ),
+          tick
+        );
+        tick.addEventListener('click', function () {
+          if (d.ticked[i]) delete d.ticked[i];
+          else d.ticked[i] = true;
+          ctx.save();
+          row.classList.toggle('is-done', !!d.ticked[i]);
+          tick.setAttribute('aria-checked', String(!!d.ticked[i]));
+          paint(tick);
+        });
+        return row;
+      })
+    );
+    paint(null);
+    return [
+      head(step),
+      h('div.guide-progress', h('span.eyebrow', 'Checklist'), count, h('div.bar', fill)),
+      list,
+      step.extras ? h('div.stack-sm', h('div.eyebrow', 'When you’re ready'), PU.tiles(step.extras)) : null,
+      step.footer ? note(step.footer) : null,
+      calloutHost
+    ];
+  };
+
+  /* ---------------------------------------------------------------------
      chat — scripted conversation, user presses Send for each turn
      --------------------------------------------------------------------- */
   S.chat = function (step, ctx) {
     var d = ctx.data;
     var frame = chatFrame(step.chatTitle || 'Claude · simulated');
-    var calloutHost = h('div');
+    var calloutHost = h('div.stack');
     var composerText = h('div.fake-input');
     var send = h('button.btn.btn-primary.btn-sm', { type: 'button' }, PU.icon('send', 'icon-sm'), h('span', 'Send'));
     PU.put(frame.composer, composerText, send);
     var idx = 0;
     var busy = false;
+    /** Shown once the conversation is over: callout, prompts to copy, footnote. */
+    function showAfter() {
+      if (calloutHost.firstChild) return;
+      PU.put(
+        calloutHost,
+        step.callout ? callout(step.callout) : null,
+        (step.templates || []).map(function (t) {
+          return promptBlock(t.text, { label: t.label, copy: true, open: true });
+        }),
+        step.footer ? note(step.footer) : null
+      );
+    }
     function finish() {
       composerText.textContent = step.endText || 'Conversation complete.';
       send.disabled = true;
@@ -1152,7 +1246,7 @@
       ctx.save();
       ctx.award('chat', step.xp || 10, step.xpLabel || 'Conversation complete', frame.el);
       ctx.complete();
-      if (step.callout && !calloutHost.firstChild) calloutHost.appendChild(callout(step.callout));
+      showAfter();
     }
     function prepare() {
       var t = step.turns[idx];
@@ -1191,7 +1285,7 @@
       composerText.textContent = step.endText || 'Conversation complete.';
       send.disabled = true;
       ctx.complete();
-      if (step.callout) calloutHost.appendChild(callout(step.callout));
+      showAfter();
     } else prepare();
     return [head(step), frame.el, calloutHost];
   };
@@ -2957,7 +3051,7 @@
       PU.save();
     }
     ctx.complete();
-    ctx.award('done', 50, 'Level ' + L.num + ' complete', null);
+    ctx.award('done', 50, PU.levelLabel(L) + ' complete', null);
     PU.emit('levels');
     var rank = PU.rankFor(PU.state.xp);
     function stat(k, v) {
@@ -2966,7 +3060,7 @@
     var card = h(
       'div.done-card',
       { class: first && !PU.reduced ? 'thud' : '' },
-      h('div.eyebrow', (L.num === 10 ? 'Final' : 'Level ' + L.num) + ' complete · ' + L.title.replace(/==/g, '')),
+      h('div.eyebrow', PU.levelLabel(L) + ' complete · ' + L.title.replace(/==/g, '')),
       h('div.stamp', { class: first ? 'slam' : '' }, 'Approved'),
       h('div.takeaway', { html: PU.rich(step.takeaway) }),
       step.points
@@ -2980,11 +3074,12 @@
       h('div.done-stats', stat('XP this level', PU.xpForPrefix(L.id + '.')), stat('Total XP', PU.state.xp), stat('Rank', rank.name))
     );
     if (first) setTimeout(PU.confetti, 380);
-    var next = PU.levels[L.num + 1];
+    var next = L.optional ? null : PU.nextLevel(L);
     return [
       card,
       step.template ? promptBlock(step.template, { label: step.templateLabel || 'Keep this', copy: true }) : null,
-      next ? note('**Up next: Level ' + (next.num === 10 ? 'Final' : next.num) + ' · ' + next.title.replace(/==/g, '') + '.** ' + next.tagline, 'arrowRight') : null
+      step.note ? note(step.note, step.noteIcon) : null,
+      next ? note('**Up next: ' + PU.levelLabel(next) + ' · ' + next.title.replace(/==/g, '') + '.** ' + next.tagline, 'arrowRight') : null
     ];
   };
 
@@ -3013,6 +3108,19 @@
     'OUTPUT: [Format, number of options, structure.]\n' +
     'Before you start, ask me any questions you need answered.';
 
+  /** Which model and effort to pick. Model names change; the idea doesn't. */
+  PU.SETTINGS = [
+    ['Everyday work', 'Sonnet, default effort. Captions, emails, summaries, rewrites.'],
+    ['Big, tricky or high-stakes work', 'Opus, or Fable for the hardest jobs. Effort on High or above.'],
+    ['Claude cut corners?', 'It didn’t try hard enough. Raise the effort.'],
+    ['Claude missed the point?', 'Check your brief first. Then try a bigger model.']
+  ];
+
+  PU.HELPER_PROMPT =
+    'Improve this prompt: “[paste your rough prompt]”.\n' +
+    'Rewrite it as a clear brief with a role, context, goal, input, constraints and output format. ' +
+    'Ask me questions first about anything important that’s missing.';
+
   PU.cheatSheetText = function () {
     var s = PU.state;
     var out = [];
@@ -3031,6 +3139,16 @@
     out.push('```');
     out.push(PU.BRIEF_TEMPLATE);
     out.push('```');
+    out.push('');
+    out.push('## Prompt helper (works in any AI chat)');
+    out.push('```');
+    out.push(PU.HELPER_PROMPT);
+    out.push('```');
+    out.push('');
+    out.push('## Model and effort');
+    PU.SETTINGS.forEach(function (r) {
+      out.push('- **' + r[0] + ':** ' + r[1]);
+    });
     var stars = s.data.stars || {};
     var keys = Object.keys(stars);
     if (keys.length) {
@@ -3078,6 +3196,16 @@
       )
     );
     wrap.appendChild(promptBlock(PU.BRIEF_TEMPLATE, { label: 'The brief template', copy: true, open: true }));
+    wrap.appendChild(promptBlock(PU.HELPER_PROMPT, { label: 'Prompt helper', copy: true, open: true }));
+    wrap.appendChild(h('div.eyebrow', 'Model and effort'));
+    wrap.appendChild(
+      h(
+        'ul.rules.rules-plain',
+        PU.SETTINGS.map(function (r) {
+          return h('li', h('div', h('b', r[0]), h('span', r[1])));
+        })
+      )
+    );
     var stars = s.data.stars || {};
     var keys = Object.keys(stars);
     if (keys.length) {
@@ -3102,7 +3230,10 @@
       PU.emit('levels');
     }
     var rank = PU.rankFor(s.xp);
-    var levelsDone = PU.levels.filter(function (L) {
+    var mainLevels = PU.levels.filter(function (L) {
+      return !L.optional;
+    });
+    var levelsDone = mainLevels.filter(function (L) {
       return s.levelsDone[L.id];
     }).length;
     var prompts = s.data.prompts || {};
@@ -3154,7 +3285,7 @@
         h('div.stamp.slam', 'Approved'),
         h('div.who', s.name || 'You did it'),
         h('p.lede', { html: PU.rich('Officially stopped using Claude like Google. Rank: ==' + rank.name + '==.') }),
-        h('div.done-stats', stat('Total XP', s.xp), stat('Levels', levelsDone + ' / ' + PU.levels.length), stat('Best prompt', best ? best + '/100' : '—'), stat('Date', date))
+        h('div.done-stats', stat('Total XP', s.xp), stat('Levels', levelsDone + ' / ' + mainLevels.length), stat('Best prompt', best ? best + '/100' : '—'), stat('Date', date))
       ),
       h('div.btn-row', PU.copyBtn(PU.cheatSheetText, 'Copy cheat sheet'), dl, reset),
       confirmHost,

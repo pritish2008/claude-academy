@@ -6,6 +6,7 @@
   PU.levels[10] = {
     id: 'LF',
     num: 10,
+    label: 'Final',
     color: 'var(--sw-10)',
     title: 'The ==real work== challenge',
     short: 'The real work challenge',

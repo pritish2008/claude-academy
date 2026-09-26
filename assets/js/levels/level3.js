@@ -2,6 +2,69 @@
 (function () {
   'use strict';
   var PU = window.PU;
+  var h = PU.h;
+
+  /* Model cards + a clickable effort scale. Names change often; update them here. */
+  var MODELS = [
+    { name: 'Sonnet 5', role: 'The all-rounder', text: 'Fast and capable. Everyday writing, emails, captions and summaries.', load: 1 },
+    { name: 'Opus 5.5', role: 'The expert', text: 'Strategy, long documents and tricky analysis.', load: 2 },
+    { name: 'Fable 5.1', role: 'The specialist', text: 'The hardest, longest jobs. Big research and long Cowork tasks.', load: 3 }
+  ];
+  var EFFORT = [
+    { label: 'Low', text: 'Quick, simple jobs. Fastest, and lightest on your limit.' },
+    { label: 'Medium', text: 'Routine work. Still quick, still light on your limit.' },
+    { label: 'High', text: 'The best balance of quality and speed for most work.' },
+    { label: 'Extra high', text: 'Long, many-step jobs, like big Cowork or Claude Code tasks.' },
+    { label: 'Max', text: 'When it has to be right and you can wait. Slowest, and uses the most.' }
+  ];
+
+  function settingsVisual() {
+    var desc = h('p.effort-desc', { 'aria-live': 'polite' });
+    var btns = EFFORT.map(function (e, i) {
+      var b = h('button', { type: 'button', 'aria-pressed': 'false' }, h('i', { style: { height: 10 + i * 9 + 'px' } }), h('span', e.label));
+      b.addEventListener('click', function () {
+        pick(i);
+      });
+      return b;
+    });
+    function pick(i) {
+      btns.forEach(function (b, j) {
+        b.classList.toggle('is-on', i === j);
+        b.classList.toggle('is-lit', j < i);
+        b.setAttribute('aria-pressed', String(i === j));
+      });
+      PU.fill(desc, h('b', EFFORT[i].label + ': '), EFFORT[i].text);
+    }
+    pick(2);
+    return h(
+      'div.settings-vis',
+      h(
+        'div.sv-panel',
+        h('div.sv-head', h('b', 'Model'), h('span.eyebrow', 'Who does the work')),
+        h(
+          'div.model-grid',
+          MODELS.map(function (m) {
+            var dots = [1, 2, 3].map(function (n) {
+              return h('i', { class: n <= m.load ? 'on' : '' });
+            });
+            return h(
+              'div.model-card',
+              h('span.mc-name', m.name),
+              h('span.mc-role', m.role),
+              h('span.mc-text', m.text),
+              h('span.mc-limit', { 'aria-label': 'Uses your limit: ' + ['', 'least', 'more', 'most'][m.load] }, dots, h('span', 'uses your limit'))
+            );
+          })
+        )
+      ),
+      h(
+        'div.sv-panel',
+        h('div.sv-head', h('b', 'Effort'), h('span.eyebrow', 'How hard it thinks. Tap a level')),
+        h('div.effort-scale', { role: 'group', 'aria-label': 'Effort levels' }, btns),
+        desc
+      )
+    );
+  }
 
   PU.levels[3] = {
     id: 'L3',
@@ -14,7 +77,8 @@
     learn: [
       'The 6-step workflow: Task, Analyse, Think, Create, Critique, Improve',
       'Ready-made workflows for 13 everyday agency jobs',
-      'How to give feedback that actually improves the next draft'
+      'How to give feedback that actually improves the next draft',
+      'Which model and effort level to pick for each job'
     ],
     steps: [
       { type: 'intro' },
@@ -297,9 +361,45 @@
       },
 
       {
+        type: 'concept',
+        eyebrow: 'Model and effort',
+        title: 'Pick the right brain, and ==how hard it thinks==.',
+        lede: 'Click the model name next to the send button. You’ll see the models, and the effort setting in the same menu. The defaults are fine most of the time. For big or tricky jobs, turn them up.',
+        visual: settingsVisual,
+        body:
+          '- **Bigger model and more effort = better on hard jobs.** But slower, and it uses up your plan’s limit faster.\n- **Claude cut corners** (skipped parts, rushed)? It didn’t try hard enough. Raise the effort.\n- **Claude missed the point** on a hard problem? It didn’t know enough. Check your brief first, then try a bigger model.',
+        note: 'Model names change every few months, and what you can pick depends on your plan. The idea stays the same: routine work on the defaults, hard work turned up.'
+      },
+
+      {
+        type: 'sort',
+        xp: 20,
+        eyebrow: 'Default or turn it up?',
+        title: 'Which jobs need ==more power==?',
+        buckets: [
+          { key: 'default', label: 'Default is fine' },
+          { key: 'up', label: 'Turn it up' }
+        ],
+        items: [
+          { text: 'Write 10 caption options for a post', answer: 'default', why: 'Routine writing. The default is quick and saves your limit.' },
+          { text: 'Fix the grammar in a client email', answer: 'default', why: 'Small and simple. The default, or even Low, is plenty.' },
+          { text: 'Turn 6 research files into a year-long content strategy', answer: 'up', why: 'Big, high-stakes thinking. A bigger model and more effort pay off.' },
+          { text: 'Summarise a 30-minute call into action points', answer: 'default', why: 'Everyday work. The default handles it well.' },
+          { text: 'Find out why sales dropped, from 12 months of ad data', answer: 'up', why: 'Tricky analysis. Give it more effort, or a bigger model.' },
+          { text: 'A long Cowork job: 8 client spreadsheets into one deck', answer: 'up', why: 'Long, many-step work goes better with more effort.' }
+        ],
+        success: 'Spot on. Routine work: leave the defaults. Big, tricky or long work: turn it up.'
+      },
+
+      {
         type: 'summary',
         takeaway: 'Don’t ask for outputs. ==Assign a process.==',
-        points: ['Analyse → Think → Create → Critique → Improve.', 'Always ask Claude to critique its own draft.', 'Feedback formula: keep this, change that, give me X.']
+        points: [
+          'Analyse → Think → Create → Critique → Improve.',
+          'Always ask Claude to critique its own draft.',
+          'Feedback formula: keep this, change that, give me X.',
+          'Routine job: default settings. Big or tricky job: turn up the effort or the model.'
+        ]
       }
     ]
   };

@@ -13,7 +13,12 @@
     short: 'Stop writing terrible prompts',
     tagline: 'A prompt is a brief. Here’s how to write a great one in 60 seconds.',
     deliverable: 'A prompt formula you’ll use every day',
-    learn: ['The 6 parts of a great brief', 'Why better information beats longer prompts', 'How to check your own prompt before you send it'],
+    learn: [
+      'The 6 parts of a great brief',
+      'Why better information beats longer prompts',
+      'How to check your own prompt before you send it',
+      'How to get AI to help you write the prompt'
+    ],
     steps: [
       { type: 'intro' },
 
@@ -308,12 +313,53 @@
       },
 
       {
+        type: 'chat',
+        xp: 15,
+        eyebrow: 'Pro move',
+        title: 'Stuck? Let ==AI write the prompt== with you.',
+        lede: 'Paste a rough idea into Claude, ChatGPT or any AI chat and ask it to turn the idea into a proper brief. Press Send to watch.',
+        chatTitle: 'Prompt helper · simulated',
+        turns: [
+          { role: 'user', text: 'Improve this prompt: “write reel ideas for our restaurant client”. Ask me questions first.' },
+          {
+            role: 'claude',
+            text:
+              'Happy to. Four quick questions first:\n\n1. **Which restaurant?** What’s the food, where is it, and what makes it special?\n2. **Who should the Reels reach?**\n3. **What should they achieve?** Bookings, followers, awareness?\n4. **Any rules?** Length, tone, things to avoid.'
+          },
+          {
+            role: 'user',
+            send: 'Answer the questions',
+            text: 'Dakshin Table, premium South Indian in Bandra. For 25–40 year-old professionals. Goal: more weekend brunch bookings. Under 30 seconds, shot on a phone, no clichés.'
+          },
+          {
+            role: 'claude',
+            think: 1100,
+            text:
+              'Here’s your improved prompt:\n\n> You’re a short-form video strategist for restaurants. Our client is Dakshin Table, a premium South Indian restaurant in Bandra, Mumbai. Audience: 25–40 year-old professionals. Goal: more weekend brunch bookings.\n>\n> Give me 5 Instagram Reel concepts. For each: a title, a 3-second hook, a shot-by-shot outline, on-screen text, and why it will work.\n>\n> Rules: under 30 seconds, shootable on a phone, no clichés like “foodie heaven”.'
+          }
+        ],
+        callout: {
+          title: 'Rough idea in, ==proper brief== out.',
+          text: 'Use it whenever you’re stuck. Then read the brief before you use it: you know the client, the AI doesn’t.'
+        },
+        templates: [
+          { label: 'Prompt helper: improve my prompt', text: PU.HELPER_PROMPT },
+          {
+            label: 'Prompt helper: interview me',
+            text: 'I need help with [the task]. Before you write anything, interview me: ask one question at a time until you have everything you need. Then write the prompt I should use.'
+          }
+        ],
+        footer: 'This works in any AI chat, including ChatGPT. Only paste client information into AI tools the agency has approved.'
+      },
+
+      {
         type: 'summary',
         takeaway: 'Real Creatives Give Insanely Clear Orders.',
         points: [
           '**R**ole, **C**ontext, **G**oal, **I**nput, **C**onstraints, **O**utput.',
           'Better information beats longer prompts.',
-          'Pro move: end with “Ask me any questions before you start.”'
+          'Pro move: end with “Ask me any questions before you start.”',
+          'Stuck? Ask an AI to turn your rough idea into a brief.'
         ],
         template: PU.BRIEF_TEMPLATE,
         templateLabel: 'Your brief template (copy it)'
