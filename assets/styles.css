@@ -653,6 +653,10 @@ p {
   flex: none;
 }
 
+.brand-mark.with-logo {
+  display: none;
+}
+
 .brand-text {
   display: block;
   min-width: 0;

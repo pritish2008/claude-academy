@@ -8,6 +8,6 @@
   window.PU.brand = {
     name: 'Brij Design Studio',
     short: 'BDS',
-    logo: ''
+    logo: 'assets/brand/bds-logo.png'
   };
 })();
