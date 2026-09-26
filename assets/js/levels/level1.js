@@ -13,7 +13,6 @@
     short: 'Stop writing terrible prompts',
     tagline: 'A prompt is a brief. Here’s how to write a great one in 60 seconds.',
     deliverable: 'A prompt formula you’ll use every day',
-    minutes: 6,
     learn: ['The 6 parts of a great brief', 'Why better information beats longer prompts', 'How to check your own prompt before you send it'],
     steps: [
       { type: 'intro' },

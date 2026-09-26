@@ -86,11 +86,13 @@
     sheetBtn.addEventListener('click', openSheet);
     var setBtn = h('button.icon-btn', { type: 'button', 'aria-label': 'Settings' }, PU.icon('sliders'));
     setBtn.addEventListener('click', openSettings);
+    var B = PU.brand || {};
     var brand = h(
       'button.brand',
-      { type: 'button', 'aria-label': 'Claude Power-Up: show all levels' },
-      h('span.brand-mark', PU.icon('bolt')),
-      h('span.brand-text', h('span.brand-name', 'Claude Power-Up'), h('span.brand-tag.hide-sm', 'Stop using Claude like Google'))
+      { type: 'button', 'aria-label': 'Claude Power-Up' + (B.name ? ' by ' + B.name : '') + ': show all levels' },
+      B.logo ? h('span.brand-logo', h('img', { src: B.logo, alt: (B.name || 'Agency') + ' logo' })) : null,
+      h('span.brand-mark', { class: B.logo ? 'with-logo' : '' }, PU.icon('bolt')),
+      h('span.brand-text', h('span.brand-name', 'Claude Power-Up'), h('span.brand-tag.hide-sm', B.name ? 'by ' + B.name : 'Stop using Claude like Google'))
     );
     brand.addEventListener('click', openLevels);
     var topbar = h('header.topbar', brand, h('div.topbar-spacer'), rankChip, xpPill, levelsBtn, sheetBtn, setBtn, h('div.progress-line', { 'aria-hidden': 'true' }, progressFill));
@@ -179,7 +181,7 @@
           h(
             'span',
             h('span.li-title', L.short || plain(L.title)),
-            h('span.li-meta', levelName(L) + ' · ' + L.minutes + ' min' + (prog && !done ? ' · ' + prog + '/' + L.steps.length : done ? ' · done' : ''))
+            h('span.li-meta', levelName(L) + ' · ' + (done ? 'done' : prog ? prog + ' of ' + L.steps.length + ' steps' : L.steps.length + ' steps'))
           ),
           h('span.li-status', done ? PU.icon('check') : locked ? PU.icon('lock', 'icon-sm') : null)
         );
@@ -202,7 +204,7 @@
       rankCard(),
       h('div.rail-head', h('span.eyebrow', 'Levels'), h('span.mono.small.muted', overallPct() + '% done')),
       levelList(),
-      h('div.rail-foot', 'Internal training on using Claude well. Not an official Anthropic product. Chats marked “Simulated” show pre-written example answers.')
+      h('div.rail-foot', 'An internal training for the ' + ((PU.brand && PU.brand.name) || 'agency') + ' team. Not an official Anthropic product. Chats marked “Simulated” show pre-written example answers.')
     );
   }
 
@@ -268,7 +270,7 @@
     var st = L.steps[idx];
     var key = stepKey(L, idx);
 
-    PU.fill(stageHead, h('div.eyebrow', levelName(L) + ' · ' + plain(L.title)), h('div.eyebrow', 'Step ' + (idx + 1) + ' of ' + L.steps.length + ' · ~' + L.minutes + ' min'));
+    PU.fill(stageHead, h('div.eyebrow', levelName(L) + ' · ' + plain(L.title)), h('div.eyebrow', 'Step ' + (idx + 1) + ' of ' + L.steps.length));
     PU.clear(stepsBar);
     L.steps.forEach(function (s, i) {
       stepsBar.appendChild(h('i', { class: i === idx ? 'now' : PU.state.stepsDone[stepKey(L, i)] ? 'done' : '' }));
@@ -493,7 +495,7 @@
         h(
           'div.setting',
           h('div.st-title', 'About this training'),
-          h('div.st-sub', 'Simulated chats show pre-written example answers so everyone sees the same thing. Prompt scores come from an automatic checklist that looks for the parts of a good brief. ' + liveLine),
+          h('div.st-sub', 'Made for the ' + ((PU.brand && PU.brand.name) || 'agency') + ' team. Simulated chats show pre-written example answers so everyone sees the same thing. Prompt scores come from an automatic checklist that looks for the parts of a good brief. ' + liveLine),
           h('div.st-sub', 'Keyboard: ← and → move between steps.')
         )
       )

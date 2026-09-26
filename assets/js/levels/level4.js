@@ -406,7 +406,6 @@
     short: 'Claude for your actual job',
     tagline: 'Ten departments. Fifty jobs Claude can take off your plate.',
     deliverable: 'Your personal list of Claude jobs',
-    minutes: 4,
     learn: ['What Claude can do for your role, with ready-made prompts', 'How to turn a template into your own prompt in seconds', 'What you should never fully hand over'],
     steps: [
       { type: 'intro' },

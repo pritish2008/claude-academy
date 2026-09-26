@@ -32,6 +32,7 @@
   --warn: #a86400;
   --warn-soft: #fff1d6;
   --topbar-bg: rgba(243, 244, 248, 0.88);
+  --logo-plate: transparent;
   --scrim: rgba(10, 13, 31, 0.42);
   --shadow-1: 0 1px 2px rgba(15, 19, 48, 0.06), 0 1px 1px rgba(15, 19, 48, 0.03);
   --shadow-2: 0 14px 34px -14px rgba(15, 19, 48, 0.28);
@@ -99,6 +100,7 @@
     --warn: #f5b947;
     --warn-soft: #362709;
     --topbar-bg: rgba(10, 13, 31, 0.86);
+    --logo-plate: #ffffff;
     --scrim: rgba(3, 4, 12, 0.62);
     --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
     --shadow-2: 0 14px 34px -14px rgba(0, 0, 0, 0.7);
@@ -136,6 +138,7 @@
   --warn: #f5b947;
   --warn-soft: #362709;
   --topbar-bg: rgba(10, 13, 31, 0.86);
+  --logo-plate: #ffffff;
   --scrim: rgba(3, 4, 12, 0.62);
   --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-2: 0 14px 34px -14px rgba(0, 0, 0, 0.7);
@@ -611,6 +614,49 @@ p {
   fill: var(--marker);
   stroke: var(--marker);
   stroke-width: 1.5;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  flex: none;
+  padding-right: 12px;
+  border-right: 1px solid var(--line-2);
+}
+
+.brand-logo img,
+.hero-logo,
+.cert-logo {
+  display: block;
+  width: auto;
+  object-fit: contain;
+  background: var(--logo-plate);
+  border-radius: 6px;
+  padding: 2px 5px;
+}
+
+.brand-logo img {
+  height: 32px;
+  max-width: 130px;
+}
+
+.hero-logo {
+  height: 52px;
+  max-width: 220px;
+  justify-self: start;
+}
+
+.cert-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cert-logo {
+  height: 44px;
+  max-width: 160px;
+  flex: none;
 }
 
 .brand-text {
@@ -4394,7 +4440,13 @@ button.rcard:hover {
 }
 
 @media (max-width: 440px) {
-  .brand-text {
+  .brand-text,
+  .brand-mark.with-logo {
     display: none;
+  }
+
+  .brand-logo {
+    border-right: 0;
+    padding-right: 0;
   }
 }

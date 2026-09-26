@@ -8,6 +8,8 @@ Reads index.html, inlines the local stylesheet and scripts, and writes:
 
 Usage: python3 tools/build.py
 """
+import base64
+import mimetypes
 import pathlib
 import re
 
@@ -30,6 +32,20 @@ def inline_assets(html: str) -> str:
     return html
 
 
+def inline_brand_files(html: str) -> str:
+    """Embed files referenced as 'assets/brand/...' (the logo) as data URIs."""
+
+    def data_uri(match):
+        path = ROOT / match.group(2)
+        if not path.is_file():
+            return match.group(0)
+        mime = mimetypes.guess_type(path.name)[0] or "application/octet-stream"
+        encoded = base64.b64encode(path.read_bytes()).decode("ascii")
+        return match.group(1) + f"data:{mime};base64,{encoded}" + match.group(1)
+
+    return re.sub(r"(['\"])(assets/brand/[^'\"]+)\1", data_uri, html)
+
+
 def region(html: str, name: str) -> str:
     start = f"<!-- build:{name}-start -->"
     end = f"<!-- build:{name}-end -->"
@@ -40,7 +56,7 @@ def region(html: str, name: str) -> str:
 
 def main() -> None:
     source = (ROOT / "index.html").read_text(encoding="utf-8")
-    bundled = inline_assets(source)
+    bundled = inline_brand_files(inline_assets(source))
 
     DIST.mkdir(exist_ok=True)
     standalone = re.sub(r"\s*<!-- build:[a-z-]+ -->", "", bundled)

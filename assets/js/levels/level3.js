@@ -11,7 +11,6 @@
     short: 'Make Claude work like an employee',
     tagline: 'Stop ordering outputs. Assign a process.',
     deliverable: 'Thinking, not just output',
-    minutes: 5,
     learn: [
       'The 6-step workflow: Task, Analyse, Think, Create, Critique, Improve',
       'Ready-made workflows for 13 everyday agency jobs',

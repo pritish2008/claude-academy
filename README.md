@@ -2,7 +2,7 @@
 
 **“Stop using Claude like Google.”**
 
-An interactive training for marketing agency teams. In about 50 minutes, people learn to use Claude properly: better prompts, context, step-by-step workflows, research, files, Projects, Cowork and Claude Code. Then they spend 30 minutes using it on their own real work.
+An interactive training for the Brij Design Studio (BDS) team. People learn to use Claude properly: better prompts, context, step-by-step workflows, research, files, Projects, Cowork and Claude Code. It ends with a challenge on their own real work.
 
 It's built like a product, not a course: XP, ranks, levels, quizzes, a prompt builder, simulated Claude chats, “fix this prompt” challenges with instant feedback, and a certificate with a personal cheat sheet at the end.
 
@@ -28,7 +28,7 @@ Progress, XP and anything people write are saved in their own browser. Nobody el
 | 7 | Claude Cowork | Delegate a monthly report and decide what Claude may delete |
 | 8 | Claude Code without being a coder | “Build” a caption checker or UTM builder, then actually use it |
 | 9 | Build your own AI workflow | Design a repeatable workflow and get a master prompt |
-| Final | The real work challenge | Brief a real task, start a 30-minute clock, get the certificate |
+| Final | The real work challenge | Brief a real task, do it in Claude with a focus clock, get the certificate |
 
 ## Good to know
 
@@ -37,6 +37,10 @@ Progress, XP and anything people write are saved in their own browser. Nobody el
 - **Live Claude:** when the page is published as a Claude artifact and opened inside Claude, “Try it with real Claude” boxes appear on the writing challenges. They use the viewer's own Claude account and ask permission first.
 - **Facilitator mode** (Settings) unlocks every level and lets a trainer skip steps.
 - The page works on phones, and in light and dark mode.
+
+## Agency name and logo
+
+Both live in `assets/js/brand.js`. To show the logo, put the file in `assets/brand/` (for example `assets/brand/bds-logo.png`) and set `logo: 'assets/brand/bds-logo.png'`. It appears in the top bar, on the opening screen and on the certificate. Run `python3 tools/build.py` afterwards so the shareable files include it.
 
 ## Change the content
 

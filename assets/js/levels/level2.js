@@ -11,7 +11,6 @@
     short: 'Think in context, not questions',
     tagline: 'Don’t make Claude guess. Give it what a new hire would need.',
     deliverable: 'Answers that sound like they came from inside the account',
-    minutes: 5,
     learn: ['Why vague prompts get generic answers', 'The kinds of context that change everything', 'The “interview me” trick for when you don’t know what to say'],
     steps: [
       { type: 'intro' },
@@ -217,7 +216,7 @@
         options: [
           {
             label:
-              '“Our agency was founded in 2012. We have 45 people across Mumbai and Pune, a dog-friendly office and lots of awards. Write a proposal intro for a real estate client.”',
+              '“Our agency has won lots of awards. We have a great team, a lovely office and happy clients across India. Write a proposal intro for a real estate client.”',
             why: 'Lots of words about you, nothing about the client or what the intro must do.'
           },
           {

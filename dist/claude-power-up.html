@@ -40,6 +40,7 @@
   --warn: #a86400;
   --warn-soft: #fff1d6;
   --topbar-bg: rgba(243, 244, 248, 0.88);
+  --logo-plate: transparent;
   --scrim: rgba(10, 13, 31, 0.42);
   --shadow-1: 0 1px 2px rgba(15, 19, 48, 0.06), 0 1px 1px rgba(15, 19, 48, 0.03);
   --shadow-2: 0 14px 34px -14px rgba(15, 19, 48, 0.28);
@@ -107,6 +108,7 @@
     --warn: #f5b947;
     --warn-soft: #362709;
     --topbar-bg: rgba(10, 13, 31, 0.86);
+    --logo-plate: #ffffff;
     --scrim: rgba(3, 4, 12, 0.62);
     --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
     --shadow-2: 0 14px 34px -14px rgba(0, 0, 0, 0.7);
@@ -144,6 +146,7 @@
   --warn: #f5b947;
   --warn-soft: #362709;
   --topbar-bg: rgba(10, 13, 31, 0.86);
+  --logo-plate: #ffffff;
   --scrim: rgba(3, 4, 12, 0.62);
   --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-2: 0 14px 34px -14px rgba(0, 0, 0, 0.7);
@@ -619,6 +622,49 @@ p {
   fill: var(--marker);
   stroke: var(--marker);
   stroke-width: 1.5;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  flex: none;
+  padding-right: 12px;
+  border-right: 1px solid var(--line-2);
+}
+
+.brand-logo img,
+.hero-logo,
+.cert-logo {
+  display: block;
+  width: auto;
+  object-fit: contain;
+  background: var(--logo-plate);
+  border-radius: 6px;
+  padding: 2px 5px;
+}
+
+.brand-logo img {
+  height: 32px;
+  max-width: 130px;
+}
+
+.hero-logo {
+  height: 52px;
+  max-width: 220px;
+  justify-self: start;
+}
+
+.cert-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cert-logo {
+  height: 44px;
+  max-width: 160px;
+  flex: none;
 }
 
 .brand-text {
@@ -4402,8 +4448,14 @@ button.rcard:hover {
 }
 
 @media (max-width: 440px) {
-  .brand-text {
+  .brand-text,
+  .brand-mark.with-logo {
     display: none;
+  }
+
+  .brand-logo {
+    border-right: 0;
+    padding-right: 0;
   }
 }
 
@@ -5512,6 +5564,22 @@ button.rcard:hover {
 </script>
 <script>
 /* ==========================================================================
+   Agency branding. Change the name here. To show the logo, put the file in
+   assets/brand/ and set `logo` to its path (PNG, JPG or SVG). The build
+   script embeds it into the single-file versions automatically.
+   ========================================================================== */
+(function () {
+  'use strict';
+  window.PU.brand = {
+    name: 'Brij Design Studio',
+    short: 'BDS',
+    logo: ''
+  };
+})();
+
+</script>
+<script>
+/* ==========================================================================
    Claude Power-Up — interactive step components.
    Each step type is PU.steps[type](step, ctx) and returns DOM nodes.
    ctx: { level, index, key, data, done, complete(), award(sub, xp, label, anchor),
@@ -5788,8 +5856,10 @@ button.rcard:hover {
       h('div.meter-track', h('div.meter-ghost'), h('div.meter-fill')),
       h('span.meter-flag.f-goal', 'You, after this training →')
     );
+    var B = PU.brand || {};
     return h(
       'div.hero',
+      B.logo ? h('img.hero-logo', { src: B.logo, alt: (B.name || 'Agency') + ' logo' }) : null,
       h('div.eyebrow', step.eyebrow),
       h('h1', { html: PU.rich(step.title) }),
       h('p.lede', { html: PU.rich(step.lede) }),
@@ -5834,7 +5904,7 @@ button.rcard:hover {
         )
       ),
       h('div.perf'),
-      h('div.ticket-fields', tf('Client', PU.state.name || 'You'), tf('Deliverable', L.deliverable), tf('Est. time', L.minutes + ' min'), tf('XP on offer', L.maxXp)),
+      h('div.ticket-fields', tf('Client', PU.state.name || 'You'), tf('Deliverable', L.deliverable), tf('Steps', L.steps.length), tf('XP on offer', L.maxXp)),
       h(
         'div.ticket-learn',
         h('div.eyebrow', 'You’ll learn'),
@@ -8418,6 +8488,7 @@ button.rcard:hover {
     var s = PU.state;
     var out = [];
     out.push('# Claude Power-Up: my cheat sheet');
+    if (PU.brand && PU.brand.name) out.push(PU.brand.name + ' · internal training  ');
     out.push('');
     if (s.name) out.push('Owner: ' + s.name + '  ');
     out.push('Rank: ' + PU.rankFor(s.xp).name + ' (' + s.xp + ' XP)');
@@ -8546,7 +8617,11 @@ button.rcard:hover {
     return [
       h(
         'div.cert',
-        h('div.eyebrow', 'Claude Power-Up · Certificate of completion'),
+        h(
+          'div.cert-top',
+          h('div.eyebrow', ((PU.brand && PU.brand.name) ? PU.brand.name + ' · ' : '') + 'Claude Power-Up · Certificate of completion'),
+          PU.brand && PU.brand.logo ? h('img.cert-logo', { src: PU.brand.logo, alt: PU.brand.name + ' logo' }) : null
+        ),
         h('div.stamp.slam', 'Approved'),
         h('div.who', s.name || 'You did it'),
         h('p.lede', { html: PU.rich('Officially stopped using Claude like Google. Rank: ==' + rank.name + '==.') }),
@@ -8576,20 +8651,19 @@ button.rcard:hover {
     short: 'The wake-up call',
     tagline: 'Most people use Claude at 20% of its potential.',
     deliverable: 'A new way of seeing Claude',
-    minutes: 3,
     learn: ['Why two people get wildly different results from the same Claude'],
     steps: [
       {
         type: 'hero',
         hideBar: true,
         xp: 10,
-        eyebrow: 'Claude Power-Up · internal training',
+        eyebrow: (PU.brand && PU.brand.name ? PU.brand.name : 'Claude Power-Up') + ' · internal training',
         title: 'Most people are using Claude at ==20%== of its potential.',
-        lede: 'Stop using Claude like Google. In about 50 minutes you’ll learn to brief it, feed it and put it to work like the sharpest person on your team.',
+        lede: 'Stop using Claude like Google. Learn to brief it, feed it and put it to work like the sharpest person on your team.',
         meta: [
           ['grid', '11 short levels'],
-          ['clock', 'About 50 minutes'],
-          ['target', 'Then 30 minutes on your real work']
+          ['trophy', 'XP, ranks and a certificate'],
+          ['target', 'Ends with a challenge on your real work']
         ]
       },
 
@@ -8764,7 +8838,6 @@ button.rcard:hover {
     short: 'Stop writing terrible prompts',
     tagline: 'A prompt is a brief. Here’s how to write a great one in 60 seconds.',
     deliverable: 'A prompt formula you’ll use every day',
-    minutes: 6,
     learn: ['The 6 parts of a great brief', 'Why better information beats longer prompts', 'How to check your own prompt before you send it'],
     steps: [
       { type: 'intro' },
@@ -9089,7 +9162,6 @@ button.rcard:hover {
     short: 'Think in context, not questions',
     tagline: 'Don’t make Claude guess. Give it what a new hire would need.',
     deliverable: 'Answers that sound like they came from inside the account',
-    minutes: 5,
     learn: ['Why vague prompts get generic answers', 'The kinds of context that change everything', 'The “interview me” trick for when you don’t know what to say'],
     steps: [
       { type: 'intro' },
@@ -9295,7 +9367,7 @@ button.rcard:hover {
         options: [
           {
             label:
-              '“Our agency was founded in 2012. We have 45 people across Mumbai and Pune, a dog-friendly office and lots of awards. Write a proposal intro for a real estate client.”',
+              '“Our agency has won lots of awards. We have a great team, a lovely office and happy clients across India. Write a proposal intro for a real estate client.”',
             why: 'Lots of words about you, nothing about the client or what the intro must do.'
           },
           {
@@ -9336,7 +9408,6 @@ button.rcard:hover {
     short: 'Make Claude work like an employee',
     tagline: 'Stop ordering outputs. Assign a process.',
     deliverable: 'Thinking, not just output',
-    minutes: 5,
     learn: [
       'The 6-step workflow: Task, Analyse, Think, Create, Critique, Improve',
       'Ready-made workflows for 13 everyday agency jobs',
@@ -10041,7 +10112,6 @@ button.rcard:hover {
     short: 'Claude for your actual job',
     tagline: 'Ten departments. Fifty jobs Claude can take off your plate.',
     deliverable: 'Your personal list of Claude jobs',
-    minutes: 4,
     learn: ['What Claude can do for your role, with ready-made prompts', 'How to turn a template into your own prompt in seconds', 'What you should never fully hand over'],
     steps: [
       { type: 'intro' },
@@ -10225,7 +10295,6 @@ button.rcard:hover {
     short: 'Research, files & images',
     tagline: 'Stop typing what you can show. Then check what comes back.',
     deliverable: 'Answers based on your real material',
-    minutes: 6,
     learn: ['What Claude can read, and what it can’t', 'Screenshots: the fastest context there is', 'How to research with sources you can check'],
     steps: [
       { type: 'intro' },
@@ -10417,7 +10486,6 @@ button.rcard:hover {
     short: 'Projects & memory',
     tagline: 'Brief once. Reuse forever.',
     deliverable: 'Never explain the client twice',
-    minutes: 5,
     learn: ['How Projects give every chat a built-in brief', 'What memory does, and where it lives', 'What to do when a long chat starts forgetting things'],
     steps: [
       { type: 'intro' },
@@ -10644,7 +10712,6 @@ button.rcard:hover {
     short: 'Claude Cowork',
     tagline: 'Chat gives you answers. Cowork gives you finished work.',
     deliverable: 'Finished files, not just answers',
-    minutes: 5,
     learn: ['What Cowork is, and when to use it instead of chat', 'How to delegate a task and stay in control', 'The ground rules for letting Claude work on your files'],
     steps: [
       { type: 'intro' },
@@ -10817,7 +10884,6 @@ button.rcard:hover {
     short: 'Claude Code for non-coders',
     tagline: 'If you can describe it, Claude can build it.',
     deliverable: 'Your first tool, built by describing it',
-    minutes: 4,
     learn: ['What marketers build with Claude Code', 'How to ask for a tool in plain English', 'How to report problems so they get fixed'],
     steps: [
       { type: 'intro' },
@@ -10952,7 +11018,6 @@ button.rcard:hover {
     short: 'Build your own AI workflow',
     tagline: 'One great prompt helps once. A workflow helps every week.',
     deliverable: 'One reusable system for your weekly work',
-    minutes: 6,
     learn: ['Which Claude tool fits which job', 'The five parts of a repeatable workflow', 'Your own workflow, ready to use tomorrow'],
     steps: [
       { type: 'intro' },
@@ -11177,8 +11242,7 @@ button.rcard:hover {
     short: 'The real work challenge',
     tagline: 'Use everything on a task from your actual to-do list.',
     deliverable: 'Real work, done better, today',
-    minutes: 5,
-    learn: ['Brief Claude on a real task using the full formula', 'Spend 30 focused minutes doing the work in Claude', 'Leave with your certificate and a personal cheat sheet'],
+    learn: ['Brief Claude on a real task using the full formula', 'Do the work in Claude with a focus clock running', 'Leave with your certificate and a personal cheat sheet'],
     steps: [
       { type: 'intro' },
 
@@ -11188,7 +11252,7 @@ button.rcard:hover {
         minutes: 30,
         eyebrow: 'Final mission',
         title: 'Do ==real work==, better, right now',
-        lede: 'Pick a task you actually need to do today. Brief it here, then spend 30 minutes getting it done in Claude.',
+        lede: 'Pick a task you actually need to do today. Brief it here, then get it done in Claude.',
         nextLabel: 'See your certificate',
         examples: [
           'Plan next week’s posts for a client',
@@ -11326,11 +11390,13 @@ button.rcard:hover {
     sheetBtn.addEventListener('click', openSheet);
     var setBtn = h('button.icon-btn', { type: 'button', 'aria-label': 'Settings' }, PU.icon('sliders'));
     setBtn.addEventListener('click', openSettings);
+    var B = PU.brand || {};
     var brand = h(
       'button.brand',
-      { type: 'button', 'aria-label': 'Claude Power-Up: show all levels' },
-      h('span.brand-mark', PU.icon('bolt')),
-      h('span.brand-text', h('span.brand-name', 'Claude Power-Up'), h('span.brand-tag.hide-sm', 'Stop using Claude like Google'))
+      { type: 'button', 'aria-label': 'Claude Power-Up' + (B.name ? ' by ' + B.name : '') + ': show all levels' },
+      B.logo ? h('span.brand-logo', h('img', { src: B.logo, alt: (B.name || 'Agency') + ' logo' })) : null,
+      h('span.brand-mark', { class: B.logo ? 'with-logo' : '' }, PU.icon('bolt')),
+      h('span.brand-text', h('span.brand-name', 'Claude Power-Up'), h('span.brand-tag.hide-sm', B.name ? 'by ' + B.name : 'Stop using Claude like Google'))
     );
     brand.addEventListener('click', openLevels);
     var topbar = h('header.topbar', brand, h('div.topbar-spacer'), rankChip, xpPill, levelsBtn, sheetBtn, setBtn, h('div.progress-line', { 'aria-hidden': 'true' }, progressFill));
@@ -11419,7 +11485,7 @@ button.rcard:hover {
           h(
             'span',
             h('span.li-title', L.short || plain(L.title)),
-            h('span.li-meta', levelName(L) + ' · ' + L.minutes + ' min' + (prog && !done ? ' · ' + prog + '/' + L.steps.length : done ? ' · done' : ''))
+            h('span.li-meta', levelName(L) + ' · ' + (done ? 'done' : prog ? prog + ' of ' + L.steps.length + ' steps' : L.steps.length + ' steps'))
           ),
           h('span.li-status', done ? PU.icon('check') : locked ? PU.icon('lock', 'icon-sm') : null)
         );
@@ -11442,7 +11508,7 @@ button.rcard:hover {
       rankCard(),
       h('div.rail-head', h('span.eyebrow', 'Levels'), h('span.mono.small.muted', overallPct() + '% done')),
       levelList(),
-      h('div.rail-foot', 'Internal training on using Claude well. Not an official Anthropic product. Chats marked “Simulated” show pre-written example answers.')
+      h('div.rail-foot', 'An internal training for the ' + ((PU.brand && PU.brand.name) || 'agency') + ' team. Not an official Anthropic product. Chats marked “Simulated” show pre-written example answers.')
     );
   }
 
@@ -11508,7 +11574,7 @@ button.rcard:hover {
     var st = L.steps[idx];
     var key = stepKey(L, idx);
 
-    PU.fill(stageHead, h('div.eyebrow', levelName(L) + ' · ' + plain(L.title)), h('div.eyebrow', 'Step ' + (idx + 1) + ' of ' + L.steps.length + ' · ~' + L.minutes + ' min'));
+    PU.fill(stageHead, h('div.eyebrow', levelName(L) + ' · ' + plain(L.title)), h('div.eyebrow', 'Step ' + (idx + 1) + ' of ' + L.steps.length));
     PU.clear(stepsBar);
     L.steps.forEach(function (s, i) {
       stepsBar.appendChild(h('i', { class: i === idx ? 'now' : PU.state.stepsDone[stepKey(L, i)] ? 'done' : '' }));
@@ -11733,7 +11799,7 @@ button.rcard:hover {
         h(
           'div.setting',
           h('div.st-title', 'About this training'),
-          h('div.st-sub', 'Simulated chats show pre-written example answers so everyone sees the same thing. Prompt scores come from an automatic checklist that looks for the parts of a good brief. ' + liveLine),
+          h('div.st-sub', 'Made for the ' + ((PU.brand && PU.brand.name) || 'agency') + ' team. Simulated chats show pre-written example answers so everyone sees the same thing. Prompt scores come from an automatic checklist that looks for the parts of a good brief. ' + liveLine),
           h('div.st-sub', 'Keyboard: ← and → move between steps.')
         )
       )

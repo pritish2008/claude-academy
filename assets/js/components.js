@@ -275,8 +275,10 @@
       h('div.meter-track', h('div.meter-ghost'), h('div.meter-fill')),
       h('span.meter-flag.f-goal', 'You, after this training →')
     );
+    var B = PU.brand || {};
     return h(
       'div.hero',
+      B.logo ? h('img.hero-logo', { src: B.logo, alt: (B.name || 'Agency') + ' logo' }) : null,
       h('div.eyebrow', step.eyebrow),
       h('h1', { html: PU.rich(step.title) }),
       h('p.lede', { html: PU.rich(step.lede) }),
@@ -321,7 +323,7 @@
         )
       ),
       h('div.perf'),
-      h('div.ticket-fields', tf('Client', PU.state.name || 'You'), tf('Deliverable', L.deliverable), tf('Est. time', L.minutes + ' min'), tf('XP on offer', L.maxXp)),
+      h('div.ticket-fields', tf('Client', PU.state.name || 'You'), tf('Deliverable', L.deliverable), tf('Steps', L.steps.length), tf('XP on offer', L.maxXp)),
       h(
         'div.ticket-learn',
         h('div.eyebrow', 'You’ll learn'),
@@ -2905,6 +2907,7 @@
     var s = PU.state;
     var out = [];
     out.push('# Claude Power-Up: my cheat sheet');
+    if (PU.brand && PU.brand.name) out.push(PU.brand.name + ' · internal training  ');
     out.push('');
     if (s.name) out.push('Owner: ' + s.name + '  ');
     out.push('Rank: ' + PU.rankFor(s.xp).name + ' (' + s.xp + ' XP)');
@@ -3033,7 +3036,11 @@
     return [
       h(
         'div.cert',
-        h('div.eyebrow', 'Claude Power-Up · Certificate of completion'),
+        h(
+          'div.cert-top',
+          h('div.eyebrow', ((PU.brand && PU.brand.name) ? PU.brand.name + ' · ' : '') + 'Claude Power-Up · Certificate of completion'),
+          PU.brand && PU.brand.logo ? h('img.cert-logo', { src: PU.brand.logo, alt: PU.brand.name + ' logo' }) : null
+        ),
         h('div.stamp.slam', 'Approved'),
         h('div.who', s.name || 'You did it'),
         h('p.lede', { html: PU.rich('Officially stopped using Claude like Google. Rank: ==' + rank.name + '==.') }),

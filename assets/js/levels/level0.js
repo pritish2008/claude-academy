@@ -11,20 +11,19 @@
     short: 'The wake-up call',
     tagline: 'Most people use Claude at 20% of its potential.',
     deliverable: 'A new way of seeing Claude',
-    minutes: 3,
     learn: ['Why two people get wildly different results from the same Claude'],
     steps: [
       {
         type: 'hero',
         hideBar: true,
         xp: 10,
-        eyebrow: 'Claude Power-Up · internal training',
+        eyebrow: (PU.brand && PU.brand.name ? PU.brand.name : 'Claude Power-Up') + ' · internal training',
         title: 'Most people are using Claude at ==20%== of its potential.',
-        lede: 'Stop using Claude like Google. In about 50 minutes you’ll learn to brief it, feed it and put it to work like the sharpest person on your team.',
+        lede: 'Stop using Claude like Google. Learn to brief it, feed it and put it to work like the sharpest person on your team.',
         meta: [
           ['grid', '11 short levels'],
-          ['clock', 'About 50 minutes'],
-          ['target', 'Then 30 minutes on your real work']
+          ['trophy', 'XP, ranks and a certificate'],
+          ['target', 'Ends with a challenge on your real work']
         ]
       },
 

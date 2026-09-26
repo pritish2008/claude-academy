@@ -11,7 +11,6 @@
     short: 'Claude Code for non-coders',
     tagline: 'If you can describe it, Claude can build it.',
     deliverable: 'Your first tool, built by describing it',
-    minutes: 4,
     learn: ['What marketers build with Claude Code', 'How to ask for a tool in plain English', 'How to report problems so they get fixed'],
     steps: [
       { type: 'intro' },

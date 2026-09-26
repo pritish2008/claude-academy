@@ -15,7 +15,6 @@
     short: 'Projects & memory',
     tagline: 'Brief once. Reuse forever.',
     deliverable: 'Never explain the client twice',
-    minutes: 5,
     learn: ['How Projects give every chat a built-in brief', 'What memory does, and where it lives', 'What to do when a long chat starts forgetting things'],
     steps: [
       { type: 'intro' },

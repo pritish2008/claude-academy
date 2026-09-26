@@ -11,8 +11,7 @@
     short: 'The real work challenge',
     tagline: 'Use everything on a task from your actual to-do list.',
     deliverable: 'Real work, done better, today',
-    minutes: 5,
-    learn: ['Brief Claude on a real task using the full formula', 'Spend 30 focused minutes doing the work in Claude', 'Leave with your certificate and a personal cheat sheet'],
+    learn: ['Brief Claude on a real task using the full formula', 'Do the work in Claude with a focus clock running', 'Leave with your certificate and a personal cheat sheet'],
     steps: [
       { type: 'intro' },
 
@@ -22,7 +21,7 @@
         minutes: 30,
         eyebrow: 'Final mission',
         title: 'Do ==real work==, better, right now',
-        lede: 'Pick a task you actually need to do today. Brief it here, then spend 30 minutes getting it done in Claude.',
+        lede: 'Pick a task you actually need to do today. Brief it here, then get it done in Claude.',
         nextLabel: 'See your certificate',
         examples: [
           'Plan next week’s posts for a client',

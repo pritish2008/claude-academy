@@ -47,7 +47,6 @@
     short: 'Claude Cowork',
     tagline: 'Chat gives you answers. Cowork gives you finished work.',
     deliverable: 'Finished files, not just answers',
-    minutes: 5,
     learn: ['What Cowork is, and when to use it instead of chat', 'How to delegate a task and stay in control', 'The ground rules for letting Claude work on your files'],
     steps: [
       { type: 'intro' },

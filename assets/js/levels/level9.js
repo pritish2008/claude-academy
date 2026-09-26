@@ -11,7 +11,6 @@
     short: 'Build your own AI workflow',
     tagline: 'One great prompt helps once. A workflow helps every week.',
     deliverable: 'One reusable system for your weekly work',
-    minutes: 6,
     learn: ['Which Claude tool fits which job', 'The five parts of a repeatable workflow', 'Your own workflow, ready to use tomorrow'],
     steps: [
       { type: 'intro' },

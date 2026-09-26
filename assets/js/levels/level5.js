@@ -135,7 +135,6 @@
     short: 'Research, files & images',
     tagline: 'Stop typing what you can show. Then check what comes back.',
     deliverable: 'Answers based on your real material',
-    minutes: 6,
     learn: ['What Claude can read, and what it can’t', 'Screenshots: the fastest context there is', 'How to research with sources you can check'],
     steps: [
       { type: 'intro' },
