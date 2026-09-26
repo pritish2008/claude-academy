@@ -970,23 +970,65 @@ p {
 .steps-bar {
   display: flex;
   gap: 4px;
-  margin-bottom: 26px;
+  margin: -6px 0 20px;
 }
 
-.steps-bar > i {
+.steps-bar > button {
   flex: 1;
+  min-width: 0;
+  height: 16px;
+  padding: 6px 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.steps-bar > button::before {
+  content: "";
+  display: block;
   height: 4px;
   border-radius: 4px;
   background: var(--surface-3);
   transition: background-color 0.3s;
 }
 
-.steps-bar > i.done {
+.steps-bar > button.done::before {
   background: var(--accent);
 }
 
-.steps-bar > i.now {
+.steps-bar > button.now::before {
   background: var(--ink);
+}
+
+.steps-bar > button:not(:disabled):not(.now):hover::before {
+  background: var(--accent-line);
+}
+
+.steps-bar > button:disabled {
+  cursor: default;
+}
+
+.preview-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-bottom: 18px;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--accent-line);
+  background: var(--accent-soft);
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.preview-bar .icon {
+  color: var(--accent);
+}
+
+.preview-bar > span {
+  flex: 1 1 260px;
+  min-width: 0;
 }
 
 .step {

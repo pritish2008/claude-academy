@@ -245,6 +245,113 @@
   }
   PU.liveBox = liveBox;
 
+  /** Data describing a finished, correctly-answered step (used by Preview mode; never saved). */
+  PU.previewData = function (step) {
+    var d = {};
+    function all(list) {
+      var o = {};
+      (list || []).forEach(function (x, i) {
+        o[i] = true;
+      });
+      return o;
+    }
+    switch (step.type) {
+      case 'showdown':
+        d.ran = true;
+        break;
+      case 'quiz':
+        d.solved = true;
+        d.wrong = [];
+        break;
+      case 'multi':
+        d.sel = [];
+        step.options.forEach(function (o, i) {
+          if (o.status === 'correct') d.sel.push(i);
+        });
+        d.checked = true;
+        break;
+      case 'builder':
+        d.pick = {};
+        step.slots.forEach(function (s) {
+          var best = 0;
+          s.options.forEach(function (o, i) {
+            if (o.q > s.options[best].q) best = i;
+          });
+          d.pick[s.key] = best;
+        });
+        d.ran = 'strong';
+        break;
+      case 'tiers':
+        d.seen = all(step.tabs);
+        d.cur = 0;
+        break;
+      case 'cards':
+        d.open = all(step.cards);
+        break;
+      case 'chat':
+      case 'guesses':
+        d.done = true;
+        break;
+      case 'contextsim':
+        d.n = step.contexts.length;
+        break;
+      case 'flow':
+        d.seen = all(step.nodes);
+        d.cur = 0;
+        break;
+      case 'library':
+        d.opened = { 0: true };
+        d.cur = 0;
+        break;
+      case 'order':
+        d.seq = step.items.map(function (t, i) {
+          return i;
+        });
+        d.checked = true;
+        d.tries = 1;
+        break;
+      case 'sort':
+        d.a = {};
+        step.items.forEach(function (it, i) {
+          d.a[i] = it.answer;
+        });
+        d.checked = true;
+        break;
+      case 'menu':
+        d.seen = { 0: true };
+        d.cur = 0;
+        break;
+      case 'screens':
+        d.seen = all(step.tabs);
+        d.cur = 0;
+        break;
+      case 'project':
+        d.name = step.defaultName;
+        d.ins = {};
+        d.files = {};
+        step.instructions.forEach(function (o, i) {
+          if (o.good) d.ins[i] = true;
+        });
+        step.files.forEach(function (o, i) {
+          if (o.good) d.files[i] = true;
+        });
+        d.ran = true;
+        break;
+      case 'cowork':
+        d.done = true;
+        d.allowed = false;
+        break;
+      case 'build':
+        d.tool = Object.keys(step.tools)[0];
+        d.built = {};
+        d.built[d.tool] = true;
+        break;
+      default:
+        break;
+    }
+    return d;
+  };
+
   /* ---------------------------------------------------------------------
      hero — Level 0 opener
      --------------------------------------------------------------------- */
@@ -481,7 +588,7 @@
         x.b.classList.toggle('is-right', isRight);
         x.b.classList.toggle('is-dim', !!d.solved && !o.correct && !isWrong);
         x.b.disabled = !!d.solved || isWrong;
-        x.why.hidden = !(isWrong || isRight) || !o.why;
+        x.why.hidden = !(isWrong || isRight || ctx.preview) || !o.why;
         PU.clear(x.st);
         if (isWrong) x.st.appendChild(PU.icon('x'));
         if (isRight) x.st.appendChild(PU.icon('check'));
@@ -592,7 +699,7 @@
             x.b.style.borderColor = good ? 'var(--good)' : 'var(--bad-line)';
             x.b.style.background = good ? 'var(--good-soft)' : 'var(--bad-soft)';
           }
-          if ((missed || bad || o.status === 'neutral' || (o.status === 'correct' && on)) && o.why) {
+          if ((missed || bad || ctx.preview || o.status === 'neutral' || (o.status === 'correct' && on)) && o.why) {
             x.extra.hidden = false;
             x.extra.textContent = (missed ? 'Missed: ' : '') + o.why;
             x.extra.style.color = good ? 'var(--good)' : missed || bad ? 'var(--bad)' : 'var(--muted)';
@@ -753,6 +860,7 @@
       renderResult(PU.scorePrompt(d.text, checks));
       ctx.complete();
     } else ctx.setHint('Write your prompt, then press “Check my prompt”');
+    if (ctx.preview) expertBtn.click();
 
     return [
       head(step),
@@ -1596,7 +1704,7 @@
           var ok = a === r.it.answer;
           r.row.classList.toggle('ok', ok);
           r.row.classList.toggle('no', !ok);
-          var showWhy = r.it.why && (!ok || step.showAllWhy);
+          var showWhy = r.it.why && (!ok || step.showAllWhy || ctx.preview);
           r.why.hidden = !showWhy;
           if (showWhy) r.why.textContent = (ok ? '' : 'Best answer: ' + bucketLabel(r.it.answer) + '. ') + r.it.why;
         } else {
@@ -2843,9 +2951,11 @@
      --------------------------------------------------------------------- */
   S.summary = function (step, ctx) {
     var L = ctx.level;
-    var first = !PU.state.levelsDone[L.id];
-    PU.state.levelsDone[L.id] = true;
-    PU.save();
+    var first = !ctx.preview && !PU.state.levelsDone[L.id];
+    if (!ctx.preview) {
+      PU.state.levelsDone[L.id] = true;
+      PU.save();
+    }
     ctx.complete();
     ctx.award('done', 50, 'Level ' + L.num + ' complete', null);
     PU.emit('levels');
@@ -2986,7 +3096,7 @@
   S.certificate = function (step, ctx) {
     ctx.complete();
     var s = PU.state;
-    if (!s.levelsDone[ctx.level.id]) {
+    if (!ctx.preview && !s.levelsDone[ctx.level.id]) {
       s.levelsDone[ctx.level.id] = true;
       PU.save();
       PU.emit('levels');
@@ -3028,7 +3138,7 @@
       });
       confirmHost.appendChild(h('div.inline-confirm', h('b', 'Erase all progress, XP and saved prompts on this device?'), h('div.btn-row', yes, no)));
     });
-    if (!s.data.certShown) {
+    if (!ctx.preview && !s.data.certShown) {
       s.data.certShown = true;
       PU.save();
       setTimeout(PU.confetti, 300);

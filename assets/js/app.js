@@ -8,7 +8,7 @@
   var PU = window.PU;
   var h = PU.h;
 
-  var root, xpPill, xpNum, rankChip, progressFill, rail, stageHead, stepsBar, stepHost, stageInner;
+  var root, xpPill, xpNum, rankChip, progressFill, rail, stageHead, stepsBar, stepHost, stageInner, previewBar;
   var backBtn, nextBtn, nextLabel, hintEl, actionbar;
   var leaveFns = [];
   var themeTouched = false;
@@ -52,7 +52,7 @@
   }
 
   function isUnlocked(idx) {
-    if (idx === 0 || PU.state.unlockAll) return true;
+    if (idx === 0 || PU.state.unlockAll || PU.state.preview) return true;
     var prev = PU.levels[idx - 1];
     return !!PU.state.levelsDone[prev.id] || levelProgress(PU.levels[idx]) > 0;
   }
@@ -99,9 +99,20 @@
 
     rail = h('aside.rail', { 'aria-label': 'Levels' });
     stageHead = h('div.stage-head');
-    stepsBar = h('div.steps-bar', { 'aria-hidden': 'true' });
+    stepsBar = h('div.steps-bar', { role: 'group', 'aria-label': 'Steps in this level' });
     stepHost = h('div');
-    stageInner = h('div.stage-inner', { tabindex: '-1' }, stageHead, stepsBar, stepHost);
+    var previewOff = h('button.btn.btn-ghost.btn-sm', { type: 'button' }, 'Turn off');
+    previewOff.addEventListener('click', function () {
+      setPreview(false);
+    });
+    previewBar = h(
+      'div.preview-bar',
+      { hidden: true, role: 'status' },
+      PU.icon('eye', 'icon-sm'),
+      h('span', h('b', 'Preview mode. '), 'Every level is open and every answer is shown. Nothing is scored or saved.'),
+      previewOff
+    );
+    stageInner = h('div.stage-inner', { tabindex: '-1' }, previewBar, stageHead, stepsBar, stepHost);
 
     backBtn = h('button.btn.btn-ghost', { type: 'button', 'aria-label': 'Back' }, PU.icon('arrowLeft'), h('span.hide-sm', 'Back'));
     backBtn.addEventListener('click', goBack);
@@ -125,7 +136,7 @@
   }
 
   function setNextEnabled(on) {
-    nextEnabled = !!on || !!PU.state.unlockAll;
+    nextEnabled = !!on || !!PU.state.unlockAll || !!PU.state.preview;
     nextBtn.classList.toggle('is-locked', !nextEnabled);
     nextBtn.setAttribute('aria-disabled', String(!nextEnabled));
   }
@@ -276,18 +287,39 @@
     var key = stepKey(L, idx);
 
     PU.fill(stageHead, h('div.eyebrow', levelName(L) + ' · ' + plain(L.title)), h('div.eyebrow', 'Step ' + (idx + 1) + ' of ' + L.steps.length));
+    var preview = !!PU.state.preview;
+    previewBar.hidden = !preview;
     PU.clear(stepsBar);
     L.steps.forEach(function (s, i) {
-      stepsBar.appendChild(h('i', { class: i === idx ? 'now' : PU.state.stepsDone[stepKey(L, i)] ? 'done' : '' }));
+      var doneI = !!PU.state.stepsDone[stepKey(L, i)];
+      var reachable = preview || PU.state.unlockAll || doneI || i === idx || (i > 0 && PU.state.stepsDone[stepKey(L, i - 1)]);
+      var seg = h('button', {
+        type: 'button',
+        class: i === idx ? 'now' : doneI ? 'done' : '',
+        disabled: !reachable,
+        title: 'Step ' + (i + 1),
+        'aria-label': 'Step ' + (i + 1) + (i === idx ? ', current' : ''),
+        'aria-current': i === idx ? 'step' : null
+      });
+      if (reachable && i !== idx)
+        seg.addEventListener('click', function () {
+          go(pos.level, i);
+        });
+      stepsBar.appendChild(seg);
     });
 
     var ctx = {
       level: L,
       index: idx,
       key: key,
-      data: PU.stepData(key),
-      done: !!PU.state.stepsDone[key],
+      preview: preview,
+      data: preview ? PU.previewData(st) : PU.stepData(key),
+      done: preview || !!PU.state.stepsDone[key],
       complete: function () {
+        if (preview) {
+          setNextEnabled(true);
+          return;
+        }
         var fresh = !PU.state.stepsDone[key];
         if (fresh) {
           PU.state.stepsDone[key] = true;
@@ -301,7 +333,7 @@
         if (!building) hintEl.textContent = idx === L.steps.length - 1 ? '' : 'Done. Continue when ready.';
       },
       award: function (sub, amt, label, anchor) {
-        return PU.award(key + ':' + sub, amt, label, anchor);
+        return preview ? 0 : PU.award(key + ':' + sub, amt, label, anchor);
       },
       next: function () {
         setTimeout(goNext, 0);
@@ -461,13 +493,10 @@
     }
     paintTheme();
 
-    var sw = h('button.switch', { type: 'button', role: 'switch', 'aria-checked': String(!!PU.state.unlockAll) }, h('span.trk'), h('span', 'Unlock all levels'));
+    var sw = h('button.switch', { type: 'button', role: 'switch', 'aria-checked': String(!!PU.state.preview) }, h('span.trk'), h('span', 'Preview mode'));
     sw.addEventListener('click', function () {
-      PU.state.unlockAll = !PU.state.unlockAll;
-      PU.save();
-      sw.setAttribute('aria-checked', String(!!PU.state.unlockAll));
-      renderRail();
-      setNextEnabled(PU.state.stepsDone[stepKey(PU.levels[PU.state.pos.level], PU.state.pos.step)]);
+      setPreview(!PU.state.preview);
+      sw.setAttribute('aria-checked', String(!!PU.state.preview));
     });
 
     var confirmHost = h('div');
@@ -495,7 +524,12 @@
       h(
         'div.stack',
         h('div.setting', h('div.st-title', 'Theme'), themeSeg),
-        h('div.setting', h('div.st-title', 'Facilitator mode'), h('div.st-sub', 'For trainers and quick reviews: open any level and skip any step.'), sw),
+        h(
+          'div.setting',
+          h('div.st-title', 'Preview mode'),
+          h('div.st-sub', 'Skim every level and question without solving anything. All levels open, answers are shown, and nothing is scored or saved. Tap the step dots to jump around, or use the ← → keys.'),
+          sw
+        ),
         h('div.setting', h('div.st-title', 'Progress'), h('div.st-sub', 'Saved in this browser only. Nobody else can see it.'), h('div', resetBtn), confirmHost),
         h(
           'div.setting',
@@ -553,12 +587,24 @@
     });
   }
 
+  /** Preview mode: skim everything, answers shown, nothing scored or saved. */
+  function setPreview(on) {
+    PU.state.preview = !!on;
+    PU.save();
+    render();
+    PU.toast(on ? 'Preview mode on' : 'Preview mode off', { icon: 'eye' });
+  }
+
   function boot() {
     prepareLevels();
     buildShell();
     applyTheme();
     wireEvents();
     PU.live.init();
+    if (window.location.hash === '#preview') {
+      PU.state.preview = true;
+      PU.save();
+    }
     var m = /^#level-(\d+)$/.exec(window.location.hash || '');
     if (m) {
       var n = parseInt(m[1], 10);

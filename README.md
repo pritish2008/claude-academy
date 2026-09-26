@@ -35,7 +35,7 @@ Progress, XP and anything people write are saved in their own browser. Nobody el
 - **Simulated chats** use pre-written example answers, so everyone sees the same thing. They're labelled “Simulated”.
 - **Prompt scores** come from an automatic checklist (role, context, audience, goal, rules, format…). It checks for the parts of a good brief, not creativity.
 - **Live Claude:** when the page is published as a Claude artifact and opened inside Claude, “Try it with real Claude” boxes appear on the writing challenges. They use the viewer's own Claude account and ask permission first.
-- **Facilitator mode** (Settings) unlocks every level and lets a trainer skip steps.
+- **Preview mode** lets managers and trainers skim everything: every level opens, every question shows its answer, and the step dots jump anywhere. Nothing is scored or saved. Turn it on in Settings, or add `#preview` to the end of the link.
 - The page works on phones, and in light and dark mode.
 
 ## Agency name and logo
