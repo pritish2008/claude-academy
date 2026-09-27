@@ -1,238 +1,154 @@
-/* Level 9 — Build your own AI workflow */
+/* Level 9 — Claude Code without being a coder. (Its id stays 'L8' so saved progress keeps working.) */
 (function () {
   'use strict';
   var PU = window.PU;
 
   PU.levels[9] = {
-    id: 'L9',
+    id: 'L8',
     num: 9,
-    color: 'var(--sw-9)',
-    title: 'Build your own ==AI workflow==',
-    short: 'Build your own AI workflow',
-    tagline: 'One great prompt helps once. A workflow helps every week.',
-    deliverable: 'One reusable system for your weekly work',
-    learn: ['Which Claude tool fits which job', 'The five parts of a repeatable workflow', 'Your own workflow, ready to use tomorrow'],
+    color: 'var(--sw-8)',
+    title: 'Claude Code ==without being a coder==',
+    short: 'Claude Code for non-coders',
+    tagline: 'If you can describe it, Claude can build it.',
+    deliverable: 'Your first tool, built by describing it',
+    learn: ['What marketers build with Claude', 'How to ask for a tool in plain English, and where to do it', 'How to report problems so they get fixed'],
     steps: [
       { type: 'intro' },
 
       {
-        type: 'sort',
+        type: 'concept',
+        eyebrow: 'What is Claude Code?',
+        title: 'If you can ==describe it==, Claude can build it.',
+        lede: 'Claude Code writes and runs code for you. You describe what you want in plain English, it builds it, and you test it. You never have to read the code.',
+        visual: function () {
+          return PU.tiles([
+            { icon: 'external', title: 'UTM link builder', text: 'Stop hand-typing campaign links.', color: '#2e3bff' },
+            { icon: 'check', title: 'Caption checker', text: 'Length, hashtags and banned words, checked instantly.', color: '#00a676' },
+            { icon: 'layers', title: 'Landing page prototype', text: 'A real page to show the client before development starts.', color: '#7a4dff' },
+            { icon: 'clipboard', title: 'Report automation', text: 'Merge 10 CSV exports into one clean sheet every month.', color: '#e89a00' },
+            { icon: 'target', title: 'Campaign quiz or calculator', text: 'Interactive content for a campaign microsite.', color: '#e0418b' },
+            { icon: 'spark', title: 'This training', text: 'Everything you’re clicking through right now was built with Claude Code.', color: '#ff5a36' }
+          ]);
+        },
+        body:
+          '**Two ways to start:**\n- **Small tools** (a calculator, a checker, a simple form): just ask in a normal chat. Claude builds it in a panel next to the chat, called an [[artifact]], and you can use it straight away. You’ll try this in a moment.\n- **Bigger things** that work with files on your computer: use [[Claude Code]]. Open the Claude [[desktop app]] and click the **Code** tab at the top.'
+      },
+
+      {
+        type: 'build',
         xp: 30,
-        eyebrow: 'Warm-up',
-        title: 'Which Claude tool ==for the job==?',
-        lede: 'Everything from the last few levels, in one quick sort.',
-        buckets: [
-          { key: 'chat', label: 'Chat' },
-          { key: 'project', label: 'Project' },
-          { key: 'research', label: 'Research' },
-          { key: 'cowork', label: 'Cowork' },
-          { key: 'code', label: 'Claude Code' }
-        ],
-        items: [
-          { text: 'A quick rewrite of an email', answer: 'chat', why: 'Small and one-off: chat.' },
-          { text: 'Everything about one client, reused every day', answer: 'project', why: 'Reusable context lives in a Project.' },
-          { text: 'A market overview with sources', answer: 'research', why: 'Research mode searches widely and cites its sources.' },
-          { text: 'Turn a folder of exports into a finished report deck', answer: 'cowork', why: 'Files in, finished file out: Cowork.' },
-          { text: 'A UTM link builder for the whole team', answer: 'code', why: 'Building a tool: Claude Code.' },
-          { text: 'Keep the brand voice consistent across the team', answer: 'project', why: 'Shared instructions and files in a Project.' },
-          { text: 'Organise 500 photos into folders', answer: 'cowork', why: 'Batch file work: Cowork.' }
-        ],
-        success: 'All correct. You know your toolkit now.'
-      },
-
-      {
-        type: 'tiers',
-        xp: 10,
-        eyebrow: 'Anatomy of a workflow',
-        title: 'Trigger → Input → Steps → Output → ==Your check==',
-        lede: 'Every good workflow has the same five parts. Here are four real ones. Tap through them.',
-        tabs: [
-          {
-            label: 'Monday content engine',
-            kind: 'good',
-            prompt:
-              'Here are last week’s top 3 posts and this week’s key dates. Plan 5 posts for the week: analyse what worked, pick the angles, write the captions, critique them against the brand voice, then give me the final plan as a table.',
-            notes: ['+ Trigger: every Monday, 10 am', '+ Lives in: the client’s Project, with brand files already inside', '+ Output: a content plan table with captions', '+ Your check: brand voice, facts, client sensitivities'],
-            result: 'A week of posts planned in minutes instead of hours.'
+        eyebrow: 'Build a tool',
+        title: 'Build a tool in ==60 seconds==',
+        lede: 'Pick one. Your request is written in plain English, exactly how you’d say it to a colleague.',
+        tools: {
+          caption: {
+            title: 'Caption checker',
+            desc: 'Paste a caption, see its length, hashtags and banned words.',
+            icon: 'check',
+            color: '#00a676',
+            request:
+              'Build me a simple web page where I can paste an Instagram caption and instantly see:\n- the character count (Instagram’s limit is 2,200)\n- how many hashtags it has (limit 30)\n- what shows before “…more” (roughly the first 125 characters)\n- a warning if it uses any of these banned words: elevate, indulge, unleash, game-changer.\nMake it clean and easy to use.',
+            log: [
+              { t: 'I’ll build a single web page with a text box and live checks. Plan: layout → counters → banned words → test.', kind: 'dim', ms: 900 },
+              { t: '✎ Creating caption-checker.html' },
+              { t: '✎ Adding live character and hashtag counters' },
+              { t: '✎ Adding the “…more” preview' },
+              { t: '✎ Adding banned-word warnings' },
+              { t: '▶ Testing with a sample caption… 4 checks passed', kind: 'ok', ms: 900 },
+              { t: 'Done. Open caption-checker.html in your browser. Want a copy button or more banned words?', kind: 'ok' }
+            ]
           },
-          {
-            label: 'Monthly client report',
-            kind: 'good',
-            prompt:
-              'Using the exports in this folder, build this month’s report in last month’s layout, write a short client email, and check every number against the source files.',
-            notes: ['+ Trigger: first working day of the month', '+ Lives in: Cowork, pointed at the client’s report folder', '+ Output: report deck and summary email', '+ Your check: every number, the story, the tone'],
-            result: 'A finished deck and email, waiting for your review.'
-          },
-          {
-            label: 'New business sprint',
-            kind: 'good',
-            prompt:
-              'Research [prospect] using their website and recent news. Summarise their business, marketing strengths and gaps, then give me 3 pitch angles and a cold email for each.',
-            notes: ['+ Trigger: a new lead comes in', '+ Lives in: chat with web search, or Research for bigger pitches', '+ Output: a one-page prospect brief and emails', '+ Your check: facts, sources, tone'],
-            result: 'You walk into every first call already knowing the business.'
-          },
-          {
-            label: 'Campaign idea machine',
-            kind: 'good',
-            prompt: 'From this brief, name the audience tension and the product truth, write 5 insights, generate 20 ideas, score them on originality and fit, and develop the top 3.',
-            notes: ['+ Trigger: a new brief lands', '+ Lives in: the client’s Project', '+ Output: 3 developed concepts with the thinking behind them', '+ Your check: originality, budget, brand fit'],
-            result: 'Better first ideas, faster, with the reasoning attached.'
-          }
-        ],
-        callout: { title: 'A workflow is a prompt you ==never have to write again==.' }
-      },
-
-      {
-        type: 'wfbuilder',
-        xp: 60,
-        eyebrow: 'Build yours',
-        title: 'Design ==your== workflow',
-        lede: 'Pick a recurring task from your real job. Seven quick questions, and you get a workflow card plus a master prompt.',
-        presets: {
-          'Monthly client report': {
-            match: /report/,
-            freq: 'Monthly',
-            where: 'Cowork',
-            inputs: ['Data exports', 'Last month’s report', 'Client goals'],
-            output: 'A report deck plus a 5-line summary email for the client',
-            steps: {
-              analyse: 'Calculate month-on-month changes for the key numbers in the exports.',
-              think: 'Pick the 3 things the client most needs to know, and explain why they happened.',
-              create: 'Build the report in last month’s layout and write the summary email.',
-              critique: 'Check every number against the source files. Flag anything that sounds like an excuse.',
-              improve: 'Tighten the summary to 5 lines a busy client will actually read.'
-            }
-          },
-          'Weekly content plan': {
-            match: /content|posts|calendar|social/,
-            freq: 'Weekly',
-            where: 'Project',
-            inputs: ['Brand guidelines', 'Past examples', 'Key dates'],
-            output: 'A table of 5 posts: date, format, hook, caption and call to action',
-            steps: {
-              analyse: 'Review last week’s best and worst posts and this week’s key dates.',
-              think: 'Pick the 2–3 angles that fit this week’s goal and audience.',
-              create: 'Plan 5 posts and write the captions.',
-              critique: 'Check each post against the brand voice and cut anything generic.',
-              improve: 'Rewrite the weakest post and give me the final table.'
-            }
-          },
-          'Competitor round-up': {
-            match: /competitor/,
-            freq: 'Monthly',
-            where: 'Chat',
-            inputs: ['Competitor screenshots', 'Client goals'],
-            output: 'A one-page round-up: what changed, what’s working for them, and 3 opportunities for us',
-            steps: {
-              analyse: 'Summarise each competitor’s posts, offers and campaigns from the screenshots and a web search.',
-              think: 'What changed since last month, and what’s working for them?',
-              create: 'Write the round-up with 3 opportunities for our client.',
-              critique: 'Separate facts from guesses, and flag anything without a source.',
-              improve: 'Cut it to one page with the most important point first.'
-            }
-          },
-          'New business research': {
-            match: /pitch|prospect|new business|lead/,
-            freq: 'Every new project',
-            where: 'Chat',
-            inputs: ['Prospect website', 'Meeting notes'],
-            output: 'A one-page prospect brief with 3 pitch angles and a cold email for each',
-            steps: {
-              analyse: 'Research the prospect’s business, audience and current marketing.',
-              think: 'Find their biggest marketing gap and what they probably care about most right now.',
-              create: 'Write 3 pitch angles and a short cold email for each.',
-              critique: 'Read it as a skeptical marketing head. What would make you ignore this?',
-              improve: 'Sharpen the best angle and its email.'
-            }
-          },
-          'Meeting notes to actions': {
-            match: /meeting|notes|call/,
-            freq: 'Daily',
-            where: 'Project',
-            inputs: ['Meeting notes', 'Client feedback'],
-            output: 'An email with a 5-line summary, decisions, action items with owners and deadlines, and open questions',
-            steps: {
-              analyse: 'Read my rough notes and pull out every decision, task and open question.',
-              think: 'Work out who owns each task and what’s urgent.',
-              create: 'Write the follow-up email.',
-              critique: 'Check that nothing is missing or vague. Flag anything I need to confirm.',
-              improve: 'Make it scannable in 30 seconds.'
-            }
-          },
-          'Ad copy variations': {
-            match: /ad copy|ads|meta|google ads/,
-            freq: 'Weekly',
-            where: 'Project',
-            inputs: ['Brand guidelines', 'Customer reviews', 'Past examples'],
-            output: '12 ad variations across 4 angles, with the top 5 ranked for testing',
-            steps: {
-              analyse: 'Pull the top reasons people buy and the top objections from the reviews.',
-              think: 'Pick 4 distinct angles: pain, aspiration, social proof and offer.',
-              create: 'Write 3 variations per angle: primary text, headline and call to action.',
-              critique: 'Flag anything generic, or any claim we can’t back up.',
-              improve: 'Rewrite the flagged ones and rank the top 5 to test.'
-            }
+          utm: {
+            title: 'UTM link builder',
+            desc: 'Fill in a short form, get a clean tracking link.',
+            icon: 'external',
+            color: '#2e3bff',
+            request:
+              'Build me a simple page where I enter a website link, a source (like Instagram), a medium (like paid social), a campaign name and an optional content label, and it gives me the full tracking link with UTM tags and a copy button.\nMake everything lowercase and replace spaces with underscores so our reports stay clean.',
+            log: [
+              { t: 'I’ll make a small form that builds the link as you type. Plan: form → link builder → clean-up rules → copy button → test.', kind: 'dim', ms: 900 },
+              { t: '✎ Creating utm-builder.html' },
+              { t: '✎ Adding the form fields' },
+              { t: '✎ Adding lowercase and underscore clean-up' },
+              { t: '✎ Adding the copy button' },
+              { t: '▶ Testing with “SPF50 Launch”… spf50_launch ✓', kind: 'ok', ms: 900 },
+              { t: 'Done. Open utm-builder.html in your browser. Want it to remember your recent links?', kind: 'ok' }
+            ]
           }
         },
-        freqs: ['Daily', 'Weekly', 'Monthly', 'Every new project'],
-        inputs: [
-          'Brand guidelines',
-          'Past examples',
-          'Audience notes',
-          'Data exports',
-          'Last month’s report',
-          'Meeting notes',
-          'Client feedback',
-          'Client goals',
-          'Competitor screenshots',
-          'Customer reviews',
-          'Key dates',
-          'Prospect website'
-        ],
-        wheres: ['Chat', 'Project', 'Cowork', 'Claude Code'],
-        whereWhy: {
-          Chat: 'Quick and flexible: paste the master prompt into a new chat each time.',
-          Project: 'The brand files and rules live there, so every run starts briefed.',
-          Cowork: 'It works through your files and hands back finished documents. Recurring jobs can run on a schedule.',
-          'Claude Code': 'Best when the answer is a tool your team can reuse.'
-        },
-        whereHow: {
-          Chat: 'paste the master prompt into a new chat each time',
-          Project: 'save the master prompt in the Project instructions',
-          Cowork: 'point it at the folder, then schedule it',
-          'Claude Code': 'use the steps as the spec for a tool'
-        },
-        checks: ['Numbers', 'Facts & sources', 'Brand voice', 'Client sensitivities', 'Legal claims', 'Names & spelling'],
-        levelUp: '**Level up:** turn your workflow into a [[Skill]], so Claude follows it by itself every time. The next screen shows you how.'
+        doneCallout: {
+          eyebrow: 'That’s the whole skill',
+          title: 'Describe the outcome. ==Test it.== Say what to change.',
+          text: 'A real Claude Code session works the same way. At the end you get a real file on your computer.'
+        }
       },
 
       {
         type: 'guide',
-        xp: 20,
+        xp: 15,
         eyebrow: 'Try it now',
-        title: 'Save your workflow as a ==Skill==',
-        lede: 'A [[Skill]] is a saved set of instructions. Once it’s saved, you don’t paste your master prompt any more: you just ask for the job, and Claude follows your steps. Open Claude in another tab and follow along.',
+        title: 'Build your first tool in a ==normal chat==',
+        lede: 'No installing, no code. Open Claude in another tab and follow along, ticking each step.',
         items: [
-          { title: 'Copy your master prompt', body: 'It’s in your cheat sheet: press **Cheat sheet** at the top right of this page.' },
-          { title: 'Open Skills', body: 'In Claude, go to **Customize**, then **Skills**.' },
-          { title: 'Add a new skill, and let Claude write it', body: 'Add a skill and choose the option to **create it with Claude**. Claude asks you a few questions and writes the skill for you.' },
-          { title: 'Give Claude your workflow', body: 'Paste your master prompt and say: “Turn this into a skill for [the task].” Answer its questions.' },
-          { title: 'Save it and switch it on', body: 'Save the skill, and check it’s switched on in your Skills list.' },
-          { title: 'Test it', body: 'In a normal chat, ask for the task the way you usually would. Claude uses your skill by itself. If something is off, ask Claude to update the skill.' }
+          { title: 'Start a new chat', body: 'Open Claude and start a new chat, like you always do.' },
+          {
+            title: 'Describe the tool',
+            body: 'Paste the request from the last screen, or describe your own tool in plain English: who uses it, and what it should do.'
+          },
+          { title: 'Watch it appear', body: 'Claude builds it in a panel next to the chat. Try it right there: type in it, click the buttons.' },
+          { title: 'Ask for changes', body: 'Just say what you want different: “Make the button bigger”, “Add a copy button”, “Use our brand colours”.' },
+          {
+            title: 'Share it with the team',
+            body: 'Use the **Share** or **Publish** button on the panel. On a Team plan, it’s shared only inside the company. On personal plans, publishing makes a public link, so check nothing private is in it first.'
+          }
         ],
-        footer:
-          'Don’t see Skills? It needs a setting called code execution to be on: ask whoever manages your Claude account. On a Team plan, an admin can also add a skill once for the whole company.'
+        footer: 'Buttons move around between versions. If something looks different, look for the panel next to the chat and its share option.'
+      },
+
+      {
+        type: 'cards',
+        xp: 10,
+        eyebrow: 'Talking to Claude Code',
+        title: 'Six habits of ==non-coders who ship==',
+        lede: 'Open each card.',
+        cards: [
+          { icon: 'target', title: 'Describe the outcome', color: '#2e3bff', body: 'Who uses it and what should it do? Not how to code it.' },
+          { icon: 'eye', title: 'Ask for a plan first', color: '#00a676', body: '“Before you build anything, explain your plan in plain English.”' },
+          { icon: 'layers', title: 'Start small', color: '#e89a00', body: 'Get a basic version working, then add one feature at a time.' },
+          { icon: 'alert', title: 'Report bugs like a client', color: '#e0418b', body: '“When I click X, Y happens. I expected Z.” Add a screenshot.' },
+          { icon: 'chat', title: 'Ask it to explain', color: '#7a4dff', body: '“Explain what you built as if I’m not technical.”' },
+          { icon: 'lock', title: 'Keep secrets out', color: '#ff5a36', body: 'Never paste passwords or client logins. Ask IT before connecting anything to company systems.' }
+        ]
+      },
+
+      {
+        type: 'quiz',
+        xp: 20,
+        eyebrow: 'Bug report',
+        title: 'Your caption checker shows “NaN” instead of a number. Best next message?',
+        options: [
+          { label: '“It’s broken. Fix it.”', why: 'It might work, but Claude has to guess what’s broken.' },
+          {
+            label: '“When I paste a caption with emojis and click Check, the character count shows ‘NaN’. I expected a number. Screenshot attached.”',
+            correct: true,
+            why: 'What you did, what happened and what you expected, plus a screenshot. That gets fixed first time.'
+          },
+          { label: '“Learn JavaScript over the weekend.”', why: 'You don’t need to. That’s Claude’s job.' },
+          { label: '“Give up and do it by hand.”', why: 'One clear sentence usually fixes it.' }
+        ],
+        explain: '**Great bug reports have three parts:** what you did, what happened, and what you expected.'
       },
 
       {
         type: 'summary',
-        takeaway: 'One great prompt helps once. ==A workflow helps every week.==',
+        takeaway: 'If you can describe it, ==Claude can build it==.',
         points: [
-          'Trigger → Input → Steps → Output → Your check.',
-          'Put it where it runs best: Chat, Project, Cowork or Claude Code.',
-          'Save the workflows you use every week as Skills.',
-          'Your workflow is saved in your cheat sheet.'
-        ]
+          'Describe the outcome, ask for a plan, start small.',
+          'Report problems like a client: what you did, what happened, what you expected.',
+          'Start with a tool that saves you 30 minutes a week.'
+        ],
+        note: '**Build websites or do SEO?** There’s a bonus level for you: Claude Code for web & SEO. It’s at the bottom of the level list, and always open.',
+        noteIcon: 'terminal'
       }
     ]
   };

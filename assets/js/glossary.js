@@ -46,6 +46,10 @@
       t: 'Connector',
       d: 'A link between Claude and another app you use, like Google Drive, Gmail or Canva, so Claude can read from it or work in it.'
     },
+    'custom connector': {
+      t: 'Custom connector',
+      d: 'A connector you add yourself by pasting a link from the tool’s own website, for tools that aren’t in Claude’s list.'
+    },
     'web search': { t: 'Web search', d: 'Lets Claude look things up on the internet and show you links to where it found them.' },
     research: {
       t: 'Research',

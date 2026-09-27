@@ -3268,7 +3268,7 @@
     ['The first answer is a first draft', 'Give specific feedback: what to keep, what to change, what you want back.'],
     ['Show, don’t describe. Then verify', 'Files, screenshots, data. Check facts and numbers before a client sees them.'],
     ['Brief once, reuse forever', 'One Project per client, with instructions and files.'],
-    ['Delegate outcomes', 'Cowork for finished files, Claude Code for tools. You review before it ships.']
+    ['Delegate outcomes', 'Connect your tools, use Cowork for finished files and Claude Code for tools. You review before it ships.']
   ];
 
   PU.BRIEF_TEMPLATE =

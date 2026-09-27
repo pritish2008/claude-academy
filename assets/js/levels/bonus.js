@@ -133,9 +133,9 @@
     'Don’t change anything. Return a table: page, issue, fix, priority.\n' +
     'Then ask me which fixes to make.';
 
-  PU.levels[11] = {
+  PU.levels[12] = {
     id: 'LB',
-    num: 11,
+    num: 12,
     label: 'Bonus',
     code: 'B',
     optional: true,

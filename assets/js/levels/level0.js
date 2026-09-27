@@ -21,7 +21,7 @@
         title: 'Most people are using Claude at ==20%== of its potential.',
         lede: 'Stop using Claude like Google. Learn to brief it, feed it and put it to work like the sharpest person on your team.',
         meta: [
-          ['grid', '11 short levels'],
+          ['grid', '12 short levels'],
           ['trophy', 'XP, ranks and a certificate'],
           ['target', 'Ends with a challenge on your real work'],
           ['terminal', 'Bonus level for web developers']
@@ -41,7 +41,7 @@
           },
           {
             label: 'Captions, emails and quick copy.',
-            reply: 'Good instinct, small ambition. Level 4 gives you 50 ready-made jobs Claude can do for your role.'
+            reply: 'Good instinct, small ambition. Level 4 gives you 55 ready-made jobs Claude can do for your role.'
           },
           {
             label: 'I paste something in and say “make it better”.',

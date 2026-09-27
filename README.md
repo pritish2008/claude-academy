@@ -2,7 +2,7 @@
 
 **“Stop using Claude like Google.”**
 
-An interactive training for the Brij Design Studio (BDS) team. People learn to use Claude properly: better prompts, context, step-by-step workflows, which model and effort to pick, research, files, Projects, Cowork (including how to set it up) and Claude Code. It ends with a challenge on their own real work. There's also a bonus level for web developers.
+An interactive training for the Brij Design Studio (BDS) team. People learn to use Claude properly: better prompts, context, step-by-step workflows, which model and effort to pick, research, files, Projects, Cowork (including how to set it up), connecting tools like Canva and Adobe so Claude can work in them, and Claude Code. It ends with a challenge on their own real work. There's also a bonus level for web developers.
 
 It's built like a product, not a course: XP, ranks, levels, quizzes, a prompt builder, simulated Claude chats, “fix this prompt” challenges with instant feedback, and a certificate with a personal cheat sheet at the end.
 
@@ -26,8 +26,9 @@ Progress, XP and anything people write are saved in their own browser. Nobody el
 | 5 | Research, files & images | Send screenshots to Claude, research with sources, verify facts |
 | 6 | Projects, memory & reusable context | Set up a client Project and see a 9-word prompt get on-brand work, then make a real one step by step |
 | 7 | Claude Cowork | Delegate a monthly report, decide what Claude may delete, and set Cowork up step by step |
-| 8 | Claude Code without being a coder | “Build” a caption checker or UTM builder, then build a real tool in a normal chat |
-| 9 | Build your own AI workflow | Design a repeatable workflow, get a master prompt and save it as a Skill |
+| 8 | Claude as the brain: connect your tools | Connect Canva, Adobe, ImagineArt, Meta Ads and more, then watch one request run a job across five apps |
+| 9 | Claude Code without being a coder | “Build” a caption checker or UTM builder, then build a real tool in a normal chat |
+| 10 | Build your own AI workflow | Design a repeatable workflow, get a master prompt and save it as a Skill |
 | Final | The real work challenge | Brief a real task, do it in Claude with a focus clock, get the certificate |
 | Bonus | Claude Code for web & SEO | Starts from zero: what Claude Code is, one-time setup, a screen-by-screen session, habits explained simply, 10 SEO and web prompts, safety |
 
@@ -68,4 +69,4 @@ To click through every step automatically and check nothing broke (needs Playwri
 node tools/smoke-test.js
 ```
 
-Not an official Anthropic product. Product details (Projects, memory, Cowork, Claude Code, models and effort levels) were checked against Claude's help centre and docs in September 2026. Features and model names change, so review Levels 3 and 6–8 and the bonus level every few months. To update model names, search the code for “Sonnet”: they appear in Level 3, the bonus level and the cheat sheet.
+Not an official Anthropic product. Product details (Projects, memory, Cowork, Claude Code, models and effort levels) were checked against Claude's help centre and docs in September 2026. Features and model names change, so review Levels 3 and 6–9 and the bonus level every few months. To update model names, search the code for “Sonnet”: they appear in Level 3, the bonus level and the cheat sheet.

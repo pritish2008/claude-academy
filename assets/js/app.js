@@ -624,8 +624,31 @@
     PU.toast(on ? 'Preview mode on' : 'Preview mode off', { icon: 'eye' });
   }
 
+  /**
+   * Saved positions are level numbers in the list. When the list changes
+   * (layout 2 added "Connect your tools" after Level 7), map old positions
+   * to the same level in the new list. Progress itself is saved by level id.
+   */
+  var LAYOUT = 2;
+  var LEGACY_ORDER = ['L0', 'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8', 'L9', 'LF', 'LB'];
+  function migratePositions() {
+    if (PU.state.layout === LAYOUT) return;
+    function map(p) {
+      var id = p && LEGACY_ORDER[p.level];
+      for (var i = 0; i < PU.levels.length; i++) {
+        if (PU.levels[i].id === id) return { level: i, step: p.step || 0 };
+      }
+      return { level: 0, step: 0 };
+    }
+    PU.state.pos = map(PU.state.pos);
+    if (PU.state.prePreviewPos) PU.state.prePreviewPos = map(PU.state.prePreviewPos);
+    PU.state.layout = LAYOUT;
+    PU.save();
+  }
+
   function boot() {
     prepareLevels();
+    migratePositions();
     buildShell();
     applyTheme();
     wireEvents();

@@ -3,10 +3,11 @@
   'use strict';
   var PU = window.PU;
 
-  PU.levels[10] = {
+  PU.levels[11] = {
     id: 'LF',
-    num: 10,
+    num: 11,
     label: 'Final',
+    code: 'F',
     color: 'var(--sw-10)',
     title: 'The ==real work== challenge',
     short: 'The real work challenge',
