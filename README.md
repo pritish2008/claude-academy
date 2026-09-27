@@ -47,7 +47,7 @@ Progress, XP and anything people write are saved in their own browser. Nobody el
 
 The training can send each person's progress to a Google Sheet you own. You get a **People** tab with one row per person (progress, levels done, active time, pace, rushed steps, quiz score, best prompt score, XP, certificate) and a **Levels** tab showing where each person spent time or rushed. Active time only counts while the page is open and the person is active.
 
-Setup takes a few minutes: see `tools/google-sheet/README.md`. It's off until you paste the Sheet's link into `assets/js/brand.js`. Staff see a note saying their progress is shared.
+Setup takes a few minutes: see `tools/google-sheet/README.md`. It's off until you paste the Sheet's link into `assets/js/brand.js`. Staff see a note saying their progress is shared. Open the link in a browser any time to see which Sheet it fills and when progress last arrived.
 
 ## Agency name and logo
 

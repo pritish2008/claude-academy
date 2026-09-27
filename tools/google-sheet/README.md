@@ -30,11 +30,28 @@ These are estimates. Treat them as a conversation starter, not a verdict.
 7. Copy the **Web app URL** (it ends in `/exec`).
 8. Paste it into `assets/js/brand.js`, under `sheet`, as `url`. Then run `python3 tools/build.py` and share the new `dist/claude-power-up.html`.
 
-To check it works, open the Web app URL in your browser. It should say “Claude Power-Up progress receiver is running.”
+## Check it works
+
+Open the Web app URL in your browser. You'll see a small page that says “Claude Power-Up progress receiver is running.” It also shows:
+
+- **Open your Google Sheet:** a link to the Sheet the progress goes into.
+- **Last progress saved:** when a report last arrived, or “No progress has arrived yet.”
+- **Last problem:** only shown when saving went wrong, with Google's error message.
+
+If the script was made at script.google.com instead of from a Sheet, it makes its own Sheet called “Claude Power-Up progress” and links to it here.
+
+## If your name doesn't show up
+
+1. Open the training **file** in Chrome, Safari or Edge: download it and double-click it. A copy opened inside the Claude app, or the Claude link version, can't send anything.
+2. Check the first screen (or **Settings**) says your progress is shared with Brij Design Studio. If it doesn't, you have an old copy.
+3. Type your name, click **Start Level 0**, then reload the check page (the Web app URL). “Last progress saved” should say “just now”.
+4. Still “No progress has arrived yet”? Open the Web app URL in a private (incognito) window. If Google asks you to sign in, go to **Deploy → Manage deployments → Edit** (pencil icon), set **Who has access** to **Anyone**, and click **Deploy**.
+5. A “Last problem” line? Send it to whoever looks after the training.
 
 ## Good to know
 
 - The training only sends data when the link is set, and never in Preview mode.
 - Staff see a note on the opening screen, and in Settings, saying their progress is shared.
+- Anyone with the Web app URL can see the check page, including the link to your Sheet. The Sheet itself stays private: only people you share it with can open it.
 - The key in `Code.gs` must match `key` in `brand.js`. It stops random junk getting into your Sheet, but it isn't a password. Anyone who opens the training file could find it.
-- If you change `Code.gs` later, use **Deploy → Manage deployments → Edit → New version**, so the link stays the same.
+- If you change `Code.gs` later, use **Deploy → Manage deployments → Edit** (pencil icon) **→ Version: New version → Deploy**, so the link stays the same. **New deployment** would give you a different link, and the training would need rebuilding with it.

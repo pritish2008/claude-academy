@@ -6,10 +6,16 @@
  * sends each person's progress here, and this keeps two tabs up to date:
  *   People: one row per person
  *   Levels: one row per person per level
+ *
+ * If the script wasn't opened from a Google Sheet, it makes its own Sheet,
+ * called "Claude Power-Up progress", the first time it's used. Open the web
+ * app link in a browser to see which Sheet it fills and when progress last
+ * arrived.
  */
 
 // Must match `key` under `sheet` in assets/js/brand.js.
 var KEY = 'bds-pu-7k3q9x2m';
+var NEW_SHEET_NAME = 'Claude Power-Up progress';
 
 var PEOPLE = [
   'Name',
@@ -47,9 +53,30 @@ var LEVELS = [
   'Level ID'
 ];
 
-/** Open the web app link in a browser to check it's working. */
+/** Open the web app link in a browser: it links to the Sheet and says when progress last arrived. */
 function doGet() {
-  return ContentService.createTextOutput('Claude Power-Up progress receiver is running.');
+  var props = PropertiesService.getScriptProperties();
+  var lines = [];
+  try {
+    var url = locked(function () {
+      var ss = book();
+      tab(ss, 'People', PEOPLE, 7);
+      tab(ss, 'Levels', LEVELS, 8);
+      return ss.getUrl();
+    });
+    lines.push('<a href="' + esc(url) + '" target="_blank" rel="noopener">Open your Google Sheet</a>');
+  } catch (err) {
+    lines.push('Problem opening the Google Sheet: ' + esc(err.message));
+  }
+  var saved = Number(props.getProperty('lastSaved')) || 0;
+  lines.push(saved ? 'Last progress saved: ' + esc(ago(saved)) : 'No progress has arrived yet.');
+  var problem = props.getProperty('lastProblem');
+  if (problem) lines.push('Last problem: ' + esc(problem));
+  var html =
+    '<div style="font:16px/1.7 Arial,sans-serif;padding:24px;max-width:640px">' +
+    '<h2 style="margin:0 0 12px">Claude Power-Up progress receiver is running.</h2>' +
+    '<p style="margin:0">' + lines.join('<br>') + '</p></div>';
+  return HtmlService.createHtmlOutput(html).setTitle('Claude Power-Up progress');
 }
 
 function doPost(e) {
@@ -63,14 +90,48 @@ function doPost(e) {
   }
   if (!data || data.key !== KEY || !data.person || !data.person.id) return reply('ignored');
 
+  var props = PropertiesService.getScriptProperties();
+  try {
+    locked(function () {
+      save(book(), data);
+    });
+  } catch (err) {
+    console.error(err);
+    props.setProperty('lastProblem', when(Date.now()) + ': ' + err.message);
+    return reply('problem: ' + err.message);
+  }
+  props.setProperty('lastSaved', String(Date.now()));
+  props.deleteProperty('lastProblem');
+  return reply('ok');
+}
+
+/** The Sheet to fill: the one this script was opened from, or one it made itself. */
+function book() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  if (ss) return ss;
+  var props = PropertiesService.getScriptProperties();
+  var id = props.getProperty('sheetId');
+  if (id) {
+    try {
+      return SpreadsheetApp.openById(id);
+    } catch (err) {
+      // Deleted or out of reach: make a new one.
+    }
+  }
+  ss = SpreadsheetApp.create(NEW_SHEET_NAME);
+  props.setProperty('sheetId', ss.getId());
+  return ss;
+}
+
+/** Run fn while no other report is being saved, so two can't clash. */
+function locked(fn) {
   var lock = LockService.getScriptLock();
   lock.waitLock(20000);
   try {
-    save(SpreadsheetApp.getActiveSpreadsheet(), data);
+    return fn();
   } finally {
     lock.releaseLock();
   }
-  return reply('ok');
 }
 
 function save(ss, data) {
@@ -174,4 +235,21 @@ function date(v) {
 
 function reply(msg) {
   return ContentService.createTextOutput(msg);
+}
+
+function when(ms) {
+  return Utilities.formatDate(new Date(ms), Session.getScriptTimeZone(), 'd MMM yyyy, h:mm a');
+}
+
+function ago(ms) {
+  var min = Math.floor((Date.now() - ms) / 60000);
+  if (min < 1) return 'just now (' + when(ms) + ')';
+  if (min < 60) return min + (min === 1 ? ' minute' : ' minutes') + ' ago (' + when(ms) + ')';
+  return when(ms);
+}
+
+function esc(v) {
+  return String(v).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
 }
