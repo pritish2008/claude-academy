@@ -65,6 +65,10 @@ def main() -> None:
     # Artifact pages get their own <!doctype>/<head>/<body> skeleton when
     # published, so only the title, styles, markup and scripts go in.
     artifact = region(bundled, "head") + "\n" + region(bundled, "body") + "\n"
+    # Progress reports go out from the shared file. A page published inside
+    # Claude can't send data to outside sites, so switch them off there
+    # rather than tell staff their progress is shared when it isn't.
+    artifact = re.sub(r"(sheet:\s*\{\s*url:\s*)'[^']*'", r"\1''", artifact)
     (DIST / "artifact.html").write_text(artifact, encoding="utf-8")
 
     for f in ("claude-power-up.html", "artifact.html"):

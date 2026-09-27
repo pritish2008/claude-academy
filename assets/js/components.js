@@ -458,7 +458,7 @@
       : null;
     var go = h('button.btn.btn-primary', { type: 'button' }, h('span', ctx.done ? 'Continue' : 'Start Level 0'), PU.icon('arrowRight'));
     go.addEventListener('click', function () {
-      if (tracking && !name.value.trim()) {
+      if (tracking && !ctx.preview && !name.value.trim()) {
         PU.toast('Please add your name first.', { icon: 'info' });
         name.focus();
         return;

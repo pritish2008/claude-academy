@@ -29,6 +29,11 @@ const SAMPLE =
     reducedMotion: 'reduce',
     colorScheme: process.env.DARK ? 'dark' : 'light'
   });
+  // Never send test runs to a real Google Sheet: answer those requests here instead.
+  await ctx.route(/script\.google\.com/, (route) => route.fulfill({ status: 200, body: 'ok' }));
+  await ctx.addInitScript(() => {
+    navigator.sendBeacon = () => true;
+  });
   const page = await ctx.newPage();
   const problems = [];
   page.on('pageerror', (e) => problems.push('script error: ' + e.message));
