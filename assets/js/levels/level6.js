@@ -74,6 +74,37 @@
       },
 
       {
+        type: 'guide',
+        xp: 20,
+        eyebrow: 'Try it now',
+        title: 'Make your first ==real Project==',
+        lede: 'Pick one client you work on every week. Open Claude in another tab and follow along, ticking each step.',
+        items: [
+          { title: 'Open Projects', body: 'In Claude, click **Projects** in the left sidebar, or go to claude.ai/projects.' },
+          { title: 'Create the Project', body: 'Click **+ New Project** at the top right. Name it after the client, like “Luma Skin”, then create it.' },
+          {
+            title: 'Add the rules',
+            body: 'Click **Set project instructions**. Paste the starter below, replace the [brackets] with the client’s details, then click **Save instructions**. These are the [[project instructions]].'
+          },
+          {
+            title: 'Add the files',
+            body: 'Click the **+** on the right of the Project page and upload the brand guidelines, tone-of-voice examples, personas and anything else from the “good files” on the last screen.'
+          },
+          { title: 'Start a chat inside it', body: 'Type a request in the message box on the Project page. Claude is already briefed, so a short request is enough.' },
+          {
+            title: 'Share it with your team',
+            body: 'On a Team plan, click **Share project** next to the Project name, add your teammates, and choose **Can view** or **Can edit**. Now everyone starts from the same brief.'
+          }
+        ],
+        template: {
+          label: 'Project instructions starter',
+          text:
+            'You’re the [role, e.g. senior strategist] on the [client] account.\nAbout the client: [what they sell, where, and who their customers are].\nVoice: [3–4 words, e.g. clear, warm, science-backed].\nNever: [words, claims or topics to avoid].\nAlways: give options with a one-line reason for each, and ask me questions if a brief is unclear.'
+        },
+        footer: 'Buttons move around between versions. If something looks different, look for the same idea: a new Project, its instructions, and its files.'
+      },
+
+      {
         type: 'sort',
         xp: 30,
         eyebrow: 'What goes where?',
@@ -109,7 +140,7 @@
             title: 'Memory',
             q: 'Claude remembers you',
             color: '#7a4dff',
-            body: 'Claude can remember details from past chats: your role, how you like things written, what you’re working on. You can view and edit what it remembers in Settings, or just say “Remember that I…”.'
+            body: 'Claude can remember details from past chats: your role, how you like things written, what you’re working on. This is its [[memory]]. You can see and edit what it remembers in **Settings**, or just say “Remember that I…”.'
           },
           {
             icon: 'folder',

@@ -293,6 +293,7 @@
 
   function render() {
     runLeave();
+    if (PU.closeTerm) PU.closeTerm();
     var pos = PU.state.pos;
     if (!PU.levels[pos.level]) pos = PU.state.pos = { level: 0, step: 0 };
     var L = PU.levels[pos.level];
@@ -379,6 +380,13 @@
     if (nextEnabled && !PU.state.unlockAll) hintEl.textContent = '';
     var stepEl = h('div.step', { class: PU.reduced ? '' : 'enter' }, content);
     PU.clear(stepHost).appendChild(stepEl);
+    if (!PU.state.data.termTip && stepEl.querySelector('.gloss')) {
+      PU.state.data.termTip = true;
+      PU.save();
+      setTimeout(function () {
+        PU.toast('Tip: tap any word with a dotted underline to see what it means.', { icon: 'info', ms: 4200 });
+      }, 600);
+    }
 
     backBtn.disabled = idx === 0 && (pos.level === 0 || !!L.optional);
     var isLast = idx === L.steps.length - 1;

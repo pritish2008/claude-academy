@@ -79,14 +79,81 @@
       list.map(function (t) {
         return h(
           'div.rcard.is-open',
-          { style: { '--c': t.color || 'var(--accent)' }, 'aria-label': t.title },
+          { style: { '--c': t.color || 'var(--accent)' } },
           h('div.rc-top', h('span', { style: 'color:var(--c)' }, PU.icon(t.icon, 'icon-lg'))),
           h('div.rc-title', t.title),
-          h('div.rc-q', t.text)
+          h('div.rc-q', { html: PU.rich(t.text) })
         );
       })
     );
   };
+
+  /* ---------------------------------------------------------------------
+     Words to know: tap a dotted-underlined word to see what it means.
+     Listens in the capture phase so a word inside a button doesn't also
+     press the button.
+     --------------------------------------------------------------------- */
+  (function () {
+    var pop = null;
+    var anchor = null;
+    function close() {
+      if (pop) pop.remove();
+      if (anchor) anchor.setAttribute('aria-expanded', 'false');
+      pop = anchor = null;
+    }
+    function open(el) {
+      var g = PU.GLOSSARY && PU.GLOSSARY[el.getAttribute('data-term')];
+      close();
+      if (!g) return;
+      anchor = el;
+      el.setAttribute('aria-expanded', 'true');
+      pop = h('div.gloss-pop', { role: 'dialog', 'aria-label': 'What “' + g.t + '” means' }, h('b', g.t), h('p', { html: PU.rich(g.d) }));
+      document.body.appendChild(pop);
+      var r = el.getBoundingClientRect();
+      var w = pop.offsetWidth;
+      var left = Math.max(12, Math.min(r.left, document.documentElement.clientWidth - w - 12));
+      var below = r.bottom + 8 + pop.offsetHeight < window.innerHeight || r.top < pop.offsetHeight + 16;
+      pop.style.left = left + window.scrollX + 'px';
+      pop.style.top = (below ? r.bottom + 8 : r.top - pop.offsetHeight - 8) + window.scrollY + 'px';
+    }
+    function termOf(e) {
+      return e.target && e.target.closest ? e.target.closest('.gloss') : null;
+    }
+    document.addEventListener(
+      'click',
+      function (e) {
+        var t = termOf(e);
+        if (t) {
+          e.preventDefault();
+          e.stopPropagation();
+          if (t === anchor) close();
+          else open(t);
+        } else if (pop && !pop.contains(e.target)) close();
+      },
+      true
+    );
+    document.addEventListener(
+      'keydown',
+      function (e) {
+        if (e.key === 'Escape' && pop) {
+          e.stopPropagation();
+          var a = anchor;
+          close();
+          if (a) a.focus();
+          return;
+        }
+        var t = termOf(e);
+        if (t && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault();
+          e.stopPropagation();
+          open(t);
+        }
+      },
+      true
+    );
+    window.addEventListener('resize', close);
+    PU.closeTerm = close;
+  })();
 
   /** How a level is named and numbered: "Level 3" / "03", "Final" / "10", "Bonus" / "B". */
   PU.levelLabel = function (L) {
@@ -306,6 +373,9 @@
         break;
       case 'guide':
         d.ticked = all(step.items);
+        break;
+      case 'howto':
+        d.open = all(step.items);
         break;
       case 'chat':
       case 'guesses':
@@ -1207,8 +1277,10 @@
     paint(null);
     return [
       head(step),
+      step.visual ? step.visual(ctx) : null,
       h('div.guide-progress', h('span.eyebrow', 'Checklist'), count, h('div.bar', fill)),
       list,
+      step.template ? promptBlock(step.template.text, { label: step.template.label, copy: true }) : null,
       step.extras ? h('div.stack-sm', h('div.eyebrow', 'When you’re ready'), PU.tiles(step.extras)) : null,
       step.footer ? note(step.footer) : null,
       calloutHost
@@ -1248,46 +1320,146 @@
       ctx.complete();
       showAfter();
     }
-    function prepare() {
+    /**
+     * Show one turn. Roles: user, claude, note (a plain-English explanation
+     * of what just happened) and screen (what the app shows, line by line).
+     */
+    function show(t, instant) {
+      var el;
+      if (t.role === 'user') {
+        frame.body.appendChild(PU.userMsg(t.text));
+        return Promise.resolve();
+      }
+      if (t.role === 'claude') return PU.claudeReply(frame.body, t.text, instant ? { instant: true } : { scroll: true, think: t.think || 800 });
+      if (t.role === 'note') el = h('div.chat-note', PU.icon('info', 'icon-sm'), h('div', { html: PU.md(t.text) }));
+      else
+        el = h(
+          'div.chat-screen',
+          t.title ? h('div.cs-title', t.title) : null,
+          t.lines.map(function (l) {
+            return h('div.cs-line', { class: l.kind ? 'is-' + l.kind : '' }, l.t);
+          })
+        );
+      frame.body.appendChild(el);
+      if (instant) return Promise.resolve();
+      PU.scrollNear(el);
+      return PU.wait(t.role === 'note' ? 350 : 700);
+    }
+    /** Play everything up to the next message the learner sends. */
+    function play() {
       var t = step.turns[idx];
       if (!t) return finish();
-      composerText.textContent = t.text;
-      send.lastChild.textContent = t.send || 'Send';
-      send.disabled = false;
-      ctx.setHint('Press “' + (t.send || 'Send') + '”');
+      if (t.role === 'user') {
+        busy = false;
+        composerText.textContent = t.text;
+        send.lastChild.textContent = t.send || 'Send';
+        send.disabled = false;
+        ctx.setHint('Press “' + (t.send || 'Send') + '”');
+        return;
+      }
+      busy = true;
+      idx++;
+      show(t, false).then(play);
     }
     send.addEventListener('click', function () {
       var t = step.turns[idx];
       if (busy || !t || t.role !== 'user') return;
-      busy = true;
       send.disabled = true;
-      frame.body.appendChild(PU.userMsg(t.text));
-      idx++;
       composerText.textContent = '';
-      var r = step.turns[idx];
-      if (r && r.role === 'claude') {
-        idx++;
-        PU.claudeReply(frame.body, r.text, { scroll: true, think: r.think || 800 }).then(function () {
-          busy = false;
-          prepare();
-        });
-      } else {
-        busy = false;
-        prepare();
-      }
+      show(t);
+      idx++;
+      play();
     });
     if (d.done) {
       step.turns.forEach(function (t) {
-        if (t.role === 'user') frame.body.appendChild(PU.userMsg(t.text));
-        else PU.claudeReply(frame.body, t.text, { instant: true });
+        show(t, true);
       });
       idx = step.turns.length;
       composerText.textContent = step.endText || 'Conversation complete.';
       send.disabled = true;
       ctx.complete();
       showAfter();
-    } else prepare();
+    } else play();
     return [head(step), frame.el, calloutHost];
+  };
+
+  /* ---------------------------------------------------------------------
+     howto — one row per thing: what it is, why it matters, how to do it.
+     Open every row to continue.
+     --------------------------------------------------------------------- */
+  S.howto = function (step, ctx) {
+    var d = ctx.data;
+    d.open = d.open || {};
+    var total = step.items.length;
+    var calloutHost = h('div');
+    function check(anchor) {
+      var n = Object.keys(d.open).length;
+      if (n >= total) {
+        ctx.complete();
+        if (anchor) ctx.award('open', step.xp || 15, step.xpLabel || 'All explained', anchor);
+        if (step.callout && !calloutHost.firstChild) calloutHost.appendChild(callout(step.callout));
+      } else ctx.setHint(n + ' of ' + total + ' opened');
+    }
+    function body(it) {
+      return h(
+        'div.job-body.howto-body',
+        it.why ? h('p.howto-why', { html: PU.rich('**Why it matters:** ' + it.why) }) : null,
+        it.steps
+          ? h(
+              'div.stack-sm',
+              h('div.eyebrow', 'How to do it'),
+              h('div.md', {
+                html: PU.md(
+                  it.steps
+                    .map(function (x, k) {
+                      return k + 1 + '. ' + x;
+                    })
+                    .join('\n')
+                )
+              })
+            )
+          : null,
+        it.tryIt ? promptBlock(it.tryIt, { label: it.tryLabel || 'Try typing this', copy: true }) : null,
+        it.note ? note(it.note) : null
+      );
+    }
+    var list = h(
+      'div.jobs',
+      step.items.map(function (it, i) {
+        var wrap = h('div.job');
+        var content = null;
+        var hb = h(
+          'button.job-head',
+          { type: 'button', 'aria-expanded': 'false' },
+          h('span.job-num', String(i + 1)),
+          h('span', h('span.job-title', it.title), h('span.job-desc', it.what)),
+          PU.icon('chevron', 'job-chev')
+        );
+        function set(open) {
+          wrap.classList.toggle('is-open', open);
+          hb.setAttribute('aria-expanded', String(open));
+          if (open && !content) {
+            content = body(it);
+            wrap.appendChild(content);
+          }
+          if (content) content.hidden = !open;
+        }
+        hb.addEventListener('click', function () {
+          var open = !wrap.classList.contains('is-open');
+          set(open);
+          if (open && !d.open[i]) {
+            d.open[i] = true;
+            ctx.save();
+            check(hb);
+          }
+        });
+        wrap.appendChild(hb);
+        if (d.open[i] && ctx.preview) set(true);
+        return wrap;
+      })
+    );
+    check(null);
+    return [head(step), list, step.footer ? note(step.footer) : null, calloutHost];
   };
 
   /* ---------------------------------------------------------------------
@@ -3180,6 +3352,11 @@
       out.push('```');
     }
     out.push('');
+    out.push('## Words to know');
+    glossaryList().forEach(function (g) {
+      out.push('- **' + g.t + ':** ' + g.d);
+    });
+    out.push('');
     out.push('Made with Claude Power-Up.');
     return out.join('\n');
   };
@@ -3218,8 +3395,33 @@
     if (wf && wf.prompt) wrap.appendChild(promptBlock(wf.prompt, { label: 'Your workflow: ' + (wf.task || ''), copy: true, open: true }));
     var m = s.data.mission;
     if (m && m.prompt) wrap.appendChild(promptBlock(m.prompt, { label: 'Your mission brief', copy: true, open: true }));
+    var words = glossaryList();
+    wrap.appendChild(
+      h(
+        'details.words',
+        h('summary', 'Words to know (' + words.length + ')'),
+        h(
+          'dl',
+          words.map(function (g) {
+            return [h('dt', g.t), h('dd', g.d)];
+          })
+        )
+      )
+    );
     return wrap;
   };
+
+  /** The glossary, A to Z. */
+  function glossaryList() {
+    var G = PU.GLOSSARY || {};
+    return Object.keys(G)
+      .map(function (k) {
+        return G[k];
+      })
+      .sort(function (a, b) {
+        return a.t.replace(/^[^a-z0-9]+/i, '').localeCompare(b.t.replace(/^[^a-z0-9]+/i, ''));
+      });
+  }
 
   S.certificate = function (step, ctx) {
     ctx.complete();

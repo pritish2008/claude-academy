@@ -175,9 +175,28 @@
   }
   PU.esc = esc;
 
+  function unesc(s) {
+    return s.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&');
+  }
+
+  /**
+   * [[word]] or [[shown text|word]] -> a word people can tap to see what it
+   * means (definitions live in glossary.js). Unknown words stay plain text,
+   * marked .gloss-missing so the smoke test can catch them.
+   */
+  function terms(s) {
+    // s must already be escaped
+    return s.replace(/\[\[([^\]|]+?)(?:\|([^\]]+?))?\]\]/g, function (m, label, key) {
+      var k = unesc(key || label).trim().toLowerCase();
+      if (!PU.GLOSSARY || !PU.GLOSSARY[k]) return '<span class="gloss-missing">' + label + '</span>';
+      return '<span class="gloss" role="button" tabindex="0" aria-haspopup="dialog" aria-expanded="false" data-term="' + esc(k) + '">' + label + '</span>';
+    });
+  }
+
   function inline(s) {
     // s must already be escaped
     s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+    s = terms(s);
     s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
     s = s.replace(/==([^=]+)==/g, '<mark>$1</mark>');
     s = s.replace(/(^|[\s(“"])_([^_\n]+?)_(?=[\s).,!?:;”"]|$)/g, '$1<em>$2</em>');
@@ -188,7 +207,7 @@
 
   /** Short rich text: ==highlight==, **bold**, _italic_. Returns HTML. */
   PU.rich = function (s) {
-    var out = esc(s);
+    var out = terms(esc(s));
     out = out.replace(/==([^=]+)==/g, '<span class="hl">$1</span>');
     out = out.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
     out = out.replace(/(^|[\s(])_([^_\n]+?)_(?=[\s).,!?:;]|$)/g, '$1<em>$2</em>');

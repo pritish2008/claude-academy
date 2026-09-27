@@ -4467,6 +4467,171 @@ button.rcard:hover {
   color: var(--muted);
 }
 
+/* ---------- Words to know (glossary) ---------- */
+
+.gloss {
+  text-decoration: underline dotted;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+  cursor: help;
+  border-radius: 3px;
+}
+
+.gloss:hover,
+.gloss[aria-expanded="true"] {
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+.callout .gloss:hover,
+.callout .gloss[aria-expanded="true"] {
+  background: rgba(127, 138, 255, 0.28);
+  color: inherit;
+}
+
+.gloss:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.gloss-pop {
+  position: absolute;
+  z-index: 90;
+  width: max-content;
+  max-width: min(320px, calc(100vw - 24px));
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: var(--r-md);
+  background: var(--ink);
+  color: var(--bg);
+  box-shadow: var(--shadow-3);
+  font-size: 14.5px;
+  line-height: 1.45;
+  animation: fade 0.15s ease-out;
+}
+
+.gloss-pop b {
+  font-weight: 700;
+}
+
+.gloss-pop p {
+  margin: 0;
+  opacity: 0.9;
+}
+
+.words {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  padding: 10px 14px;
+}
+
+.words summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.words dl {
+  margin: 10px 0 2px;
+  display: grid;
+  gap: 8px;
+}
+
+.words dt {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.words dd {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+/* ---------- Walkthrough notes and app screens inside a chat ---------- */
+
+.chat-note {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  border: 1px dashed var(--accent-line);
+  background: var(--accent-soft);
+  color: var(--ink);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+.chat-note .icon {
+  flex: none;
+  margin-top: 3px;
+  color: var(--accent);
+}
+
+.chat-note p {
+  margin: 0;
+}
+
+.chat-screen {
+  display: grid;
+  gap: 1px;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  background: #0f1330;
+  color: #e9ebf7;
+  font-family: var(--f-code);
+  font-size: 12.5px;
+  line-height: 1.55;
+  overflow-x: auto;
+}
+
+.cs-title {
+  color: #aab3ff;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.cs-line {
+  white-space: pre-wrap;
+  padding: 0 4px;
+  border-radius: 3px;
+}
+
+.cs-line.is-add {
+  color: #86efc1;
+  background: rgba(58, 212, 155, 0.14);
+}
+
+.cs-line.is-del {
+  color: #ffa3b1;
+  background: rgba(255, 112, 133, 0.14);
+}
+
+.cs-line.is-ok {
+  color: #86efc1;
+}
+
+.cs-line.is-dim {
+  color: #9aa1c9;
+}
+
+/* ---------- How-to rows ---------- */
+
+.howto-body {
+  padding-top: 12px;
+}
+
+.howto-body .md {
+  font-size: 15px;
+}
+
+.howto-why {
+  font-size: 15px;
+  color: var(--ink-2);
+}
+
 /* ---------- Setup checklist (guide) ---------- */
 
 .guide-progress {
@@ -4740,6 +4905,186 @@ button.rcard:hover {
 
 .effort-desc b {
   color: var(--ink);
+}
+
+/* ---------- Where the model menu is (simplified picture) ---------- */
+
+.mm {
+  margin: 0;
+  display: grid;
+  gap: 10px;
+  padding: 18px 16px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--surface-2);
+}
+
+.mm-menu {
+  position: relative;
+  justify-self: end;
+  width: min(310px, 100%);
+  display: grid;
+  gap: 2px;
+  padding: 8px;
+  border-radius: var(--r-md);
+  background: var(--surface);
+  border: 1px solid var(--line-2);
+  box-shadow: var(--shadow-2);
+}
+
+.mm-head {
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--muted);
+  padding: 4px 8px 2px;
+}
+
+.mm-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.mm-row span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.mm-row.is-on {
+  background: var(--accent-soft);
+}
+
+.mm-row .icon {
+  color: var(--accent);
+}
+
+.mm-row.mm-more {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.mm-row.mm-more span {
+  color: var(--ink-2);
+  font-size: 14px;
+}
+
+.mm-row.mm-more .icon {
+  color: var(--muted);
+}
+
+.mm-effort {
+  position: relative;
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid var(--line);
+}
+
+.mm-levels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 2px 6px 6px;
+}
+
+.mm-levels span {
+  font-size: 12.5px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--line-2);
+  color: var(--ink-2);
+}
+
+.mm-levels span.is-on {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.mm-box {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--line-2);
+  box-shadow: var(--shadow-1);
+}
+
+.mm-plus {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  border: 1px solid var(--line-2);
+  color: var(--ink-2);
+  font-weight: 600;
+}
+
+.mm-placeholder {
+  color: var(--muted);
+  font-size: 14.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mm-model {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 650;
+  white-space: nowrap;
+  background: var(--accent-soft);
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.mm-model .icon {
+  transform: rotate(90deg);
+}
+
+.mm-send {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.mm-send .icon {
+  transform: rotate(-90deg);
+}
+
+.mm-badge {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  width: 21px;
+  height: 21px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 800;
+  background: var(--marker);
+  color: var(--marker-ink);
+  box-shadow: var(--shadow-1);
+}
+
+.mm figcaption {
+  margin: 0;
 }
 
 /* ---------- Reduced motion ---------- */

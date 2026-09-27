@@ -82,6 +82,10 @@ const SAMPLE =
       const ticks = page.locator('.guide-tick');
       for (let i = 0; i < (await ticks.count()); i++) await ticks.nth(i).click();
     },
+    howto: async () => {
+      const rows = page.locator('.step .job-head');
+      for (let i = 0; i < (await rows.count()); i++) await rows.nth(i).click();
+    },
     chat: async (info) => {
       for (let k = 0; k < 400 && !(await isDone(info.key)); k++) {
         const b = page.locator('.composer .btn-primary');
@@ -163,6 +167,14 @@ const SAMPLE =
         problems.push(tag + ': ' + e.message.split('\n')[0]);
       }
       await page.waitForTimeout(100);
+      const missing = await page.evaluate(() => [...document.querySelectorAll('.gloss-missing')].map((e) => e.textContent));
+      if (missing.length) problems.push('no explanation for ' + missing.join(', ') + ' at ' + tag);
+      const word = page.locator('.step .gloss').first();
+      if (await word.count()) {
+        await word.click();
+        if (!(await page.locator('.gloss-pop').count())) problems.push('tapping a word showed nothing at ' + tag);
+        await page.keyboard.press('Escape');
+      }
       const sideways = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
       if (sideways > 1) problems.push('page scrolls sideways by ' + sideways + 'px at ' + tag);
       if (stop(info)) return;

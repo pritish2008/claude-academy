@@ -18,6 +18,45 @@
     { label: 'Max', text: 'When it has to be right and you can wait. Slowest, and uses the most.' }
   ];
 
+  /* A simplified picture of the Claude message box with the model menu open. */
+  function whereVisual() {
+    function badge(n) {
+      return h('span.mm-badge', { 'aria-hidden': 'true' }, String(n));
+    }
+    return h(
+      'figure.mm',
+      { 'aria-label': 'Picture of the Claude message box with the model menu open' },
+      h(
+        'div.mm-menu',
+        badge(2),
+        h('div.mm-head', 'Model'),
+        MODELS.map(function (m, i) {
+          return h('div.mm-row', { class: i === 1 ? 'is-on' : '' }, h('b', m.name), h('span', m.role), i === 1 ? PU.icon('check', 'icon-sm') : null);
+        }),
+        h('div.mm-row.mm-more', h('span', 'More models'), PU.icon('chevron', 'icon-sm')),
+        h(
+          'div.mm-effort',
+          badge(3),
+          h('div.mm-head', 'Effort'),
+          h(
+            'div.mm-levels',
+            EFFORT.map(function (e) {
+              return h('span', { class: e.label === 'High' ? 'is-on' : '' }, e.label);
+            })
+          )
+        )
+      ),
+      h(
+        'div.mm-box',
+        h('span.mm-plus', { 'aria-hidden': 'true' }, '+'),
+        h('span.mm-placeholder', 'Reply to Claude…'),
+        h('span.mm-model', badge(1), 'Opus 5.5', PU.icon('chevron', 'icon-sm')),
+        h('span.mm-send', { 'aria-hidden': 'true' }, PU.icon('arrowRight', 'icon-sm'))
+      ),
+      h('figcaption.small.muted', 'A simplified picture. Your screen may look a little different.')
+    );
+  }
+
   function settingsVisual() {
     var desc = h('p.effort-desc', { 'aria-live': 'polite' });
     var btns = EFFORT.map(function (e, i) {
@@ -78,7 +117,7 @@
       'The 6-step workflow: Task, Analyse, Think, Create, Critique, Improve',
       'Ready-made workflows for 13 everyday agency jobs',
       'How to give feedback that actually improves the next draft',
-      'Which model and effort level to pick for each job'
+      'Which model and effort to pick, and where to change them'
     ],
     steps: [
       { type: 'intro' },
@@ -362,13 +401,35 @@
 
       {
         type: 'concept',
-        eyebrow: 'Model and effort',
+        eyebrow: 'Model and effort: for everyone',
         title: 'Pick the right brain, and ==how hard it thinks==.',
-        lede: 'Click the model name next to the send button. You’ll see the models, and the effort setting in the same menu. The defaults are fine most of the time. For big or tricky jobs, turn them up.',
+        lede: 'Every time you use Claude, two settings decide the answer you get: the [[model]] (which “brain” answers) and the [[effort]] (how hard it thinks). They work the same everywhere: in chats, in Projects and in Cowork.',
         visual: settingsVisual,
         body:
-          '- **Bigger model and more effort = better on hard jobs.** But slower, and it uses up your plan’s limit faster.\n- **Claude cut corners** (skipped parts, rushed)? It didn’t try hard enough. Raise the effort.\n- **Claude missed the point** on a hard problem? It didn’t know enough. Check your brief first, then try a bigger model.',
+          '- **For everyday work, leave both as they are.** The defaults are fine most of the time.\n- **For big, tricky or important jobs, turn them up.** You get a more careful answer, but it’s slower and uses up your plan’s [[limit]] faster.\n- **Claude cut corners** (skipped parts, rushed)? It didn’t try hard enough. Raise the effort.\n- **Claude missed the point** on a hard problem? It didn’t know enough. Check your brief first, then try a bigger model.',
         note: 'Model names change every few months, and what you can pick depends on your plan. The idea stays the same: routine work on the defaults, hard work turned up.'
+      },
+
+      {
+        type: 'guide',
+        xp: 10,
+        eyebrow: 'Try it now',
+        title: 'Where to ==change them==',
+        lede: 'Open Claude in another tab and follow along. Tick each step as you do it.',
+        visual: whereVisual,
+        items: [
+          { title: 'Open any chat in Claude', body: 'It works the same in a normal chat, inside a Project and in Cowork.' },
+          {
+            title: 'Click the model name',
+            body: 'It sits next to the send button, at the bottom right of the message box (number 1 in the picture). A menu opens.'
+          },
+          { title: 'Pick a model', body: 'Choose from the list (number 2). Can’t see the one you want? Click **More models**.' },
+          { title: 'Pick the effort', body: 'In the same menu (number 3), choose **Low**, **Medium**, **High**, **Extra high** or **Max**.' },
+          {
+            title: 'Leave it on the default for everyday work',
+            body: 'Only change these for big or tricky jobs. More power is slower and uses up your limit faster.'
+          }
+        ]
       },
 
       {

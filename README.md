@@ -24,18 +24,20 @@ Progress, XP and anything people write are saved in their own browser. Nobody el
 | 3 | Make Claude work like an employee | Run a 6-step workflow, browse 13 agency workflows, order steps, pick the right model and effort |
 | 4 | Claude for your actual job | 11 departments (including Web & SEO) × 5 ready-made prompts they can fill in and save |
 | 5 | Research, files & images | Send screenshots to Claude, research with sources, verify facts |
-| 6 | Projects, memory & reusable context | Set up a client Project and see a 9-word prompt get on-brand work |
+| 6 | Projects, memory & reusable context | Set up a client Project and see a 9-word prompt get on-brand work, then make a real one step by step |
 | 7 | Claude Cowork | Delegate a monthly report, decide what Claude may delete, and set Cowork up step by step |
-| 8 | Claude Code without being a coder | “Build” a caption checker or UTM builder, then actually use it |
-| 9 | Build your own AI workflow | Design a repeatable workflow and get a master prompt |
+| 8 | Claude Code without being a coder | “Build” a caption checker or UTM builder, then build a real tool in a normal chat |
+| 9 | Build your own AI workflow | Design a repeatable workflow, get a master prompt and save it as a Skill |
 | Final | The real work challenge | Brief a real task, do it in Claude with a focus clock, get the certificate |
-| Bonus | Claude Code for web & SEO | For web developers: CLAUDE.md setup, model and effort for coding, 10 SEO and web workflows, safety rules |
+| Bonus | Claude Code for web & SEO | Starts from zero: what Claude Code is, one-time setup, a screen-by-screen session, habits explained simply, 10 SEO and web prompts, safety |
 
 ## Good to know
 
 - **Simulated chats** use pre-written example answers, so everyone sees the same thing. They're labelled “Simulated”.
 - **Prompt scores** come from an automatic checklist (role, context, audience, goal, rules, format…). It checks for the parts of a good brief, not creativity.
 - **Live Claude:** when the page is published as a Claude artifact and opened inside Claude, “Try it with real Claude” boxes appear on the writing challenges. They use the viewer's own Claude account and ask permission first.
+- **Tap a word to see what it means.** Words with a dotted underline (like CLAUDE.md, connector or effort) open a plain-English explanation. The full list is under “Words to know” in the cheat sheet. To add or change a word, edit `assets/js/glossary.js`, then write `[[word]]` in any lesson text.
+- **“Try it now” checklists** walk people through the real app step by step (turning on web search, making a Project, changing the model and effort, saving a Skill, setting up Cowork and Claude Code).
 - **The bonus level** is optional and always open. It isn't needed for the certificate. To send someone straight to it, add `#bonus` to the end of the link.
 - **Preview mode** lets managers and trainers skim everything: every level opens, every question shows its answer, and the step dots jump anywhere. Nothing is scored or saved. Turn it on in Settings, or add `#preview` to the end of the link.
 - The page works on phones, and in light and dark mode.

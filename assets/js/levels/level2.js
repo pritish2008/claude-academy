@@ -55,7 +55,7 @@
               '“Three things are holding this account back. **1.** 7 of your last 10 posts are product shots with no hook in the first line. **2.** Your audience is 28–40 working parents, but you post at 11 am when they’re at work. **3.** The brand guide says ‘expert but warm’, but the captions read corporate…”'
           }
         ],
-        callout: { title: 'Context turns Claude from a stranger into ==someone who knows the account==.' }
+        callout: { title: '[[Context]] turns Claude from a stranger into ==someone who knows the account==.' }
       },
 
       {

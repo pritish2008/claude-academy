@@ -203,8 +203,25 @@
           'Claude Code': 'use the steps as the spec for a tool'
         },
         checks: ['Numbers', 'Facts & sources', 'Brand voice', 'Client sensitivities', 'Legal claims', 'Names & spelling'],
-        levelUp:
-          '**Level up:** turn a workflow you use every week into a **Skill** (in Claude, go to Customize → Skills). Claude then follows it automatically whenever that task comes up. On paid plans, Cowork on a Mac can even record you doing the task and turn it into a skill.'
+        levelUp: '**Level up:** turn your workflow into a [[Skill]], so Claude follows it by itself every time. The next screen shows you how.'
+      },
+
+      {
+        type: 'guide',
+        xp: 20,
+        eyebrow: 'Try it now',
+        title: 'Save your workflow as a ==Skill==',
+        lede: 'A [[Skill]] is a saved set of instructions. Once it’s saved, you don’t paste your master prompt any more: you just ask for the job, and Claude follows your steps. Open Claude in another tab and follow along.',
+        items: [
+          { title: 'Copy your master prompt', body: 'It’s in your cheat sheet: press **Cheat sheet** at the top right of this page.' },
+          { title: 'Open Skills', body: 'In Claude, go to **Customize**, then **Skills**.' },
+          { title: 'Add a new skill, and let Claude write it', body: 'Add a skill and choose the option to **create it with Claude**. Claude asks you a few questions and writes the skill for you.' },
+          { title: 'Give Claude your workflow', body: 'Paste your master prompt and say: “Turn this into a skill for [the task].” Answer its questions.' },
+          { title: 'Save it and switch it on', body: 'Save the skill, and check it’s switched on in your Skills list.' },
+          { title: 'Test it', body: 'In a normal chat, ask for the task the way you usually would. Claude uses your skill by itself. If something is off, ask Claude to update the skill.' }
+        ],
+        footer:
+          'Don’t see Skills? It needs a setting called code execution to be on: ask whoever manages your Claude account. On a Team plan, an admin can also add a skill once for the whole company.'
       },
 
       {
@@ -213,6 +230,7 @@
         points: [
           'Trigger → Input → Steps → Output → Your check.',
           'Put it where it runs best: Chat, Project, Cowork or Claude Code.',
+          'Save the workflows you use every week as Skills.',
           'Your workflow is saved in your cheat sheet.'
         ]
       }

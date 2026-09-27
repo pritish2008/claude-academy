@@ -11,7 +11,7 @@
     short: 'Claude Code for non-coders',
     tagline: 'If you can describe it, Claude can build it.',
     deliverable: 'Your first tool, built by describing it',
-    learn: ['What marketers build with Claude Code', 'How to ask for a tool in plain English', 'How to report problems so they get fixed'],
+    learn: ['What marketers build with Claude', 'How to ask for a tool in plain English, and where to do it', 'How to report problems so they get fixed'],
     steps: [
       { type: 'intro' },
 
@@ -31,7 +31,7 @@
           ]);
         },
         body:
-          '**Where to find it:** in the Claude desktop app, or at claude.ai/code in your browser. For something small, like a calculator or a checklist, you can also just ask in a normal chat and Claude builds it right there.'
+          '**Two ways to start:**\n- **Small tools** (a calculator, a checker, a simple form): just ask in a normal chat. Claude builds it in a panel next to the chat, called an [[artifact]], and you can use it straight away. You’ll try this in a moment.\n- **Bigger things** that work with files on your computer: use [[Claude Code]]. Open the Claude [[desktop app]] and click the **Code** tab at the top.'
       },
 
       {
@@ -81,6 +81,28 @@
           title: 'Describe the outcome. ==Test it.== Say what to change.',
           text: 'A real Claude Code session works the same way. At the end you get a real file on your computer.'
         }
+      },
+
+      {
+        type: 'guide',
+        xp: 15,
+        eyebrow: 'Try it now',
+        title: 'Build your first tool in a ==normal chat==',
+        lede: 'No installing, no code. Open Claude in another tab and follow along, ticking each step.',
+        items: [
+          { title: 'Start a new chat', body: 'Open Claude and start a new chat, like you always do.' },
+          {
+            title: 'Describe the tool',
+            body: 'Paste the request from the last screen, or describe your own tool in plain English: who uses it, and what it should do.'
+          },
+          { title: 'Watch it appear', body: 'Claude builds it in a panel next to the chat. Try it right there: type in it, click the buttons.' },
+          { title: 'Ask for changes', body: 'Just say what you want different: “Make the button bigger”, “Add a copy button”, “Use our brand colours”.' },
+          {
+            title: 'Share it with the team',
+            body: 'Use the **Share** or **Publish** button on the panel. On a Team plan, it’s shared only inside the company. On personal plans, publishing makes a public link, so check nothing private is in it first.'
+          }
+        ],
+        footer: 'Buttons move around between versions. If something looks different, look for the panel next to the chat and its share option.'
       },
 
       {

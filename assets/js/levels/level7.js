@@ -200,7 +200,7 @@
           },
           {
             title: 'Add folder instructions',
-            body: 'Tell Claude how the folder works: what’s inside, how files are named, and what it must never touch. It reads them every time it works there, and can update them for you.'
+            body: 'These are the [[folder instructions]]: what’s inside, how files are named, and what Claude must never touch. Easiest way: start your first task with “Save these as the folder instructions:” and list them. Claude reads them every time it works there.'
           },
           {
             title: 'Choose how much Claude asks',
@@ -215,7 +215,7 @@
           {
             icon: 'layers',
             title: 'Connect your tools',
-            text: 'Google Drive, Gmail, Slack and more. Add them from the + menu in the message box.',
+            text: 'Google Drive, Gmail, Slack and more. These links are called [[connectors|connector]]. Add them from the **+** menu in the message box.',
             color: 'var(--sw-5)'
           },
           {

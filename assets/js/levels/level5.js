@@ -146,10 +146,10 @@
         lede: 'Most people describe things to Claude. Pros just show it.',
         visual: function () {
           return PU.tiles([
-            { icon: 'file', title: 'Files', text: 'PDFs, Word, PowerPoint, Excel and CSV. Up to 30 MB each.', color: '#e0418b' },
-            { icon: 'image', title: 'Screenshots & photos', text: 'Dashboards, competitor posts, designs, whiteboards, even handwriting.', color: '#00a3e0' },
-            { icon: 'search', title: 'Web search', text: 'Current information with links to sources. Use it for anything recent.', color: '#00a676' },
-            { icon: 'layers', title: 'Research mode', text: 'For big questions, Claude searches many sources and writes a report with citations.', color: '#7a4dff' },
+            { icon: 'file', title: 'Files', text: 'PDFs, Word, PowerPoint, Excel and [[CSV]], up to 30 MB each. Drag them into the chat, or click **+** in the message box to attach.', color: '#e0418b' },
+            { icon: 'image', title: 'Screenshots & photos', text: 'Dashboards, competitor posts, designs, whiteboards, even handwriting. Paste a screenshot straight into the message box.', color: '#00a3e0' },
+            { icon: 'search', title: 'Web search', text: 'Current information with links to sources. To turn it on: click **+** in the message box, then **Web search**.', color: '#00a676' },
+            { icon: 'layers', title: 'Research mode', text: 'For big questions: Claude reads many sources and writes a report with links. Click **+**, then **Research** (paid plans).', color: '#7a4dff' },
             { icon: 'download', title: 'It makes files too', text: 'Ask for an Excel sheet, Word doc, PowerPoint or PDF and Claude creates the actual file.', color: '#2e3bff' },
             { icon: 'video', title: 'Video: not directly', text: 'Claude can’t watch video files. Give it the transcript or a few screenshots.', color: '#ff5a36' }
           ]);
@@ -232,7 +232,7 @@
             result: 'Five sourced findings, split into facts and interpretation, with three implications you can take into a client meeting.'
           }
         ],
-        body: '**What makes the difference:** a clear scope, a time frame, an audience, sources you can click, facts kept apart from opinions, and a “so what” at the end. Turn on web search, or use Research mode for bigger questions.'
+        body: '**What makes the difference:** a clear scope, a time frame, an audience, sources you can click, facts kept apart from opinions, and a “so what” at the end.\n\n**How to switch it on:** click **+** at the bottom left of the message box, then **Web search** (a tick appears next to it). For bigger questions, click **+** and choose **Research** instead ([[research]] is on paid plans).'
       },
 
       {
