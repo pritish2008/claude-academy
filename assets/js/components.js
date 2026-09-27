@@ -452,9 +452,19 @@
       autocomplete: 'given-name',
       maxlength: '40'
     });
+    var tracking = PU.tracking && PU.tracking();
+    var email = tracking
+      ? h('input.input#pu-email', { type: 'email', placeholder: 'you@agency.com', value: PU.state.email || '', autocomplete: 'email', maxlength: '80' })
+      : null;
     var go = h('button.btn.btn-primary', { type: 'button' }, h('span', ctx.done ? 'Continue' : 'Start Level 0'), PU.icon('arrowRight'));
     go.addEventListener('click', function () {
+      if (tracking && !name.value.trim()) {
+        PU.toast('Please add your name first.', { icon: 'info' });
+        name.focus();
+        return;
+      }
       PU.state.name = name.value.trim().slice(0, 40);
+      if (email) PU.state.email = email.value.trim().slice(0, 80);
       PU.save();
       PU.emit('name');
       ctx.award('start', step.xp || 10, 'You showed up', go);
@@ -479,7 +489,19 @@
       h('h1', { html: PU.rich(step.title) }),
       h('p.lede', { html: PU.rich(step.lede) }),
       meter,
-      h('div.name-row', h('div.field', h('label', { for: 'pu-name' }, 'What should we call you?'), name), go),
+      h(
+        'div.name-row',
+        h('div.field', h('label', { for: 'pu-name' }, 'What should we call you?'), name),
+        email ? h('div.field', h('label', { for: 'pu-email' }, 'Work email (optional)'), email) : null,
+        go
+      ),
+      tracking
+        ? h(
+            'p.small.muted.share-note',
+            PU.icon('eye', 'icon-sm'),
+            h('span', 'Your name, progress, scores and time on each level are shared with ' + ((B.name || 'your team lead')) + ', so they can support your learning.')
+          )
+        : null,
       h(
         'div.meta-row',
         (step.meta || []).map(function (m) {
@@ -3219,6 +3241,10 @@
     var L = ctx.level;
     var first = !ctx.preview && !PU.state.levelsDone[L.id];
     if (!ctx.preview) {
+      if (first) {
+        var at = (PU.state.data.doneAt = PU.state.data.doneAt || {});
+        at[L.id] = new Date().toISOString();
+      }
       PU.state.levelsDone[L.id] = true;
       PU.save();
     }
@@ -3473,6 +3499,7 @@
     });
     if (!ctx.preview && !s.data.certShown) {
       s.data.certShown = true;
+      s.data.certAt = new Date().toISOString();
       PU.save();
       setTimeout(PU.confetti, 300);
     }

@@ -239,6 +239,7 @@
   /* ---------- navigation ---------- */
 
   function runLeave() {
+    if (PU.track) PU.track.leave();
     var fns = leaveFns;
     leaveFns = [];
     fns.forEach(function (fn) {
@@ -380,6 +381,7 @@
     if (nextEnabled && !PU.state.unlockAll) hintEl.textContent = '';
     var stepEl = h('div.step', { class: PU.reduced ? '' : 'enter' }, content);
     PU.clear(stepHost).appendChild(stepEl);
+    if (PU.track) PU.track.enter(key, stepEl);
     if (!PU.state.data.termTip && stepEl.querySelector('.gloss')) {
       PU.state.data.termTip = true;
       PU.save();
@@ -557,6 +559,9 @@
           'div.setting',
           h('div.st-title', 'About this training'),
           h('div.st-sub', 'Made for the ' + ((PU.brand && PU.brand.name) || 'agency') + ' team. Simulated chats show pre-written example answers so everyone sees the same thing. Prompt scores come from an automatic checklist that looks for the parts of a good brief. ' + liveLine),
+          PU.tracking && PU.tracking()
+            ? h('div.st-sub', 'Your name, progress, scores and time on each level are shared with ' + ((PU.brand && PU.brand.name) || 'your team lead') + '. Time only counts while this page is open and you’re active on it.')
+            : null,
           h('div.st-sub', 'Keyboard: ← and → move between steps.')
         )
       )
@@ -687,6 +692,7 @@
     }
     updateXP(false);
     render();
+    if (PU.track) PU.track.start();
     document.addEventListener('keydown', onKey);
   }
 

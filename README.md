@@ -43,6 +43,12 @@ Progress, XP and anything people write are saved in their own browser. Nobody el
 - **Preview mode** lets managers and trainers skim everything: every level opens, every question shows its answer, and the step dots jump anywhere. Nothing is scored or saved. Turn it on in Settings, or add `#preview` to the end of the link.
 - The page works on phones, and in light and dark mode.
 
+## Progress reports to a Google Sheet
+
+The training can send each person's progress to a Google Sheet you own. You get a **People** tab with one row per person (progress, levels done, active time, pace, rushed steps, quiz score, best prompt score, XP, certificate) and a **Levels** tab showing where each person spent time or rushed. Active time only counts while the page is open and the person is active.
+
+Setup takes a few minutes: see `tools/google-sheet/README.md`. It's off until you paste the Sheet's link into `assets/js/brand.js`. Staff see a note saying their progress is shared.
+
 ## Agency name and logo
 
 Both live in `assets/js/brand.js`. To show the logo, put the file in `assets/brand/` (for example `assets/brand/bds-logo.png`) and set `logo: 'assets/brand/bds-logo.png'`. It appears in the top bar, on the opening screen and on the certificate. Run `python3 tools/build.py` afterwards so the shareable files include it.

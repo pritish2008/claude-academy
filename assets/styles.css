@@ -1368,6 +1368,18 @@ p {
   min-width: 0;
 }
 
+.share-note {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  max-width: 62ch;
+}
+
+.share-note .icon {
+  flex: none;
+  margin-top: 3px;
+}
+
 .field label,
 .field .label {
   font-size: 13px;
