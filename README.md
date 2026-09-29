@@ -2,6 +2,8 @@
 
 **“Stop using Claude like Google.”**
 
+> New here, or continuing with a different Claude? Read [START-HERE.md](START-HERE.md) (history, links, status and next steps) and [CLAUDE.md](CLAUDE.md) (how the code works).
+
 An interactive training for the Brij Design Studio (BDS) team. People learn to use Claude properly: better prompts, context, step-by-step workflows, which model and effort to pick, research, files, Projects, Cowork (including how to set it up), connecting tools like Canva and Adobe so Claude can work in them, and Claude Code. It ends with a challenge on their own real work. There's also a bonus level for web developers.
 
 It's built like a product, not a course: XP, ranks, levels, quizzes, a prompt builder, simulated Claude chats, “fix this prompt” challenges with instant feedback, and a certificate with a personal cheat sheet at the end.
