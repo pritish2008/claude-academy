@@ -1,0 +1,480 @@
+<title>Power-Up Team Tracker</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400..800&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one column. A summary strip of counts, filter chips, then one row per person that opens to show each level. */
+:root {
+  --bg: #f3f4f8;
+  --surface: #ffffff;
+  --surface-2: #f0f1f7;
+  --ink: #0f1330;
+  --ink-2: #394063;
+  --muted: #676d90;
+  --line: #dfe2ec;
+  --accent: #2e3bff;
+  --accent-soft: #e9ebff;
+  --accent-ink: #ffffff;
+  --marker: #ffe45c;
+  --marker-ink: #221e00;
+  --good: #0b875e;
+  --good-soft: #def4ea;
+  --bad: #c42740;
+  --bad-soft: #fce6e9;
+  --warn: #a86400;
+  --warn-soft: #fff1d6;
+  --f-body: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono: "DM Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b0e22; --surface: #141836; --surface-2: #1b2045; --ink: #eef0ff; --ink-2: #c3c8ea; --muted: #949ac2;
+    --line: #2a3060; --accent: #8c96ff; --accent-soft: #232a66; --accent-ink: #0b0e22; --marker: #ffe45c; --marker-ink: #221e00;
+    --good: #5fd3a6; --good-soft: #10392c; --bad: #ff8a9b; --bad-soft: #43172150; --warn: #ffc266; --warn-soft: #3d2c0c;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0b0e22; --surface: #141836; --surface-2: #1b2045; --ink: #eef0ff; --ink-2: #c3c8ea; --muted: #949ac2;
+  --line: #2a3060; --accent: #8c96ff; --accent-soft: #232a66; --accent-ink: #0b0e22; --marker: #ffe45c; --marker-ink: #221e00;
+  --good: #5fd3a6; --good-soft: #10392c; --bad: #ff8a9b; --bad-soft: #43172150; --warn: #ffc266; --warn-soft: #3d2c0c;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 var(--f-body); }
+.wrap { max-width: 1040px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 56px; display: grid; gap: 22px; }
+h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); line-height: 1.15; margin: 0; letter-spacing: -0.02em; text-wrap: balance; }
+h1 mark { background: var(--marker); color: var(--marker-ink); padding: 0 .2em; border-radius: 4px; }
+.sub { color: var(--muted); margin: 6px 0 0; }
+.eyebrow { font: 500 .72rem/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.head { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: flex-end; justify-content: space-between; }
+.head > div { min-width: 0; }
+.source { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: .85rem; color: var(--muted); }
+button, .filebtn { font: 600 .88rem var(--f-body); border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 7px 14px; cursor: pointer; }
+button:hover, .filebtn:hover { border-color: var(--accent); }
+button:focus-visible, .filebtn:focus-within, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.filebtn input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+
+.tiles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 760px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: grid; gap: 4px; text-align: left; }
+.tile b { font-size: 1.9rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.tile span { color: var(--muted); font-size: .85rem; }
+.tile.is-on { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.tile.good b { color: var(--good); } .tile.bad b { color: var(--bad); } .tile.warn b { color: var(--warn); }
+
+.tools { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.tools input[type=search] { flex: 1 1 200px; min-width: 0; font: inherit; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+.tools label { font-size: .85rem; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+.tools select { font: inherit; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+
+.list { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+.row { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.3fr) minmax(0, 1fr) 128px; gap: 14px; align-items: center; padding: 14px 16px; border-top: 1px solid var(--line); width: 100%; background: none; border-radius: 0; border-left: 0; border-right: 0; border-bottom: 0; text-align: left; font-weight: 400; }
+.row:first-child { border-top: 0; }
+.row:hover { background: var(--surface-2); border-color: var(--line); }
+.row.cols { font: 500 .72rem/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding-block: 12px; cursor: default; background: var(--surface-2); }
+@media (max-width: 680px) {
+  .row { grid-template-columns: minmax(0, 1fr) auto; }
+  .row .c-now, .row.cols { display: none; }
+  .row .c-prog { grid-column: 1 / -1; }
+  .row .pills { grid-row: 1; grid-column: 2; }
+}
+.name { font-weight: 700; overflow-wrap: anywhere; }
+.small { font-size: .82rem; color: var(--muted); }
+.bar { height: 8px; border-radius: 99px; background: var(--surface-2); overflow: hidden; margin-top: 6px; }
+.bar i { display: block; height: 100%; background: var(--accent); border-radius: 99px; }
+.pills { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+.pill { font-size: .76rem; font-weight: 700; padding: 3px 9px; border-radius: 99px; white-space: nowrap; background: var(--surface-2); color: var(--ink-2); }
+.pill.good { background: var(--good-soft); color: var(--good); }
+.pill.bad { background: var(--bad-soft); color: var(--bad); }
+.pill.warn { background: var(--warn-soft); color: var(--warn); }
+.pill.accent { background: var(--accent-soft); color: var(--accent); }
+
+.detail { padding: 4px 16px 18px; border-top: 1px dashed var(--line); background: var(--surface-2); display: grid; gap: 12px; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 22px; padding-top: 12px; font-size: .88rem; }
+.facts b { font-variant-numeric: tabular-nums; }
+.lvscroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: .86rem; min-width: 560px; }
+th { text-align: left; font: 500 .7rem/1 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: 8px 8px; }
+td:first-child { min-width: 170px; }
+td + td { white-space: nowrap; }
+td { padding: 8px; border-top: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+
+.empty { padding: 36px 20px; text-align: center; color: var(--muted); display: grid; gap: 10px; justify-items: center; }
+.empty strong { color: var(--ink); font-size: 1.05rem; }
+.note { font-size: .82rem; color: var(--muted); }
+.error { background: var(--bad-soft); color: var(--bad); padding: 10px 14px; border-radius: 10px; font-size: .9rem; }
+@media (prefers-reduced-motion: no-preference) { .bar i { transition: width .5s ease; } }
+</style>
+
+<div class="wrap">
+  <header class="head">
+    <div>
+      <div class="eyebrow">Claude Power-Up · Team tracker</div>
+      <h1>Who's <mark>training</mark>, who's finished, who needs a nudge</h1>
+      <p class="sub" id="updated">Getting the latest progress…</p>
+    </div>
+    <div class="source">
+      <button type="button" id="refresh" hidden>Refresh</button>
+      <label class="filebtn">Open People file<input type="file" id="filePeople" accept=".csv,text/csv"></label>
+      <label class="filebtn">Open Levels file<input type="file" id="fileLevels" accept=".csv,text/csv"></label>
+    </div>
+  </header>
+
+  <div id="problem" class="error" hidden></div>
+
+  <section class="tiles" id="tiles" aria-label="Summary"></section>
+
+  <div class="tools">
+    <input type="search" id="search" placeholder="Find a person" aria-label="Find a person">
+    <label for="stuckDays">Needs a nudge after
+      <select id="stuckDays">
+        <option value="3">3 days</option>
+        <option value="7" selected>7 days</option>
+        <option value="14">14 days</option>
+      </select>
+      without training</label>
+    <label><input type="checkbox" id="showTests"> Show test rows</label>
+  </div>
+
+  <section class="list" id="list" aria-live="polite"></section>
+
+  <p class="note">
+    <b>How to read this.</b> "Passed the test" means they finished the final challenge and got the certificate.
+    "Needs a nudge" means they haven't finished and haven't trained for a while (or never started).
+    "Rushing" means they moved much faster than it takes to read the steps. Treat it as a reason to chat, not a verdict.
+  </p>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  /* The Google Sheet the training fills (People and Levels tabs). */
+  var SHEET_ID = '1dGTLBZNiE4gtBjXkzjAE6JecKc0SBhUADyZkz-SDLGM';
+  var CONNECTOR = 'Google Sheets';
+  var TOTAL_LEVELS = 12;
+
+  var state = { people: [], levels: [], filter: 'all', open: {}, when: null, from: '' };
+  var $ = function (id) { return document.getElementById(id); };
+
+  function store(k, v) {
+    try { if (v === undefined) return localStorage.getItem('pu-dash:' + k); localStorage.setItem('pu-dash:' + k, v); } catch (e) { return null; }
+  }
+
+  /* ---------- Reading the data ---------- */
+
+  function toObjects(rows) {
+    if (!rows || !rows.length) return [];
+    var head = rows[0].map(function (h) { return String(h).trim(); });
+    return rows.slice(1).filter(function (r) { return r.some(function (c) { return String(c).trim(); }); }).map(function (r) {
+      var o = {};
+      head.forEach(function (h, i) { o[h] = r[i] === undefined ? '' : String(r[i]).trim(); });
+      return o;
+    });
+  }
+
+  function parseCSV(text) {
+    var rows = [], row = [], cell = '', q = false;
+    text = text.replace(/^﻿/, '');
+    for (var i = 0; i < text.length; i++) {
+      var c = text[i];
+      if (q) {
+        if (c === '"' && text[i + 1] === '"') { cell += '"'; i++; }
+        else if (c === '"') q = false;
+        else cell += c;
+      } else if (c === '"') q = true;
+      else if (c === ',') { row.push(cell); cell = ''; }
+      else if (c === '\n' || c === '\r') {
+        if (c === '\r' && text[i + 1] === '\n') i++;
+        row.push(cell); rows.push(row); row = []; cell = '';
+      } else cell += c;
+    }
+    if (cell || row.length) { row.push(cell); rows.push(row); }
+    return rows;
+  }
+
+  /* Sheet dates look like 9/27/2026 17:30:00 (month first). */
+  function parseDate(s) {
+    if (!s) return null;
+    var m = String(s).match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+    var d = m ? new Date(+m[3], +m[1] - 1, +m[2], +(m[4] || 0), +(m[5] || 0), +(m[6] || 0)) : new Date(s);
+    return isNaN(d.getTime()) ? null : d;
+  }
+
+  function num(s) { var n = parseFloat(String(s).replace('%', '')); return isFinite(n) ? n : null; }
+
+  function setPeople(rows) {
+    state.people = toObjects(rows).map(function (o) {
+      var done = String(o['Levels done'] || '').match(/(\d+)\s*of\s*(\d+)/);
+      return {
+        id: o['Person ID'] || o.Name,
+        name: o.Name || '(no name)',
+        email: o.Email,
+        progress: num(o['Progress %']) || 0,
+        levelsDone: done ? +done[1] : 0,
+        levelsAll: done ? +done[2] : TOTAL_LEVELS,
+        nowOn: o['Now on'],
+        activeMin: num(o['Active time (min)']),
+        pace: o.Pace,
+        rushed: o['Rushed steps'],
+        quiz: num(o['Quiz score %']),
+        bestPrompt: num(o['Best prompt score']),
+        xp: num(o.XP),
+        rank: o.Rank,
+        cert: parseDate(o.Certificate),
+        started: parseDate(o.Started),
+        last: parseDate(o['Last active']),
+        test: /delete me/i.test(o.Name || '')
+      };
+    });
+  }
+
+  function setLevels(rows) {
+    state.levels = toObjects(rows).map(function (o) {
+      return {
+        person: o['Person ID'] || o.Name, level: o.Level, title: o.Title, status: o.Status, steps: o['Steps done'],
+        activeMin: o['Active time (min)'], needMin: o['Time needed to read (min)'], pace: o.Pace,
+        quiz: o['Quiz score %'], finished: parseDate(o.Finished), levelId: o['Level ID']
+      };
+    });
+  }
+
+  /* ---------- Working out where each person stands ---------- */
+
+  function daysSince(d) { return d ? (Date.now() - d.getTime()) / 864e5 : Infinity; }
+
+  function standing(p) {
+    var limit = +$('stuckDays').value;
+    if (p.cert) return { key: 'passed', label: 'Passed the test', tone: 'good' };
+    if (p.progress <= 0 && p.levelsDone === 0 && !(p.activeMin > 1)) return { key: 'nudge', label: 'Not started', tone: 'bad' };
+    if (daysSince(p.last) >= limit) return { key: 'nudge', label: 'Stalled', tone: 'bad' };
+    return { key: 'going', label: 'Still going', tone: 'accent' };
+  }
+
+  function ago(d) {
+    if (!d) return 'never';
+    var days = Math.floor(daysSince(d));
+    if (days < 1) { var h = Math.floor((Date.now() - d.getTime()) / 36e5); return h < 1 ? 'just now' : h + (h === 1 ? ' hour ago' : ' hours ago'); }
+    if (days === 1) return 'yesterday';
+    if (days < 30) return days + ' days ago';
+    return d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  function day(d) { return d ? d.toLocaleDateString(undefined, { day: 'numeric', month: 'short' }) : ''; }
+
+  /* ---------- Drawing the page ---------- */
+
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+
+  function visible() { return state.people.filter(function (p) { return $('showTests').checked || !p.test; }); }
+
+  function render() {
+    var people = visible().map(function (p) { return { p: p, s: standing(p) }; });
+    var counts = { all: people.length, passed: 0, going: 0, nudge: 0, rushing: 0 };
+    people.forEach(function (x) { counts[x.s.key]++; if (x.p.pace === 'Rushing') counts.rushing++; });
+
+    var tiles = $('tiles');
+    tiles.textContent = '';
+    [['all', 'People in training', ''], ['passed', 'Passed the test', 'good'], ['going', 'Still going', ''], ['nudge', 'Need a nudge', 'bad'], ['rushing', 'Rushing', 'warn']].forEach(function (t) {
+      var b = el('button', 'tile ' + t[2] + (state.filter === t[0] ? ' is-on' : ''));
+      b.type = 'button';
+      b.setAttribute('aria-pressed', state.filter === t[0]);
+      b.appendChild(el('b', null, String(counts[t[0]])));
+      b.appendChild(el('span', null, t[1]));
+      b.onclick = function () { state.filter = state.filter === t[0] && t[0] !== 'all' ? 'all' : t[0]; store('filter', state.filter); render(); };
+      tiles.appendChild(b);
+    });
+
+    var q = $('search').value.trim().toLowerCase();
+    var shown = people.filter(function (x) {
+      if (q && x.p.name.toLowerCase().indexOf(q) < 0 && String(x.p.email).toLowerCase().indexOf(q) < 0) return false;
+      if (state.filter === 'rushing') return x.p.pace === 'Rushing';
+      return state.filter === 'all' || x.s.key === state.filter;
+    });
+    var order = { nudge: 0, going: 1, passed: 2 };
+    shown.sort(function (a, b) { return order[a.s.key] - order[b.s.key] || (b.p.last || 0) - (a.p.last || 0); });
+
+    var list = $('list');
+    list.textContent = '';
+    if (!state.people.length) {
+      var e = el('div', 'empty');
+      e.appendChild(el('strong', null, state.from ? 'Nobody has started the training yet.' : 'No progress loaded yet.'));
+      e.appendChild(el('span', null, state.from
+        ? 'People appear here as soon as they type their name in the training and press Start.'
+        : 'Inside Claude this fills in from the Google Sheet by itself. Elsewhere, open the Sheet, pick the People tab, choose File › Download › CSV, then press "Open People file" above.'));
+      list.appendChild(e);
+      return;
+    }
+    if (!shown.length) { list.appendChild(el('div', 'empty', 'Nobody matches this filter.')); return; }
+
+    var cols = el('div', 'row cols');
+    ['Person', 'Progress', 'Last trained', ''].forEach(function (c) { cols.appendChild(el('div', null, c)); });
+    list.appendChild(cols);
+
+    shown.forEach(function (x) {
+      var p = x.p, s = x.s;
+      var row = el('button', 'row');
+      row.type = 'button';
+      row.setAttribute('aria-expanded', !!state.open[p.id]);
+
+      var who = el('div');
+      who.appendChild(el('div', 'name', p.name));
+      who.appendChild(el('div', 'small', p.cert ? 'Finished the training' : p.nowOn ? 'On ' + p.nowOn : 'Hasn’t opened a level'));
+      row.appendChild(who);
+
+      var prog = el('div', 'c-prog');
+      prog.appendChild(el('div', 'small', p.levelsDone + ' of ' + p.levelsAll + ' levels · ' + Math.round(p.progress) + '%'));
+      var bar = el('div', 'bar'), fill = el('i');
+      fill.style.width = Math.max(0, Math.min(100, p.progress)) + '%';
+      bar.appendChild(fill); prog.appendChild(bar);
+      row.appendChild(prog);
+
+      var now = el('div', 'c-now');
+      now.appendChild(el('div', null, ago(p.last)));
+      now.appendChild(el('div', 'small', p.activeMin != null ? Math.round(p.activeMin) + ' min of real training' : ''));
+      row.appendChild(now);
+
+      var pills = el('div', 'pills');
+      pills.appendChild(el('span', 'pill ' + s.tone, s.label));
+      if (p.pace === 'Rushing') pills.appendChild(el('span', 'pill warn', 'Rushing'));
+      row.appendChild(pills);
+
+      row.onclick = function () { state.open[p.id] = !state.open[p.id]; render(); };
+      list.appendChild(row);
+      if (state.open[p.id]) list.appendChild(detail(p));
+    });
+  }
+
+  function detail(p) {
+    var box = el('div', 'detail');
+    var facts = el('div', 'facts');
+    [
+      ['Certificate', p.cert ? day(p.cert) : 'Not yet'],
+      ['Quiz score', p.quiz != null ? p.quiz + '%' : '–'],
+      ['Best prompt score', p.bestPrompt != null ? String(p.bestPrompt) : '–'],
+      ['Pace', p.pace || '–'],
+      ['Rank', p.rank || '–'],
+      ['Started', p.started ? day(p.started) : '–'],
+      ['Email', p.email || '–']
+    ].forEach(function (f) {
+      var s = el('span', null, f[0] + ': ');
+      s.appendChild(el('b', null, f[1]));
+      facts.appendChild(s);
+    });
+    box.appendChild(facts);
+
+    var mine = state.levels.filter(function (l) { return l.person === p.id; });
+    if (!mine.length) {
+      box.appendChild(el('div', 'small', state.levels.length ? 'No level details yet.' : 'Open the Levels file too to see each level.'));
+      return box;
+    }
+    var wrap = el('div', 'lvscroll'), t = el('table'), head = el('tr');
+    ['Level', 'Status', 'Steps', 'Minutes spent', 'Minutes to read', 'Pace', 'Quiz', 'Finished'].forEach(function (h) { head.appendChild(el('th', null, h)); });
+    t.appendChild(head);
+    mine.forEach(function (l) {
+      var tr = el('tr');
+      tr.appendChild(el('td', null, l.level + (l.title ? ' · ' + l.title : '')));
+      var st = el('td'); st.appendChild(el('span', 'pill ' + (l.status === 'Done' ? 'good' : 'accent'), l.status || '–')); tr.appendChild(st);
+      tr.appendChild(el('td', null, l.steps || '–'));
+      tr.appendChild(el('td', null, l.activeMin || '–'));
+      tr.appendChild(el('td', null, l.needMin || '–'));
+      var pc = el('td'); if (l.pace) pc.appendChild(el('span', 'pill ' + (l.pace === 'Rushing' ? 'warn' : l.pace === 'Thorough' ? 'good' : ''), l.pace)); else pc.textContent = '–'; tr.appendChild(pc);
+      tr.appendChild(el('td', null, l.quiz ? l.quiz + '%' : '–'));
+      tr.appendChild(el('td', null, day(l.finished) || '–'));
+      t.appendChild(tr);
+    });
+    wrap.appendChild(t); box.appendChild(wrap);
+    return box;
+  }
+
+  function stamp(when, from) {
+    state.when = when; state.from = from;
+    $('updated').textContent = from + (when ? ' · updated ' + when.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }) : '');
+  }
+
+  function problem(msg) { $('problem').hidden = !msg; $('problem').textContent = msg || ''; }
+
+  /* ---------- Live from the Google Sheet (inside Claude) ---------- */
+
+  var FIX = {
+    needs_reauth: 'Google Sheets needs signing in again. Go to Settings › Connectors in Claude and reconnect it, then press Refresh.',
+    server_not_connected: 'Google Sheets isn’t connected to your Claude. Add it in Settings › Connectors, then reload this page.',
+    selection_required: 'You have more than one Google Sheets connection. Pick one when Claude asks, then press Refresh.',
+    not_in_manifest: 'This page isn’t allowed to read Google Sheets. Allow it from the page’s permissions, then reload.',
+    blocked_by_policy: 'Your organisation blocks this page from reading Google Sheets.',
+    tool_error: 'Google Sheets couldn’t open the progress Sheet. Check you still have access to it.'
+  };
+
+  function live(mcp) {
+    $('refresh').hidden = false;
+    var got = { people: false, levels: false };
+    function watch(range, key, apply) {
+      return mcp.watchTool(CONNECTOR, 'get_values', { spreadsheetId: SHEET_ID, range: range }, function (ev) {
+        if (ev.type === 'data') {
+          var v = ev.result.payload && ev.result.payload.values;
+          apply(v || []);
+          got[key] = true;
+          problem('');
+          var when = ev.result.cache ? new Date(ev.result.cache.storedAt) : new Date();
+          stamp(when, 'Live from the Google Sheet');
+          render();
+        } else {
+          var c = ev.error && ev.error.code;
+          if (c === 'needs_reauth' || c === 'server_not_connected' || c === 'not_in_manifest' || c === 'blocked_by_policy') {
+            if (key === 'people') { state.people = []; state.levels = []; render(); }
+          }
+          if (!got[key] || FIX[c]) problem(FIX[c] || 'Couldn’t reach the Google Sheet just now. Press Refresh to try again.');
+          if (!got.people) $('updated').textContent = 'Not connected to the Google Sheet';
+        }
+      }, { refetchInterval: 300000 });
+    }
+    watch('People!A1:P2000', 'people', setPeople);
+    watch('Levels!A1:N6000', 'levels', setLevels);
+    $('refresh').onclick = function () {
+      $('updated').textContent = 'Refreshing…';
+      mcp.invalidate(CONNECTOR, 'get_values').catch(function () {});
+    };
+  }
+
+  /* ---------- From a downloaded file (anywhere) ---------- */
+
+  function readFile(input, apply, label) {
+    input.addEventListener('change', function () {
+      var f = input.files && input.files[0];
+      if (!f) return;
+      var r = new FileReader();
+      r.onload = function () {
+        var rows = parseCSV(String(r.result));
+        var head = (rows[0] || []).join(',');
+        if (label === 'People' && head.indexOf('Levels done') < 0) return problem('That file isn’t the People tab. In the Sheet, open the People tab, then File › Download › CSV.');
+        if (label === 'Levels' && head.indexOf('Level ID') < 0) return problem('That file isn’t the Levels tab. In the Sheet, open the Levels tab, then File › Download › CSV.');
+        apply(rows);
+        problem('');
+        if (label === 'People' || !state.from) stamp(new Date(f.lastModified), 'From the file ' + f.name);
+        render();
+      };
+      r.readAsText(f);
+      input.value = '';
+    });
+  }
+
+  readFile($('filePeople'), setPeople, 'People');
+  readFile($('fileLevels'), setLevels, 'Levels');
+
+  ['search', 'stuckDays', 'showTests'].forEach(function (id) {
+    $(id).addEventListener(id === 'search' ? 'input' : 'change', function () { if (id === 'stuckDays') store('days', this.value); render(); });
+  });
+  var savedDays = store('days'); if (savedDays) $('stuckDays').value = savedDays;
+  var savedFilter = store('filter'); if (savedFilter) state.filter = savedFilter;
+
+  render();
+  var claude = window.claude;
+  if (claude && claude.use) {
+    claude.use('mcp').then(function (mcp) {
+      if (mcp) live(mcp);
+      else if (!state.from) $('updated').textContent = 'Open the People file to see your team';
+    });
+  } else {
+    $('updated').textContent = 'Open the People file to see your team';
+  }
+  window.PUDash = { setPeople: setPeople, setLevels: setLevels, render: render, parseCSV: parseCSV, parseDate: parseDate };
+})();
+</script>

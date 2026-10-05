@@ -5,6 +5,8 @@ Reads index.html, inlines the local stylesheet and scripts, and writes:
   dist/claude-power-up.html  - one self-contained file (email it, host it anywhere)
   dist/artifact.html         - the same page without <html>/<head>/<body> tags,
                                for publishing as a Claude artifact
+  dist/team-tracker.html     - the employer dashboard (dashboard/dashboard.html)
+                               as a page that opens in any browser
 
 Usage: python3 tools/build.py
 """
@@ -71,7 +73,17 @@ def main() -> None:
     artifact = re.sub(r"(sheet:\s*\{\s*url:\s*)'[^']*'", r"\1''", artifact)
     (DIST / "artifact.html").write_text(artifact, encoding="utf-8")
 
-    for f in ("claude-power-up.html", "artifact.html"):
+    # The employer dashboard is written as an artifact page (no skeleton), so
+    # wrap it to open on its own in a browser.
+    dashboard = (ROOT / "dashboard" / "dashboard.html").read_text(encoding="utf-8")
+    (DIST / "team-tracker.html").write_text(
+        '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
+        '<meta name="viewport" content="width=device-width, initial-scale=1">\n</head>\n<body>\n'
+        + dashboard + "\n</body>\n</html>\n",
+        encoding="utf-8",
+    )
+
+    for f in ("claude-power-up.html", "artifact.html", "team-tracker.html"):
         size = (DIST / f).stat().st_size
         print(f"dist/{f}: {size / 1024:.0f} KB")
 
