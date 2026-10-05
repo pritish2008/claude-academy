@@ -1,0 +1,1398 @@
+<title>Trainable</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400..800;1,400..600&display=swap">
+<style>
+/* ==========================================================================
+   Trainable — styles
+   Same palette as Claude Power-Up: ink navy, ultramarine, highlighter yellow.
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+  --bg: #f3f4f8;
+  --surface: #ffffff;
+  --surface-2: #f0f1f7;
+  --ink: #0f1330;
+  --ink-2: #394063;
+  --muted: #676d90;
+  --line: #dfe2ec;
+  --accent: #2e3bff;
+  --accent-hover: #1f2be0;
+  --accent-ink: #ffffff;
+  --accent-soft: #e9ebff;
+  --marker: #ffe45c;
+  --marker-ink: #221e00;
+  --good: #0b875e;
+  --good-soft: #def4ea;
+  --bad: #d42a43;
+  --bad-soft: #fce6e9;
+  --warn: #a86400;
+  --warn-soft: #fff1d6;
+  --shadow: 0 14px 34px -14px rgba(15, 19, 48, 0.28);
+  --f: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --r: 14px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0a0d1f;
+    --surface: #121634;
+    --surface-2: #181d42;
+    --ink: #eef0ff;
+    --ink-2: #c4c9e8;
+    --muted: #8d93bd;
+    --line: #262c58;
+    --accent: #8a95ff;
+    --accent-hover: #a3acff;
+    --accent-ink: #0a0d1f;
+    --accent-soft: #1d2466;
+    --marker: #f2d84b;
+    --marker-ink: #1c1800;
+    --good: #3ad49b;
+    --good-soft: #0f2e27;
+    --bad: #ff7085;
+    --bad-soft: #3a1522;
+    --warn: #f5b947;
+    --warn-soft: #362709;
+    --shadow: 0 14px 34px -14px rgba(0, 0, 0, 0.7);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0a0d1f;
+  --surface: #121634;
+  --surface-2: #181d42;
+  --ink: #eef0ff;
+  --ink-2: #c4c9e8;
+  --muted: #8d93bd;
+  --line: #262c58;
+  --accent: #8a95ff;
+  --accent-hover: #a3acff;
+  --accent-ink: #0a0d1f;
+  --accent-soft: #1d2466;
+  --marker: #f2d84b;
+  --marker-ink: #1c1800;
+  --good: #3ad49b;
+  --good-soft: #0f2e27;
+  --bad: #ff7085;
+  --bad-soft: #3a1522;
+  --warn: #f5b947;
+  --warn-soft: #362709;
+  --shadow: 0 14px 34px -14px rgba(0, 0, 0, 0.7);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--f);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+.tr-app {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 16px 16px 64px;
+  min-height: 100vh;
+}
+
+.tr-loading {
+  text-align: center;
+  color: var(--muted);
+  padding: 80px 0;
+}
+
+/* ---------- Top bar ---------- */
+
+.tr-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 0 20px;
+}
+
+.tr-logo {
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tr-logo-mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+}
+
+.tr-steps {
+  display: flex;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.tr-steps span {
+  padding: 3px 10px;
+  border-radius: 99px;
+  background: var(--surface-2);
+}
+
+.tr-steps span.on {
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 700;
+}
+
+.tr-steps span.done {
+  background: var(--good-soft);
+  color: var(--good);
+}
+
+/* ---------- Cards and text ---------- */
+
+.tr-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.tr-hero h1 {
+  font-size: clamp(32px, 7vw, 52px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin: 8px 0 12px;
+}
+
+.tr-hero p.lead {
+  font-size: 18px;
+  color: var(--ink-2);
+  margin: 0 0 20px;
+}
+
+h2 {
+  font-size: 22px;
+  letter-spacing: -0.01em;
+  margin: 0 0 8px;
+}
+
+h3 {
+  font-size: 17px;
+  margin: 0 0 6px;
+}
+
+p {
+  margin: 0 0 10px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.small {
+  font-size: 14px;
+}
+
+.hl {
+  background: var(--marker);
+  color: var(--marker-ink);
+  padding: 0 4px;
+  border-radius: 4px;
+}
+
+.tag {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.tag.warn {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+
+.how {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+  display: grid;
+  gap: 10px;
+}
+
+.how li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.how b.n {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  min-height: 44px;
+}
+
+a.btn {
+  color: var(--accent);
+}
+
+.btn:hover {
+  border-color: var(--accent);
+}
+
+.btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.btn.primary:hover {
+  background: var(--accent-hover);
+}
+
+.btn.ghost {
+  border-color: transparent;
+  background: transparent;
+  color: var(--muted);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.choice-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.choice {
+  text-align: left;
+  border: 2px solid var(--line);
+  background: var(--surface);
+  border-radius: var(--r);
+  padding: 16px;
+  cursor: pointer;
+}
+
+.choice:hover,
+.choice.on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.choice b {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+/* ---------- Chat ---------- */
+
+.chat {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.bubble {
+  max-width: 88%;
+  padding: 12px 16px;
+  border-radius: 16px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.bubble.bot {
+  align-self: flex-start;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-bottom-left-radius: 4px;
+}
+
+.bubble.me {
+  align-self: flex-end;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-bottom-right-radius: 4px;
+}
+
+.bubble.thinking {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.composer {
+  position: sticky;
+  bottom: 0;
+  background: var(--bg);
+  padding: 8px 0 12px;
+}
+
+.composer-box {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+textarea.input,
+input.input {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 12px 14px;
+  resize: vertical;
+  min-height: 48px;
+}
+
+textarea.input:focus,
+input.input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 0;
+  border-color: transparent;
+}
+
+.progress-dots {
+  display: flex;
+  gap: 4px;
+  margin: 6px 0 0;
+}
+
+.progress-dots i {
+  width: 18px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--line);
+}
+
+.progress-dots i.on {
+  background: var(--accent);
+}
+
+/* ---------- Summary ---------- */
+
+.facts {
+  display: grid;
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.fact label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+/* ---------- Activity ---------- */
+
+.step {
+  border-left: 4px solid var(--line);
+  padding-left: 16px;
+  margin: 0 0 20px;
+}
+
+.step.done {
+  border-left-color: var(--good);
+}
+
+.prompt-box {
+  background: var(--surface-2);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin: 8px 0;
+  white-space: pre-wrap;
+  font-size: 15px;
+}
+
+.tip {
+  background: var(--warn-soft);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 14px;
+  margin: 8px 0;
+}
+
+.check {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  cursor: pointer;
+  margin: 8px 0;
+}
+
+.check input {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  accent-color: var(--good);
+}
+
+.quiz-q {
+  margin-bottom: 18px;
+}
+
+.quiz-opt {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin: 6px 0;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.quiz-opt.right {
+  border-color: var(--good);
+  background: var(--good-soft);
+}
+
+.quiz-opt.wrong {
+  border-color: var(--bad);
+  background: var(--bad-soft);
+}
+
+.feedback {
+  font-size: 14px;
+  padding: 6px 2px;
+}
+
+.ideas {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.ideas li {
+  margin-bottom: 6px;
+}
+
+.done-banner {
+  text-align: center;
+  padding: 28px 20px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-radius: var(--r);
+  margin-bottom: 16px;
+}
+
+.done-banner h2 {
+  font-size: 28px;
+}
+
+.stars {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.stars button {
+  min-width: 56px;
+}
+
+.stars button.on {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-color: var(--accent);
+}
+
+.notice {
+  background: var(--warn-soft);
+  color: var(--ink);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin: 12px 0;
+  font-size: 15px;
+}
+
+.error {
+  background: var(--bad-soft);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin: 12px 0;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: var(--bg);
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  box-shadow: var(--shadow);
+  z-index: 10;
+}
+
+.foot {
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 32px;
+}
+
+@media (max-width: 520px) {
+  .tr-steps {
+    display: none;
+  }
+  .bubble {
+    max-width: 94%;
+  }
+}
+
+</style>
+<div id="app" class="tr-app">
+  <p class="tr-loading">Loading Trainable…</p>
+  <noscript><p class="tr-loading">Trainable needs JavaScript turned on.</p></noscript>
+</div>
+<script>
+/* ==========================================================================
+   Trainable — first version
+   1. An AI coach interviews a person (or a team lead) about their work.
+   2. It shows back what it learned, so they can fix it.
+   3. It builds one hands-on activity around their real work.
+   The AI parts use Claude through the artifact "sample" capability, so the
+   page must be opened from its Claude link. Elsewhere it offers an example.
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  var KEY = 'trainable:v1';
+  var MAX_ANSWERS = 9;
+  var TARGET_ANSWERS = 7;
+  var app = document.getElementById('app');
+
+  /* ---------- Small helpers ---------- */
+
+  function h(tag, props) {
+    var parts = tag.split(/(?=[.#])/);
+    var el = document.createElement(parts[0] || 'div');
+    parts.slice(1).forEach(function (p) {
+      if (p[0] === '.') el.classList.add(p.slice(1));
+      else el.id = p.slice(1);
+    });
+    if (props) {
+      Object.keys(props).forEach(function (k) {
+        var v = props[k];
+        if (v == null || v === false) return;
+        if (k === 'on') Object.keys(v).forEach(function (e) { el.addEventListener(e, v[e]); });
+        else if (k === 'text') el.textContent = v;
+        else if (k in el && k !== 'list') el[k] = v;
+        else el.setAttribute(k, v === true ? '' : v);
+      });
+    }
+    for (var i = 2; i < arguments.length; i++) add(el, arguments[i]);
+    return el;
+  }
+  function add(el, c) {
+    if (c == null || c === false) return;
+    if (Array.isArray(c)) c.forEach(function (x) { add(el, x); });
+    else el.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+  }
+  function str(v, max) {
+    var s = v == null ? '' : String(v).trim();
+    return max && s.length > max ? s.slice(0, max) : s;
+  }
+  function arr(v) {
+    return Array.isArray(v) ? v : [];
+  }
+
+  var toastTimer;
+  function toast(msg) {
+    var old = document.querySelector('.toast');
+    if (old) old.remove();
+    var t = h('div.toast', { role: 'status', text: msg });
+    document.body.appendChild(t);
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.remove(); }, 2200);
+  }
+
+  function copy(text) {
+    var done = function () { toast('Copied. Paste it into Claude.'); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { fallbackCopy(text); done(); });
+    } else {
+      fallbackCopy(text);
+      done();
+    }
+  }
+  function fallbackCopy(text) {
+    var ta = h('textarea', { value: text, style: 'position:fixed;opacity:0' });
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch (e) { /* ignore */ }
+    ta.remove();
+  }
+
+  function claudeLink(prompt) {
+    var q = encodeURIComponent(prompt || '');
+    return q && q.length < 7000 ? 'https://claude.ai/new?q=' + q : 'https://claude.ai/new';
+  }
+
+  /* ---------- Saved state ---------- */
+
+  function fresh() {
+    return { screen: 'welcome', mode: 'me', turns: [], finished: false, profile: null, activity: null, demo: false, progress: {} };
+  }
+  var S = fresh();
+  try {
+    var saved = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if (saved && saved.screen) S = Object.assign(fresh(), saved);
+  } catch (e) { /* no saved state */ }
+  if (S.screen === 'building') S.screen = S.profile ? 'summary' : 'welcome';
+
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* storage off */ }
+  }
+  function go(screen) {
+    S.screen = screen;
+    save();
+    render();
+    window.scrollTo(0, 0);
+  }
+
+  /* ---------- Claude (only inside a Claude viewer that allows it) ---------- */
+
+  var AI = { fn: null, status: 'pending' };
+  if (window.claude && typeof window.claude.use === 'function') {
+    window.claude.use('sample').then(
+      function (fn) {
+        AI.fn = typeof fn === 'function' ? fn : null;
+        AI.status = AI.fn ? 'ready' : 'absent';
+        if (S.screen === 'welcome' || S.screen === 'interview') render();
+      },
+      function () {
+        AI.status = 'absent';
+        if (S.screen === 'welcome') render();
+      }
+    );
+  } else {
+    AI.status = 'absent';
+  }
+
+  function errorText(e) {
+    var code = e && e.code;
+    if (code === 'not_granted' || code === 'sampling_disabled' || code === 'not_declared')
+      return 'The coach needs your OK to use Claude. Reload the page and choose Allow.';
+    if (code === 'rate_limited') return 'Claude is busy, or you’ve reached your usage limit. Wait a little, then try again.';
+    if (code === 'session_expired') return 'Please sign in to Claude again, then try again.';
+    if (code === 'invalid_json') return 'Claude’s answer came back jumbled. Please try again.';
+    if (code === 'prompt_too_large') return 'That’s too much text in one go. Try shorter answers.';
+    return 'Couldn’t reach Claude just now. Please try again.';
+  }
+
+  /* ---------- What we tell Claude ---------- */
+
+  function interviewRules() {
+    var who = S.mode === 'team'
+      ? 'a team lead, about the team they run. Learn about the team as a whole: what the team does, the different roles in it, the work they repeat every week, the tools they share, where work gets stuck, and how comfortable the team is with AI.'
+      : 'one person, about their own job. Learn: their role and what kind of company they work in, the main tasks in a normal week, the tools and apps they use, what feels slow, boring or repetitive, and how much they have used AI tools like Claude before.';
+    return [
+      'You are the friendly interview coach inside Trainable, an app that teaches people at work to use AI in their real day-to-day work.',
+      'You are interviewing ' + who,
+      'Your goal: learn enough to design ONE hands-on practice activity that uses their real work. Near the end, ask which one task they would most like AI to help with, and ask for a small real example of it (what goes in and what comes out).',
+      '',
+      'Rules:',
+      '- Ask ONE question at a time. Keep each message under 40 words.',
+      '- Use very simple, warm, everyday English. No jargon or technical words.',
+      '- Start each message (except the first) with a short, specific reaction to what they said, then the next question.',
+      '- If an answer is vague, ask a short follow-up to get a concrete example.',
+      '- Do not give advice or tips yet. Just listen and ask.',
+      '- Never ask for passwords, private customer data, or anything confidential. If they share some, tell them they don’t need to.',
+      '- Ask between 5 and ' + (MAX_ANSWERS - 1) + ' questions in total. When you have enough, send a short thank-you that says you will now build their activity, and put the exact text <<DONE>> on its own line at the very end.',
+      '',
+      'Begin now with a one-line hello (you are their Trainable coach) and your first question.'
+    ].join('\n');
+  }
+
+  function transcript() {
+    return S.turns.slice(1).map(function (t) {
+      return (t.role === 'assistant' ? 'Coach: ' : (S.mode === 'team' ? 'Team lead: ' : 'Person: ')) + t.content;
+    }).join('\n\n');
+  }
+
+  function profilePrompt() {
+    return [
+      'Below is an interview between a training coach and ' + (S.mode === 'team' ? 'a team lead about their team' : 'a person about their job') + '.',
+      'Pull out what we learned. Reply with only one JSON object with these keys, every value a short plain-English string (write "Not mentioned" if unknown):',
+      '{"role": "their job or the team’s job, and the kind of company",',
+      ' "tasks": "the main tasks in a normal week",',
+      ' "tools": "the tools and apps they use",',
+      ' "pains": "what feels slow, boring or repetitive",',
+      ' "aiLevel": "how much they have used AI so far",',
+      ' "focus": "the ONE real task the activity should be built around, with any example they gave"}',
+      'Write in second person ("You…" or "Your team…"). Keep each value under 50 words.',
+      '',
+      'INTERVIEW:',
+      transcript()
+    ].join('\n');
+  }
+
+  function activityPrompt() {
+    var p = S.profile || {};
+    var team = S.mode === 'team';
+    return [
+      'You design short, hands-on AI practice activities for people at work. The learner is not technical.',
+      team ? 'This activity is for a whole team. The team lead will run it with the team.' : 'This activity is for one person.',
+      '',
+      'WHAT WE KNOW:',
+      'Role and company: ' + str(p.role),
+      'Main tasks: ' + str(p.tasks),
+      'Tools: ' + str(p.tools),
+      'What slows them down: ' + str(p.pains),
+      'AI experience: ' + str(p.aiLevel),
+      'Task to build the activity around: ' + str(p.focus),
+      '',
+      'Design ONE activity that helps them use Claude for that real task. Rules:',
+      '- Teach by doing. They will work in a normal Claude chat at claude.ai. No special setup, add-ons or coding.',
+      '- 4 steps that build on each other: 1) a first simple try, 2) give Claude more background so the answer gets much better, 3) ask Claude to improve or check its work, 4) turn it into something reusable they can use every week (for example a saved prompt template, or a Claude Project with their instructions).',
+      '- Each step has a ready-to-paste prompt. Put the parts they must fill in inside [square brackets], like [paste your notes here]. Prompts must fit their real work, not a made-up company.',
+      '- Match their AI experience: simpler for beginners, more ambitious for regular users.',
+      '- Very simple English, short sentences, no jargon. No time estimates. Don’t invent facts about their company.',
+      '- Remind them not to paste passwords or private customer details.',
+      '',
+      'Reply with only one JSON object in exactly this shape:',
+      '{"title": "short, catchy activity name",',
+      ' "why": "1-2 sentences on why this helps them, using their words",',
+      ' "skill": "the AI habit it teaches, in 2-5 words",',
+      ' "steps": [{"title": "short step name", "do": "1-3 sentences: what to do and what to notice", "prompt": "the ready-to-paste prompt", "tip": "one short tip"}],',
+      ' "quiz": [{"q": "question about using this skill in their work", "options": ["a", "b", "c"], "answer": 0, "why": "one sentence explaining the right answer"}],',
+      ' "doneWhen": ["3 short checks that show they have done it well"],',
+      team ? ' "teamNotes": "2-3 sentences on how the lead can run this with the team, for example who tries which step and how to share results",' : '',
+      ' "next": ["3 more real tasks from their work they could try the same way"]}',
+      'Use exactly 4 steps and 2 quiz questions. "answer" is the index of the right option. Mix up which option is right.'
+    ].filter(function (l) { return l !== ''; }).join('\n');
+  }
+
+  function cleanActivity(a) {
+    a = a || {};
+    var out = {
+      title: str(a.title, 120) || 'Your AI practice activity',
+      why: str(a.why, 600),
+      skill: str(a.skill, 80),
+      teamNotes: str(a.teamNotes, 800),
+      steps: arr(a.steps).slice(0, 6).map(function (s) {
+        return { title: str(s && s.title, 120), do: str(s && s.do, 800), prompt: str(s && s.prompt, 3000), tip: str(s && s.tip, 400) };
+      }).filter(function (s) { return s.title || s.do || s.prompt; }),
+      quiz: arr(a.quiz).slice(0, 4).map(function (q) {
+        var options = arr(q && q.options).map(function (o) { return str(o, 300); }).filter(Boolean).slice(0, 5);
+        var answer = parseInt(q && q.answer, 10);
+        return { q: str(q && q.q, 400), options: options, answer: answer >= 0 && answer < options.length ? answer : 0, why: str(q && q.why, 400) };
+      }).filter(function (q) { return q.q && q.options.length > 1; }),
+      doneWhen: arr(a.doneWhen).map(function (x) { return str(x, 300); }).filter(Boolean).slice(0, 5),
+      next: arr(a.next).map(function (x) { return str(x, 300); }).filter(Boolean).slice(0, 5)
+    };
+    if (!out.steps.length) throw { code: 'invalid_json' };
+    return out;
+  }
+
+  /* ---------- Layout ---------- */
+
+  var STEPS = [['welcome', 'Start'], ['interview', 'Interview'], ['summary', 'Check'], ['activity', 'Activity']];
+
+  function topBar() {
+    var at = S.screen === 'building' ? 'summary' : S.screen;
+    var idx = STEPS.findIndex(function (s) { return s[0] === at; });
+    return h('header.tr-top', null,
+      h('div.tr-logo', null, h('span.tr-logo-mark', { 'aria-hidden': 'true', text: 'T' }), 'Trainable'),
+      h('nav.tr-steps', { 'aria-label': 'Progress' }, STEPS.map(function (s, i) {
+        return h('span' + (i === idx ? '.on' : i < idx ? '.done' : ''), { text: s[1] });
+      })),
+      S.screen !== 'welcome' ? h('button.btn.ghost', { type: 'button', on: { click: startOver } }, 'Start over') : null
+    );
+  }
+
+  function startOver() {
+    if (!confirm('Start again from the beginning? Your answers here will be cleared.')) return;
+    if (current) current.abort();
+    S = fresh();
+    go('welcome');
+  }
+
+  function render() {
+    var y = window.scrollY;
+    app.innerHTML = '';
+    add(app, topBar());
+    var view = { welcome: viewWelcome, interview: viewInterview, summary: viewSummary, building: viewBuilding, activity: viewActivity }[S.screen] || viewWelcome;
+    add(app, view());
+    add(app, h('p.foot', null, 'Trainable · the coach and your activity are written by Claude, so check anything important.'));
+    // Keep the newest chat message in view; elsewhere stay where the reader was.
+    window.scrollTo(0, S.screen === 'interview' ? document.body.scrollHeight : y);
+  }
+
+  /* ---------- 1. Welcome ---------- */
+
+  function viewWelcome() {
+    var choose = function (m) {
+      return function () {
+        S.mode = m;
+        save();
+        render();
+      };
+    };
+    var noAI = AI.status === 'absent';
+    return h('section', null,
+      h('div.tr-hero', null,
+        h('span.tag', { text: 'AI training that fits your job' }),
+        h('h1', null, 'Learn AI on ', h('span.hl', { text: 'your own work' }), '.'),
+        h('p.lead', { text: 'A friendly AI coach asks you a few questions about your work. Then it builds a hands-on activity, made just for you, that you can try straight away in Claude.' })
+      ),
+      h('div.tr-card', null,
+        h('ol.how', null,
+          h('li', null, h('b.n', { text: '1' }), h('div', null, h('b', { text: 'Chat with the coach. ' }), 'Tell it what you do, the tools you use and what slows you down.')),
+          h('li', null, h('b.n', { text: '2' }), h('div', null, h('b', { text: 'Check what it learned. ' }), 'Fix anything it got wrong.')),
+          h('li', null, h('b.n', { text: '3' }), h('div', null, h('b', { text: 'Do your activity. ' }), 'Real steps, ready-made prompts and a quick quiz, all about your real work.'))
+        ),
+        h('h3', { text: 'Who is this for?' }),
+        h('div.choice-grid', null,
+          h('button.choice' + (S.mode === 'me' ? '.on' : ''), { type: 'button', 'aria-pressed': String(S.mode === 'me'), on: { click: choose('me') } },
+            h('b', { text: 'Just me' }), h('span.muted', { text: 'Build an activity for my own job.' })),
+          h('button.choice' + (S.mode === 'team' ? '.on' : ''), { type: 'button', 'aria-pressed': String(S.mode === 'team'), on: { click: choose('team') } },
+            h('b', { text: 'My team' }), h('span.muted', { text: 'I lead a team. Build an activity we can do together.' }))
+        ),
+        noAI ? h('div.notice', null,
+          h('b', { text: 'The coach works inside Claude. ' }),
+          'Open Trainable from its Claude link to chat with the coach. For now, you can look at an example.') : null,
+        h('div.btn-row', null,
+          h('button.btn.primary#start', { type: 'button', disabled: !AI.fn, on: { click: startInterview } },
+            AI.status === 'pending' ? 'Connecting to Claude…' : S.turns.length ? 'Continue my interview' : 'Start my interview'),
+          h('button.btn#example', { type: 'button', on: { click: showExample } }, 'See an example')
+        ),
+        h('p.muted.small', { style: 'margin-top:12px', text: 'Don’t share passwords or private customer details. You won’t need them.' })
+      )
+    );
+  }
+
+  function startInterview() {
+    S.demo = false;
+    if (!S.turns.length) {
+      S.turns = [{ role: 'user', content: interviewRules() }];
+      S.finished = false;
+    }
+    go('interview');
+    if (S.turns[S.turns.length - 1].role === 'user') askCoach();
+  }
+
+  /* ---------- 2. Interview ---------- */
+
+  var current = null; // AbortController for the call in flight
+  var busy = false;
+  var lastError = '';
+
+  function answers() {
+    return S.turns.filter(function (t, i) { return i > 0 && t.role === 'user'; }).length;
+  }
+
+  function askCoach() {
+    if (!AI.fn || busy) return;
+    busy = true;
+    lastError = '';
+    current = new AbortController();
+    var bubble = null;
+    render();
+    var input = S.turns.slice();
+    if (answers() >= MAX_ANSWERS) {
+      input.push({ role: 'user', content: '(Coach: that was the last question. Thank them in one line, say you will now build their activity, and end with <<DONE>>.)' });
+    }
+    AI.fn(input, {
+      cache: false,
+      modelTier: 'quick',
+      signal: current.signal,
+      onText: function (u) {
+        bubble = bubble || document.querySelector('.bubble.thinking');
+        if (bubble) {
+          bubble.classList.remove('thinking');
+          bubble.textContent = u.text.replace(/<<\s*DONE\s*>>/g, '').trim();
+        }
+      }
+    }).then(function (r) {
+      var text = r.text || '';
+      var done = /<<\s*DONE\s*>>/.test(text);
+      text = text.replace(/<<\s*DONE\s*>>/g, '').trim();
+      S.turns.push({ role: 'assistant', content: text || 'Thanks!' });
+      if (done) S.finished = true;
+    }, function (e) {
+      if (e && e.code !== 'cancelled') lastError = errorText(e);
+    }).then(function () {
+      busy = false;
+      current = null;
+      save();
+      render();
+      var box = document.getElementById('answer');
+      if (box) box.focus();
+    });
+  }
+
+  function sendAnswer(text) {
+    text = str(text, 4000);
+    if (!text || busy) return;
+    S.turns.push({ role: 'user', content: text });
+    save();
+    askCoach();
+  }
+
+  function viewInterview() {
+    if (!AI.fn && AI.status !== 'pending') {
+      return h('div.tr-card', null, h('h2', { text: 'The coach isn’t available here' }),
+        h('p', { text: 'Open Trainable from its Claude link to chat with the coach.' }),
+        h('button.btn', { type: 'button', on: { click: function () { go('welcome'); } } }, 'Back'));
+    }
+    var n = answers();
+    var chat = h('div.chat', { 'aria-live': 'polite' });
+    S.turns.slice(1).forEach(function (t) {
+      add(chat, h('div.bubble.' + (t.role === 'assistant' ? 'bot' : 'me'), { text: t.content }));
+    });
+    if (busy) add(chat, h('div.bubble.bot.thinking', { text: 'Thinking…' }));
+    var waiting = !busy && S.turns[S.turns.length - 1].role === 'user';
+    if (lastError) add(chat, h('div.error', null, lastError, ' ',
+      h('button.btn', { type: 'button', on: { click: askCoach } }, 'Try again')));
+    else if (waiting) add(chat, h('div', null,
+      h('button.btn.primary', { type: 'button', disabled: !AI.fn, on: { click: askCoach } }, 'Continue the interview')));
+
+    if (S.finished && !busy) add(chat, h('div.tr-card', null, h('p', null, h('b', { text: 'Interview done. ' }), 'Next, check what the coach learned.'),
+      h('button.btn.primary#to-summary', { type: 'button', on: { click: makeProfile } }, 'See what it learned')));
+
+    var box = h('textarea.input#answer', {
+      rows: 2,
+      placeholder: S.finished ? 'All done. Add anything else here, or check what I learned.' : 'Type your answer…',
+      'aria-label': 'Your answer',
+      disabled: busy,
+      on: {
+        keydown: function (e) {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendAnswer(box.value);
+          }
+        }
+      }
+    });
+    var dots = h('div.progress-dots', { 'aria-hidden': 'true' });
+    for (var i = 0; i < TARGET_ANSWERS; i++) add(dots, h('i' + (i < n ? '.on' : '')));
+
+    return h('section', null,
+      h('h2', { text: S.mode === 'team' ? 'Tell the coach about your team' : 'Tell the coach about your work' }),
+      h('p.muted.small', { text: 'Short answers are fine. Real examples help the most.' }),
+      chat,
+      h('div.composer', null,
+        h('div.composer-box', null, box,
+          busy
+            ? h('button.btn', { type: 'button', on: { click: function () { if (current) current.abort(); } } }, 'Stop')
+            : h('button.btn.primary#send', { type: 'button', on: { click: function () { sendAnswer(box.value); } } }, 'Send')),
+        dots,
+        !S.finished && n >= 3 && !busy
+          ? h('button.btn.ghost.small', { type: 'button', on: { click: makeProfile } }, 'That’s enough questions, build my activity')
+          : null
+      )
+    );
+  }
+
+  /* ---------- 3. Summary ---------- */
+
+  var FIELDS = [
+    ['role', 'Your role and company', 'Your team and company'],
+    ['tasks', 'Your main tasks', 'The team’s main tasks'],
+    ['tools', 'Tools you use', 'Tools the team uses'],
+    ['pains', 'What slows you down', 'What slows the team down'],
+    ['aiLevel', 'Your AI experience so far', 'The team’s AI experience so far'],
+    ['focus', 'The task your activity will be about', 'The task the team activity will be about']
+  ];
+
+  function makeProfile() {
+    if (!AI.fn || busy) return;
+    busy = true;
+    lastError = '';
+    current = new AbortController();
+    S.screen = 'building';
+    S.buildingWhat = 'profile';
+    render();
+    AI.fn.json(profilePrompt(), { modelTier: 'quick', cache: false, signal: current.signal }).then(function (p) {
+      p = p || {};
+      S.profile = {};
+      FIELDS.forEach(function (f) { S.profile[f[0]] = str(p[f[0]], 600) || 'Not mentioned'; });
+      S.screen = 'summary';
+    }, function (e) {
+      S.screen = 'interview';
+      if (e && e.code !== 'cancelled') lastError = errorText(e);
+    }).then(function () {
+      busy = false;
+      current = null;
+      save();
+      render();
+    });
+  }
+
+  function viewSummary() {
+    var p = S.profile || {};
+    var team = S.mode === 'team';
+    var inputs = {};
+    var facts = h('div.facts', null, FIELDS.map(function (f) {
+      var ta = h('textarea.input', { id: 'f-' + f[0], rows: f[0] === 'focus' ? 3 : 2, value: p[f[0]] || '' });
+      inputs[f[0]] = ta;
+      return h('div.fact', null, h('label', { htmlFor: 'f-' + f[0], text: f[team ? 2 : 1] }), ta);
+    }));
+    function keep() {
+      Object.keys(inputs).forEach(function (k) { S.profile[k] = str(inputs[k].value, 1200); });
+      save();
+    }
+    return h('section', null,
+      S.demo ? h('div.notice', null, h('b', { text: 'Example. ' }), 'This is a pre-written example, not a real interview.') : null,
+      h('div.tr-card', null,
+        h('h2', { text: 'Here’s what the coach learned' }),
+        h('p.muted', { text: 'Fix anything that’s wrong. The last box matters most: it’s the real task your activity will use.' }),
+        facts,
+        lastError ? h('div.error', { text: lastError }) : null,
+        h('div.btn-row', null,
+          h('button.btn.primary#build', {
+            type: 'button',
+            on: {
+              click: function () {
+                keep();
+                if (S.demo) { S.activity = EXAMPLE.activity; S.progress = {}; go('activity'); return; }
+                buildActivity();
+              }
+            }
+          }, 'Build my activity'),
+          !S.demo ? h('button.btn', { type: 'button', on: { click: function () { keep(); S.finished = false; go('interview'); } } }, 'Back to the chat') : null
+        )
+      )
+    );
+  }
+
+  /* ---------- 4. Building ---------- */
+
+  var buildChars = 0;
+  function buildActivity() {
+    if (!AI.fn || busy) return;
+    busy = true;
+    lastError = '';
+    buildChars = 0;
+    current = new AbortController();
+    S.buildingWhat = 'activity';
+    go('building');
+    AI.fn.json(activityPrompt(), {
+      cache: false,
+      signal: current.signal,
+      onText: function (u) {
+        buildChars = u.text.length;
+        var el = document.getElementById('build-progress');
+        if (el) el.textContent = 'Writing your activity… ' + Math.min(99, Math.round(buildChars / 45)) + '%';
+      }
+    }).then(function (a) {
+      S.activity = cleanActivity(a);
+      S.progress = {};
+      S.screen = 'activity';
+    }, function (e) {
+      S.screen = 'summary';
+      if (e && e.code !== 'cancelled') lastError = errorText(e);
+    }).then(function () {
+      busy = false;
+      current = null;
+      save();
+      render();
+      window.scrollTo(0, 0);
+    });
+  }
+
+  function viewBuilding() {
+    var profile = S.buildingWhat === 'profile';
+    return h('div.tr-card', { style: 'text-align:center;padding:48px 20px' },
+      h('h2', { text: profile ? 'Reading your answers…' : 'Building your activity…' }),
+      h('p.muted#build-progress', { text: profile ? 'Pulling out the key points.' : 'Claude is thinking about your work. This can take a minute.' }),
+      h('button.btn', { type: 'button', on: { click: function () { if (current) current.abort(); } } }, 'Stop')
+    );
+  }
+
+  /* ---------- 5. Activity ---------- */
+
+  function prog() {
+    S.progress = S.progress || {};
+    S.progress.steps = S.progress.steps || {};
+    S.progress.quiz = S.progress.quiz || {};
+    S.progress.checks = S.progress.checks || {};
+    return S.progress;
+  }
+
+  function viewActivity() {
+    var a = S.activity;
+    if (!a) return viewWelcome();
+    var P = prog();
+    var wrap = h('section');
+
+    if (S.demo) add(wrap, h('div.notice', null, h('b', { text: 'Example. ' }), 'This activity was written in advance to show what Trainable makes. Open Trainable from its Claude link to get one built for you.'));
+
+    if (P.finished) {
+      add(wrap, h('div.done-banner', null,
+        h('h2', { text: 'Activity complete!' }),
+        h('p', { text: 'You practised “' + (a.skill || a.title) + '” on your own work. Keep the prompts and use them again.' })));
+    }
+
+    add(wrap, h('div.tr-card', null,
+      h('span.tag', { text: S.mode === 'team' ? 'Made for your team' : 'Made for you' }),
+      h('h2', { style: 'margin-top:8px', text: a.title }),
+      a.why ? h('p', { text: a.why }) : null,
+      a.skill ? h('p.small', null, h('b', { text: 'Skill you’ll practise: ' }), a.skill) : null,
+      a.teamNotes ? h('div.tip', null, h('b', { text: 'Running it with your team: ' }), a.teamNotes) : null,
+      h('p.muted.small', { text: 'Open Claude in another tab. For each step, copy the prompt, fill in the [square brackets] with your real details, and send it.' })
+    ));
+
+    var steps = h('div.tr-card', null, h('h2', { text: 'Try it' }));
+    a.steps.forEach(function (s, i) {
+      var done = !!P.steps[i];
+      add(steps, h('div.step' + (done ? '.done' : ''), null,
+        h('h3', { text: 'Step ' + (i + 1) + ': ' + s.title }),
+        s.do ? h('p', { text: s.do }) : null,
+        s.prompt ? h('div.prompt-box', { text: s.prompt }) : null,
+        s.prompt ? h('div.btn-row', { style: 'margin-top:4px' },
+          h('button.btn', { type: 'button', on: { click: function () { copy(s.prompt); } } }, 'Copy prompt'),
+          h('a.btn', { href: claudeLink(s.prompt), target: '_blank', rel: 'noopener' }, 'Open in Claude')) : null,
+        s.tip ? h('div.tip', null, h('b', { text: 'Tip: ' }), s.tip) : null,
+        h('label.check', null,
+          h('input', { type: 'checkbox', checked: done, on: { change: function (e) { P.steps[i] = e.target.checked; save(); render(); } } }),
+          h('span', { text: 'I did this step' }))
+      ));
+    });
+    add(wrap, steps);
+
+    if (a.quiz.length) {
+      var quiz = h('div.tr-card', null, h('h2', { text: 'Quick check' }));
+      a.quiz.forEach(function (q, qi) {
+        var picked = P.quiz[qi];
+        var answered = picked != null;
+        add(quiz, h('div.quiz-q', null,
+          h('p', null, h('b', { text: q.q })),
+          q.options.map(function (o, oi) {
+            var cls = answered && oi === q.answer ? '.right' : answered && oi === picked ? '.wrong' : '';
+            return h('button.quiz-opt' + cls, {
+              type: 'button',
+              disabled: answered,
+              on: { click: function () { P.quiz[qi] = oi; save(); render(); } }
+            }, o);
+          }),
+          answered ? h('p.feedback', null, h('b', { text: picked === q.answer ? 'Right! ' : 'Not quite. ' }), q.why) : null
+        ));
+      });
+      add(wrap, quiz);
+    }
+
+    if (a.doneWhen.length) {
+      add(wrap, h('div.tr-card', null, h('h2', { text: 'You’ve nailed it when…' }),
+        a.doneWhen.map(function (d, i) {
+          return h('label.check', null,
+            h('input', { type: 'checkbox', checked: !!P.checks[i], on: { change: function (e) { P.checks[i] = e.target.checked; save(); } } }),
+            h('span', { text: d }));
+        })));
+    }
+
+    var finish = h('div.tr-card', null, h('h2', { text: P.finished ? 'Your notes' : 'Finish up' }),
+      h('p', { text: 'How useful was this for your real work?' }),
+      h('div.stars', { role: 'group', 'aria-label': 'Rating from 1 to 5' }, [1, 2, 3, 4, 5].map(function (n) {
+        return h('button.btn' + (P.rating === n ? '.on' : ''), { type: 'button', 'aria-pressed': String(P.rating === n), on: { click: function () { P.rating = n; save(); render(); } } }, String(n));
+      })),
+      h('p', { style: 'margin-top:14px', text: 'Where will you use this next?' }),
+      h('textarea.input#reflection', { rows: 2, value: P.reflection || '', placeholder: 'For example: our weekly client update', on: { input: function (e) { P.reflection = str(e.target.value, 1000); save(); } } }),
+      h('div.btn-row', null,
+        !P.finished ? h('button.btn.primary#finish', { type: 'button', on: { click: function () { P.finished = true; save(); render(); window.scrollTo(0, 0); } } }, 'Mark activity complete') : null,
+        h('button.btn', { type: 'button', on: { click: downloadActivity } }, 'Save as a file')
+      )
+    );
+    add(wrap, finish);
+
+    if (a.next.length) {
+      add(wrap, h('div.tr-card', null, h('h2', { text: 'Try the same trick on…' }),
+        h('ul.ideas', null, a.next.map(function (n) { return h('li', { text: n }); }))));
+    }
+
+    if (!S.demo) {
+      add(wrap, h('div.btn-row', null,
+        h('button.btn', { type: 'button', on: { click: function () { lastError = ''; go('summary'); } } }, 'Make a different activity')));
+    }
+    return wrap;
+  }
+
+  function activityText() {
+    var a = S.activity, P = prog(), L = [];
+    L.push('# ' + a.title, '');
+    if (a.why) L.push(a.why, '');
+    if (a.skill) L.push('Skill: ' + a.skill, '');
+    if (a.teamNotes) L.push('Running it with your team: ' + a.teamNotes, '');
+    a.steps.forEach(function (s, i) {
+      L.push('## Step ' + (i + 1) + ': ' + s.title, '');
+      if (s.do) L.push(s.do, '');
+      if (s.prompt) L.push('Prompt:', '', s.prompt.split('\n').map(function (l) { return '> ' + l; }).join('\n'), '');
+      if (s.tip) L.push('Tip: ' + s.tip, '');
+    });
+    if (a.doneWhen.length) L.push('## You’ve nailed it when', '', a.doneWhen.map(function (d) { return '- ' + d; }).join('\n'), '');
+    if (a.next.length) L.push('## Try the same trick on', '', a.next.map(function (d) { return '- ' + d; }).join('\n'), '');
+    if (P.reflection) L.push('## My notes', '', P.reflection, '');
+    L.push('Made with Trainable.');
+    return L.join('\n');
+  }
+
+  function downloadActivity() {
+    var text = activityText();
+    var name = (S.activity.title || 'activity').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50) + '.md';
+    var viaBlob = function () {
+      try {
+        var url = URL.createObjectURL(new Blob([text], { type: 'text/markdown;charset=utf-8' }));
+        var link = h('a', { href: url, download: name, style: 'display:none' });
+        document.body.appendChild(link);
+        link.click();
+        setTimeout(function () { URL.revokeObjectURL(url); link.remove(); }, 800);
+      } catch (e) {
+        copy(text);
+      }
+    };
+    if (window.claude && typeof window.claude.use === 'function') {
+      window.claude.use('downloads').then(function (d) {
+        if (!d) { copy(text); toast('Saving isn’t available here, so it was copied instead.'); return; }
+        d.save({ filename: name, data: text }).catch(function () { /* declined */ });
+      }, function () { copy(text); });
+    } else viaBlob();
+  }
+
+  /* ---------- Example (no Claude needed) ---------- */
+
+  var EXAMPLE = {
+    profile: {
+      role: 'You’re an office manager at a 25-person accounting firm.',
+      tasks: 'Answering staff questions, booking meetings, ordering supplies, writing the weekly team email, and onboarding new starters.',
+      tools: 'Gmail, Google Calendar, Google Sheets and WhatsApp.',
+      pains: 'The weekly team email takes ages to pull together from scattered notes, and you answer the same staff questions again and again.',
+      aiLevel: 'You’ve tried ChatGPT a couple of times for emails, but nothing regular.',
+      focus: 'Writing the weekly team email from your messy notes (dates, reminders, birthdays, office news).'
+    },
+    activity: {
+      title: 'From messy notes to a great team email',
+      why: 'You said the weekly team email takes ages because the notes are all over the place. This activity turns Claude into your email helper, so you start from a good draft every week.',
+      skill: 'Giving Claude good background',
+      teamNotes: '',
+      steps: [
+        {
+          title: 'A first quick try',
+          do: 'Paste this week’s notes and ask for an email. Notice what Claude gets right and what feels generic.',
+          prompt: 'Turn these notes into a short, friendly weekly email for my team:\n\n[paste your notes here]',
+          tip: 'Leave out anything private, like salaries or health details.'
+        },
+        {
+          title: 'Give Claude the background',
+          do: 'Now tell Claude who the email is for, the tone you like, and the layout. Compare it with the first draft.',
+          prompt: 'I’m the office manager at a 25-person accounting firm. Every Monday I send a team email. Our tone is warm but short, with a little humour. Use these sections: This week, Reminders, Celebrations. Keep it under 200 words and use bullet points.\n\nHere are this week’s notes:\n[paste your notes here]',
+          tip: 'Paste an old email you liked and say “match this style”.'
+        },
+        {
+          title: 'Ask Claude to check its work',
+          do: 'Ask Claude to check the draft against your notes, so nothing is missed or made up.',
+          prompt: 'Check your email against my notes. List anything you missed, any dates or names you changed, and anything you added that wasn’t in my notes. Then give me the corrected email.',
+          tip: 'Always read dates and names yourself before sending.'
+        },
+        {
+          title: 'Make it reusable',
+          do: 'Save your best prompt so next Monday is quick. Create a Claude Project called “Team email” and paste your instructions in it, or save the prompt in a note.',
+          prompt: 'Turn my instructions above into a reusable template I can paste every week. Put [square brackets] where the weekly notes go.',
+          tip: 'Next week, just paste the template and your new notes.'
+        }
+      ],
+      quiz: [
+        {
+          q: 'Your first draft sounds stiff and generic. What’s the best fix?',
+          options: ['Ask the same thing again', 'Tell Claude who it’s for, the tone and the layout', 'Write the email yourself'],
+          answer: 1,
+          why: 'Claude does much better work when it knows the audience, tone and format.'
+        },
+        {
+          q: 'Before you send the email, what should you always do?',
+          options: ['Check dates and names yourself', 'Nothing, Claude is always right', 'Add more emojis'],
+          answer: 0,
+          why: 'Claude can make mistakes, so you check the facts that matter.'
+        }
+      ],
+      doneWhen: ['Your email has the right sections and tone', 'Every date and name matches your notes', 'You saved a template for next week'],
+      next: ['Answering common staff questions from a simple FAQ', 'Writing a welcome pack for new starters', 'Turning supplier quotes into a quick comparison table']
+    }
+  };
+
+  function showExample() {
+    S = fresh();
+    S.demo = true;
+    S.mode = 'me';
+    S.profile = Object.assign({}, EXAMPLE.profile);
+    go('summary');
+  }
+
+  render();
+})();
+
+</script>

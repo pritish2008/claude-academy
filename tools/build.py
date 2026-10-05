@@ -6,6 +6,10 @@ Reads index.html, inlines the local stylesheet and scripts, and writes:
   dist/artifact.html         - the same page without <html>/<head>/<body> tags,
                                for publishing as a Claude artifact
 
+  dist/trainable.html         - Trainable, the AI interview coach, as one file
+  dist/trainable-artifact.html - Trainable for publishing as a Claude artifact
+                               (its AI coach only works there)
+
 Usage: python3 tools/build.py
 """
 import base64
@@ -54,6 +58,26 @@ def region(html: str, name: str) -> str:
     return html[a:b].strip()
 
 
+def build_trainable() -> None:
+    """Bundle trainable/ the same way, into dist/trainable*.html."""
+    src = ROOT / "trainable"
+
+    def css(match):
+        return "<style>\n" + (src / match.group(1)).read_text(encoding="utf-8") + "\n</style>"
+
+    def js(match):
+        code = (src / match.group(1)).read_text(encoding="utf-8").replace("</script", "<\\/script")
+        return "<script>\n" + code + "\n</script>"
+
+    html = (src / "index.html").read_text(encoding="utf-8")
+    html = re.sub(r'<link rel="stylesheet" href="([\w.-]+\.css)">', css, html)
+    html = re.sub(r'<script src="([\w.-]+\.js)"></script>', js, html)
+    standalone = re.sub(r"\s*<!-- build:[a-z-]+ -->", "", html)
+    (DIST / "trainable.html").write_text(standalone, encoding="utf-8")
+    artifact = region(html, "head") + "\n" + region(html, "body") + "\n"
+    (DIST / "trainable-artifact.html").write_text(artifact, encoding="utf-8")
+
+
 def main() -> None:
     source = (ROOT / "index.html").read_text(encoding="utf-8")
     bundled = inline_brand_files(inline_assets(source))
@@ -71,7 +95,9 @@ def main() -> None:
     artifact = re.sub(r"(sheet:\s*\{\s*url:\s*)'[^']*'", r"\1''", artifact)
     (DIST / "artifact.html").write_text(artifact, encoding="utf-8")
 
-    for f in ("claude-power-up.html", "artifact.html"):
+    build_trainable()
+
+    for f in ("claude-power-up.html", "artifact.html", "trainable.html", "trainable-artifact.html"):
         size = (DIST / f).stat().st_size
         print(f"dist/{f}: {size / 1024:.0f} KB")
 

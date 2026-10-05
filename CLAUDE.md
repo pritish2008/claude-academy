@@ -78,6 +78,15 @@ The position in the list and the ID don't always match. IDs stay fixed, so saved
 
 **`tools/smoke-test.js`** clicks through every step in headless Chromium.
 
+## Trainable (the new core product)
+
+`trainable/` is Trainable: an AI coach interviews a person (or a team lead), shows back what it learned, then builds one hands-on activity around their real work. It's for any company, so keep it free of BDS branding.
+
+- `trainable/index.html`, `trainable.css` and `trainable.js` are standalone. They don't use `PU`.
+- The AI parts use Claude through the artifact `sample` capability, so the coach only works when published as a Claude artifact (`dist/trainable-artifact.html`, capabilities `sample` and `downloads`). Opened anywhere else, it offers a pre-written example labelled "Example".
+- Progress is saved in `localStorage` under `trainable:v1`.
+- Test: `node tools/trainable-test.js` (uses a pretend Claude; never contacts the real one).
+
 ## Commands
 
 - **Run:** open `index.html` in a browser.
