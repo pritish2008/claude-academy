@@ -62,7 +62,9 @@ button:focus-visible, .filebtn:focus-within, input:focus-visible, select:focus-v
 .tile.good b { color: var(--good); } .tile.bad b { color: var(--bad); } .tile.warn b { color: var(--warn); }
 
 .tools { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-.tools input[type=search] { flex: 1 1 200px; min-width: 0; font: inherit; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+.sheetform { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: grid; gap: 8px; }
+.sheetform label { font-weight: 700; }
+.tools input[type=search], .tools input[type=url] { flex: 1 1 200px; min-width: 0; font: inherit; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
 .tools label { font-size: .85rem; color: var(--muted); display: flex; gap: 6px; align-items: center; }
 .tools select { font: inherit; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
 
@@ -114,10 +116,20 @@ td { padding: 8px; border-top: 1px solid var(--line); font-variant-numeric: tabu
     </div>
     <div class="source">
       <button type="button" id="refresh" hidden>Refresh</button>
+      <button type="button" id="changeSheet" hidden>Change Sheet</button>
       <label class="filebtn">Open People file<input type="file" id="filePeople" accept=".csv,text/csv"></label>
       <label class="filebtn">Open Levels file<input type="file" id="fileLevels" accept=".csv,text/csv"></label>
     </div>
   </header>
+
+  <form id="sheetForm" class="sheetform" hidden>
+    <label for="sheetLink">Paste the link to your company's progress Google Sheet</label>
+    <div class="tools">
+      <input type="url" id="sheetLink" placeholder="https://docs.google.com/spreadsheets/d/…" required>
+      <button type="submit">Use this Sheet</button>
+    </div>
+    <span class="note">It must have the People and Levels tabs that the training fills in.</span>
+  </form>
 
   <div id="problem" class="error" hidden></div>
 
@@ -147,8 +159,9 @@ td { padding: 8px; border-top: 1px solid var(--line); font-variant-numeric: tabu
 <script>
 (function () {
   'use strict';
-  /* The Google Sheet the training fills (People and Levels tabs). */
-  var SHEET_ID = '1dGTLBZNiE4gtBjXkzjAE6JecKc0SBhUADyZkz-SDLGM';
+  /* The Google Sheet the training fills (People and Levels tabs). Each company
+     can point the page at its own Sheet with "Change Sheet". */
+  var DEFAULT_SHEET = '1dGTLBZNiE4gtBjXkzjAE6JecKc0SBhUADyZkz-SDLGM';
   var CONNECTOR = 'Google Sheets';
   var TOTAL_LEVELS = 12;
 
@@ -403,8 +416,12 @@ td { padding: 8px; border-top: 1px solid var(--line); font-variant-numeric: tabu
     tool_error: 'Google Sheets couldn’t open the progress Sheet. Check you still have access to it.'
   };
 
+  var stops = [];
   function live(mcp) {
+    stops.forEach(function (stop) { stop(); });
+    var SHEET_ID = store('sheet') || DEFAULT_SHEET;
     $('refresh').hidden = false;
+    $('changeSheet').hidden = false;
     var got = { people: false, levels: false };
     function watch(range, key, apply) {
       return mcp.watchTool(CONNECTOR, 'get_values', { spreadsheetId: SHEET_ID, range: range }, function (ev) {
@@ -426,8 +443,22 @@ td { padding: 8px; border-top: 1px solid var(--line); font-variant-numeric: tabu
         }
       }, { refetchInterval: 300000 });
     }
-    watch('People!A1:P2000', 'people', setPeople);
-    watch('Levels!A1:N6000', 'levels', setLevels);
+    stops = [watch('People!A1:P2000', 'people', setPeople), watch('Levels!A1:N6000', 'levels', setLevels)];
+    $('changeSheet').onclick = function () {
+      $('sheetForm').hidden = !$('sheetForm').hidden;
+      $('sheetLink').value = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID;
+    };
+    $('sheetForm').onsubmit = function (e) {
+      e.preventDefault();
+      var m = $('sheetLink').value.match(/\/d\/([A-Za-z0-9_-]{20,})/) || $('sheetLink').value.trim().match(/^([A-Za-z0-9_-]{20,})$/);
+      if (!m) return problem('That doesn\u2019t look like a Google Sheet link. Open the Sheet and copy the link from the address bar.');
+      store('sheet', m[1]);
+      $('sheetForm').hidden = true;
+      state.people = []; state.levels = []; state.open = {};
+      $('updated').textContent = 'Getting the latest progress…';
+      render();
+      live(mcp);
+    };
     $('refresh').onclick = function () {
       $('updated').textContent = 'Refreshing…';
       mcp.invalidate(CONNECTOR, 'get_values').catch(function () {});
