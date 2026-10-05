@@ -538,6 +538,23 @@
       confirmHost.appendChild(h('div.inline-confirm', h('b', 'Erase all progress, XP and saved prompts on this device?'), h('div.btn-row', yes, no)));
     });
 
+    var sheetSetting = null;
+    if (PU.tracking && PU.tracking()) {
+      var sheetMsg = h('div.st-sub', { 'aria-live': 'polite' });
+      var last = PU.state.sheetLast;
+      if (last) sheetMsg.textContent = (last.ok ? 'Last progress report reached the Sheet' : 'Last progress report wasn’t confirmed') + ' (' + new Date(last.at).toLocaleString() + ').';
+      var checkBtn = h('button.btn.btn-ghost.btn-sm', { type: 'button' }, 'Check the Google Sheet link');
+      checkBtn.addEventListener('click', function () {
+        checkBtn.disabled = true;
+        sheetMsg.textContent = 'Checking…';
+        PU.report.check().then(function (r) {
+          checkBtn.disabled = false;
+          sheetMsg.textContent = (r.ok ? '✓ ' : '✗ ') + r.text;
+        });
+      });
+      sheetSetting = h('div.setting', h('div.st-title', 'Google Sheet'), h('div.st-sub', 'Progress reports go to your team lead’s Google Sheet. This button checks the link works. It doesn’t add anything to the Sheet.'), h('div', checkBtn), sheetMsg);
+    }
+
     var liveLine =
       PU.live.status === 'ready'
         ? 'Live Claude is available here: “Try it with real Claude” boxes use your own Claude account.'
@@ -555,6 +572,7 @@
           sw
         ),
         h('div.setting', h('div.st-title', 'Progress'), h('div.st-sub', 'Saved in this browser only. Nobody else can see it.'), h('div', resetBtn), confirmHost),
+        sheetSetting,
         h(
           'div.setting',
           h('div.st-title', 'About this training'),

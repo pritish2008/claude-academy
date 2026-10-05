@@ -59,7 +59,8 @@ The position in the list and the ID don't always match. IDs stay fixed, so saved
 | 12 | `LB` | `bonus.js` | Bonus. It has `optional: true`, is always open, and doesn't count towards progress or the certificate. |
 
 **`assets/js/tracking.js`** measures active time and pace, and sends progress to the Google Sheet:
-- It sends a `text/plain` POST using `fetch(..., {mode: 'no-cors'})`, and `sendBeacon` when the page closes.
+- It sends a `text/plain` POST with `fetch` (no preflight), reads the reply to note whether it arrived (`PU.state.sheetLast`), and uses `sendBeacon` when the page closes.
+- Settings has a **Check the Google Sheet link** button (`PU.report.check`). It sends `{ping: 1}`, which writes nothing.
 - It never sends in Preview mode or before a name is entered.
 
 **`assets/js/app.js`** runs the app itself:

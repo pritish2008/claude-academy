@@ -14212,14 +14212,59 @@ button.rcard:hover {
           navigator.sendBeacon(cfg.url, new Blob([body], { type: 'text/plain;charset=utf-8' }));
           return;
         }
-        fetch(cfg.url, { method: 'POST', mode: 'no-cors', keepalive: true, headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: body }).catch(function () {
-          report.lastBody = '';
-        });
+        /* A plain text POST goes out the same way in any mode. Reading the reply
+           tells us whether it reached the Sheet; when Google asks for a sign-in
+           instead ("Who has access" isn't "Anyone"), the reply can't be read. */
+        post(cfg.url, body, true).then(
+          function (msg) {
+            heard(msg === 'ok', msg);
+          },
+          function () {
+            report.lastBody = '';
+            heard(false, '');
+          }
+        );
       } catch (e) {
         report.lastBody = '';
       }
     }
   };
+  function post(url, body, keepalive) {
+    return fetch(url, { method: 'POST', keepalive: !!keepalive, headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: body }).then(function (res) {
+      return res.text();
+    });
+  }
+
+  /** Remember how the last report went, for Settings. */
+  function heard(ok, msg) {
+    PU.state.sheetLast = { ok: ok, at: Date.now(), msg: String(msg || '').slice(0, 120) };
+    PU.save();
+  }
+
+  var FIX = 'Not reaching the Google Sheet. In Apps Script, open Deploy → Manage deployments, click the pencil, set “Who has access” to “Anyone”, pick “New version” and click Deploy.';
+
+  /** Settings: send a harmless test (no row is written) and say in plain words whether the Sheet link works. */
+  report.check = function () {
+    var cfg = sheet();
+    if (!cfg) return Promise.resolve({ ok: false, text: 'No Google Sheet link is set, so nothing is sent.' });
+    return post(cfg.url, JSON.stringify({ ping: 1 }), false).then(
+      function (msg) {
+        msg = String(msg || '').trim();
+        if (/^(ok|ignored|pong|bad data)$/.test(msg)) return { ok: true, text: 'Working. The training can reach the Google Sheet.' };
+        if (/^problem/.test(msg)) return { ok: false, text: 'The link works, but the Google script hit a problem: ' + msg.slice(0, 160) };
+        return { ok: false, text: FIX + ' If that’s already set, check the link in brand.js is the web app link that ends in /exec.' };
+      },
+      function () {
+        return {
+          ok: false,
+          text: navigator.onLine === false
+            ? 'You seem to be offline. Connect to the internet and try again.'
+            : FIX
+        };
+      }
+    );
+  };
+
   PU.report = report;
   PU.tracking = function () {
     return !!sheet();
@@ -14773,6 +14818,23 @@ button.rcard:hover {
       confirmHost.appendChild(h('div.inline-confirm', h('b', 'Erase all progress, XP and saved prompts on this device?'), h('div.btn-row', yes, no)));
     });
 
+    var sheetSetting = null;
+    if (PU.tracking && PU.tracking()) {
+      var sheetMsg = h('div.st-sub', { 'aria-live': 'polite' });
+      var last = PU.state.sheetLast;
+      if (last) sheetMsg.textContent = (last.ok ? 'Last progress report reached the Sheet' : 'Last progress report wasn’t confirmed') + ' (' + new Date(last.at).toLocaleString() + ').';
+      var checkBtn = h('button.btn.btn-ghost.btn-sm', { type: 'button' }, 'Check the Google Sheet link');
+      checkBtn.addEventListener('click', function () {
+        checkBtn.disabled = true;
+        sheetMsg.textContent = 'Checking…';
+        PU.report.check().then(function (r) {
+          checkBtn.disabled = false;
+          sheetMsg.textContent = (r.ok ? '✓ ' : '✗ ') + r.text;
+        });
+      });
+      sheetSetting = h('div.setting', h('div.st-title', 'Google Sheet'), h('div.st-sub', 'Progress reports go to your team lead’s Google Sheet. This button checks the link works. It doesn’t add anything to the Sheet.'), h('div', checkBtn), sheetMsg);
+    }
+
     var liveLine =
       PU.live.status === 'ready'
         ? 'Live Claude is available here: “Try it with real Claude” boxes use your own Claude account.'
@@ -14790,6 +14852,7 @@ button.rcard:hover {
           sw
         ),
         h('div.setting', h('div.st-title', 'Progress'), h('div.st-sub', 'Saved in this browser only. Nobody else can see it.'), h('div', resetBtn), confirmHost),
+        sheetSetting,
         h(
           'div.setting',
           h('div.st-title', 'About this training'),

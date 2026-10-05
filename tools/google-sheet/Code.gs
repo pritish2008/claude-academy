@@ -88,6 +88,8 @@ function doPost(e) {
   } catch (err) {
     return reply('bad data');
   }
+  // The training's "Check the Google Sheet link" button. Writes nothing.
+  if (data && data.ping) return reply('pong');
   if (!data || data.key !== KEY || !data.person || !data.person.id) return reply('ignored');
 
   var props = PropertiesService.getScriptProperties();

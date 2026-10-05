@@ -30,7 +30,12 @@ const SAMPLE =
     colorScheme: process.env.DARK ? 'dark' : 'light'
   });
   // Never send test runs to a real Google Sheet: answer those requests here instead.
-  await ctx.route(/script\.google\.com/, (route) => route.fulfill({ status: 200, body: 'ok' }));
+  let reports = 0;
+  await ctx.route(/script\.google\.com/, (route) => {
+    const ping = /"ping"/.test(route.request().postData() || '');
+    if (!ping) reports++;
+    route.fulfill({ status: 200, headers: { 'Access-Control-Allow-Origin': '*' }, body: ping ? 'pong' : 'ok' });
+  });
   await ctx.addInitScript(() => {
     navigator.sendBeacon = () => true;
   });
@@ -212,6 +217,18 @@ const SAMPLE =
     else await walk((info) => info.last);
   } catch (e) {
     problems.push('could not open the bonus level: ' + e.message.split('\n')[0]);
+  }
+
+  // Progress reports were sent and confirmed, and the Settings check says the link works.
+  try {
+    if (!reports) problems.push('no progress report was sent');
+    else if (!(await page.evaluate(() => PU.state.sheetLast && PU.state.sheetLast.ok))) problems.push('a progress report was sent but not confirmed');
+    if (await page.locator('.drawer').count()) await page.keyboard.press('Escape');
+    await page.click('button[aria-label="Settings"]');
+    await btn('Check the Google Sheet link').click();
+    await page.getByText('Working. The training can reach the Google Sheet.').waitFor({ timeout: 5000 });
+  } catch (e) {
+    problems.push('the Google Sheet check in Settings failed: ' + e.message.split('\n')[0]);
   }
 
   const xp = await page.evaluate(() => PU.state.xp);
