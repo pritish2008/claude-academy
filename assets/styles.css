@@ -3393,6 +3393,186 @@ button.rcard:hover {
   color: #666;
 }
 
+/* ---------- Design mocks (Level 9) ---------- */
+
+.pack {
+  padding: 18px;
+  background: #ece7df;
+  display: grid;
+  place-items: center;
+}
+
+.pack-box {
+  width: min(250px, 78%);
+  aspect-ratio: 0.72;
+  background: #2f4a3a;
+  color: #f3e6c8;
+  border-radius: 4px;
+  padding: 12px;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto auto;
+  gap: 6px;
+  text-align: center;
+  box-shadow: 0 14px 28px -16px rgba(20, 30, 25, 0.7);
+}
+
+.pack-logo {
+  font-family: var(--f-display);
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  font-size: clamp(13px, 2.4vw, 18px);
+}
+
+.pack-name {
+  font-size: 9px;
+  opacity: 0.85;
+}
+
+.pack-art {
+  border-radius: 3px;
+  background: repeating-linear-gradient(160deg, #4f7a5a 0 8px, #5d8a66 8px 16px);
+  display: grid;
+  place-items: center;
+  font-size: 9px;
+  color: #dfe9d9;
+}
+
+.pack-claims {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3px;
+}
+
+.pack-claims span {
+  font-size: 8px;
+  padding: 2px 5px;
+  border-radius: 999px;
+  background: #d9b45a;
+  color: #2f2a1c;
+  font-weight: 700;
+}
+
+.pack-weight {
+  font-size: 9px;
+  text-align: right;
+  opacity: 0.8;
+}
+
+.webhero {
+  background: #fbf8f3;
+  font-size: clamp(8px, 1.3vw, 11px);
+  color: #3a3631;
+}
+
+.wh-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-bottom: 1px solid #e8e1d6;
+}
+
+.wh-nav span {
+  font-size: 0.85em;
+  color: #77706a;
+  text-align: right;
+}
+
+.wh-main {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 12px;
+  padding: 14px 12px;
+}
+
+.wh-copy {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+}
+
+.wh-h {
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-size: 1.7em;
+  line-height: 1.1;
+  color: #2b2620;
+}
+
+.wh-p {
+  line-height: 1.45;
+}
+
+.wh-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.wh-btn {
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #b8a68e;
+  color: #6b5a44;
+  font-weight: 700;
+}
+
+.wh-img {
+  border-radius: 6px;
+  min-height: 90px;
+  background: linear-gradient(135deg, #d8c3a5, #b99d7a);
+  display: grid;
+  place-items: center;
+  color: #fff8ee;
+}
+
+.wa {
+  padding: 14px;
+  background: #e7ddd3;
+  display: grid;
+  gap: 8px;
+  font-size: clamp(10px, 1.5vw, 12.5px);
+  color: #1d1d1d;
+}
+
+.wa-logo {
+  justify-self: end;
+  width: 62%;
+  padding: 14px 10px;
+  border-radius: 8px 8px 2px 8px;
+  background: #d8f4c8;
+  display: grid;
+  place-items: center;
+}
+
+.wa-logo b {
+  font-family: Georgia, serif;
+  font-size: 1.8em;
+  color: #6f7d73;
+  letter-spacing: 0.04em;
+}
+
+.wa-logo span {
+  font-size: 0.8em;
+  color: #6f7d73;
+}
+
+.wa-msg {
+  justify-self: start;
+  max-width: 85%;
+  padding: 8px 10px;
+  border-radius: 8px 8px 8px 2px;
+  background: #ffffff;
+  line-height: 1.4;
+}
+
+.wa-time {
+  font-size: 0.8em;
+  color: #6c6c6c;
+}
+
 /* ---------- Project sim ---------- */
 
 .proj {

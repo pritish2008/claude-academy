@@ -630,16 +630,21 @@
   }
 
   /**
-   * Saved positions are level numbers in the list. When the list changes
-   * (layout 2 added "Connect your tools" after Level 7), map old positions
-   * to the same level in the new list. Progress itself is saved by level id.
+   * Saved positions are level numbers in the list. When the list changes,
+   * map old positions to the same level in the new list. Progress itself is
+   * saved by level id. Layout 2 added "Connect your tools" after Level 7;
+   * layout 3 added "Claude for designers" after it.
    */
-  var LAYOUT = 2;
-  var LEGACY_ORDER = ['L0', 'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8', 'L9', 'LF', 'LB'];
+  var LAYOUT = 3;
+  var OLD_ORDERS = {
+    1: ['L0', 'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8', 'L9', 'LF', 'LB'],
+    2: ['L0', 'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'LC', 'L8', 'L9', 'LF', 'LB']
+  };
   function migratePositions() {
     if (PU.state.layout === LAYOUT) return;
+    var order = OLD_ORDERS[PU.state.layout] || OLD_ORDERS[1];
     function map(p) {
-      var id = p && LEGACY_ORDER[p.level];
+      var id = p && order[p.level];
       for (var i = 0; i < PU.levels.length; i++) {
         if (PU.levels[i].id === id) return { level: i, step: p.step || 0 };
       }

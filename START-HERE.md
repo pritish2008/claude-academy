@@ -54,8 +54,9 @@
 | 6 | Projects, memory & reusable context | Set up a client Project and see a 9-word prompt get on-brand work, then make a real one step by step |
 | 7 | Claude Cowork | Delegate a monthly report, decide what Claude may delete, and set Cowork up step by step |
 | 8 | Claude as the brain: connect your tools | Connect Canva, Adobe, ImagineArt, Meta Ads and more, then watch one request run a job across five apps |
-| 9 | Claude Code without being a coder | “Build” a caption checker or UTM builder, then build a real tool in a normal chat |
-| 10 | Build your own AI workflow | Design a repeatable workflow, get a master prompt and save it as a Skill |
+| 9 | Claude for designers | Hand off briefs, copy and rollouts, get design directions that aren’t generic, get a critique from a screenshot, decode client feedback, and roll out a design in Canva and Adobe |
+| 10 | Claude Code without being a coder | “Build” a caption checker or UTM builder, then build a real tool in a normal chat |
+| 11 | Build your own AI workflow | Design a repeatable workflow, get a master prompt and save it as a Skill |
 | Final | The real work challenge | Brief a real task, do it in Claude with a focus clock, get the certificate |
 | Bonus | Claude Code for web & SEO | Starts from zero: what Claude Code is, one-time setup, a screen-by-screen session, habits explained simply, 10 SEO and web prompts, safety |
 
@@ -72,7 +73,7 @@ The bonus level is optional, is always open, and isn't needed for the certificat
 
 - **Ready from day one:** writing clear requests, everyday writing and research, improving drafts, and picking the model and effort.
 - **Needs a bit of practice:** client Projects, handing bigger jobs to Cowork, connecting tools, and building small tools and Skills.
-- **Not covered yet:** clear rules on client data, design work (Claude Design, Canva and Adobe in depth), and examples from branding and packaging work.
+- **Not covered yet:** clear rules on client data. (Design work and branding, packaging and web examples are now in Level 9.)
 
 ---
 

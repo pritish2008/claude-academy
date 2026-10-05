@@ -26,7 +26,7 @@ An interactive, game-like Claude training for Brij Design Studio (BDS) staff. It
 2. `brand.js`
 3. `glossary.js`
 4. `components.js`
-5. `levels/level0.js` to `level10.js`
+5. `levels/level0.js` to `level11.js`
 6. `final.js`
 7. `bonus.js`
 8. `tracking.js`
@@ -47,16 +47,17 @@ An interactive, game-like Claude training for Brij Design Studio (BDS) staff. It
 
 **`assets/js/levels/*.js`** has one file per level. Each sets `PU.levels[index] = { id, num, title, short, tagline, learn, steps: [...] }`.
 
-The position in the list and the ID don't always match. IDs stay fixed, so saved progress survives reordering. The `LAYOUT` and `LEGACY_ORDER` migration in `app.js` handles older saves.
+The position in the list and the ID don't always match. IDs stay fixed, so saved progress survives reordering. The `LAYOUT` and `OLD_ORDERS` migration in `app.js` handles older saves.
 
 | Position | ID | File | Level |
 |---|---|---|---|
 | 0–7 | `L0`–`L7` | `level0.js`–`level7.js` | Levels 0–7 |
 | 8 | `LC` | `level8.js` | Level 8, "Claude as the brain" |
-| 9 | `L8` | `level9.js` | Level 9, Claude Code |
-| 10 | `L9` | `level10.js` | Level 10, your own workflow |
-| 11 | `LF` | `final.js` | Final |
-| 12 | `LB` | `bonus.js` | Bonus. It has `optional: true`, is always open, and doesn't count towards progress or the certificate. |
+| 9 | `LD` | `level9.js` | Level 9, Claude for designers |
+| 10 | `L8` | `level10.js` | Level 10, Claude Code |
+| 11 | `L9` | `level11.js` | Level 11, your own workflow |
+| 12 | `LF` | `final.js` | Final |
+| 13 | `LB` | `bonus.js` | Bonus. It has `optional: true`, is always open, and doesn't count towards progress or the certificate. |
 
 **`assets/js/tracking.js`** measures active time and pace, and sends progress to the Google Sheet:
 - It sends a `text/plain` POST using `fetch(..., {mode: 'no-cors'})`, and `sendBeacon` when the page closes.
@@ -88,7 +89,7 @@ The position in the list and the ID don't always match. IDs stay fixed, so saved
 
 - **Never send test data to the real Google Sheet.** Tests must block `script.google.com` and stub `navigator.sendBeacon`, as `tools/smoke-test.js` does.
 - **The name box:** it's required on the first screen only when a Sheet link is set and Preview mode is off.
-- **Class names:** the glossary uses `.gloss`, `.gloss-pop` and `.gloss-missing`. `.term` belongs to the terminal mock-up in Level 9.
+- **Class names:** the glossary uses `.gloss`, `.gloss-pop` and `.gloss-missing`. `.term` belongs to the terminal mock-up in Level 10.
 - **Plain text only:** the quiz `why` field is shown as plain text, so markdown and backticks won't render there.
 - **Rebuild after every change.** The shareable file doesn't update itself.
 - **If the Apps Script link changes,** update `sheet.url` in `brand.js` and rebuild. If `KEY` in `Code.gs` changes, update `sheet.key` in `brand.js` to match.

@@ -3,9 +3,9 @@
   'use strict';
   var PU = window.PU;
 
-  PU.levels[11] = {
+  PU.levels[12] = {
     id: 'LF',
-    num: 11,
+    num: 12,
     label: 'Final',
     code: 'F',
     color: 'var(--sw-10)',
